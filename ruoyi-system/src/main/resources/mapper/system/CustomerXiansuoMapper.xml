@@ -34,12 +34,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="sysUserId != null "> and sys_user_id = #{sysUserId}</if>
             <if test="createTime != null "> and create_time = #{createTime}</if>
             <if test="updateTime != null "> and update_time = #{updateTime}</if>
+            and is_customer = 0
         </where>
     </select>
     
     <select id="selectCustomerXiansuoById" parameterType="Long" resultMap="CustomerXiansuoResult">
         <include refid="selectCustomerXiansuoVo"/>
-        where id = #{id}
+        where id = #{id} and is_customer = 0
     </select>
         
     <insert id="insertCustomerXiansuo" parameterType="CustomerXiansuo" useGeneratedKeys="true" keyProperty="id">

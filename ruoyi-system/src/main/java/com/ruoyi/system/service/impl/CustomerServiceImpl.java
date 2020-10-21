@@ -1,7 +1,6 @@
 package com.ruoyi.system.service.impl;
 
 import java.util.List;
-import com.ruoyi.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.system.mapper.CustomerMapper;
@@ -12,7 +11,7 @@ import com.ruoyi.system.service.ICustomerService;
  * 我的客户Service业务层处理
  * 
  * @author hanke
- * @date 2020-10-19
+ * @date 2020-10-21
  */
 @Service
 public class CustomerServiceImpl implements ICustomerService 
@@ -53,7 +52,6 @@ public class CustomerServiceImpl implements ICustomerService
     @Override
     public int insertCustomer(Customer customer)
     {
-        customer.setCreateTime(DateUtils.getNowDate());
         return customerMapper.insertCustomer(customer);
     }
 
@@ -66,7 +64,6 @@ public class CustomerServiceImpl implements ICustomerService
     @Override
     public int updateCustomer(Customer customer)
     {
-        customer.setUpdateTime(DateUtils.getNowDate());
         return customerMapper.updateCustomer(customer);
     }
 

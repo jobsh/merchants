@@ -38,6 +38,11 @@ nbdist/
 *.log
 *.xml.versionsBackup
 *.swp
+*.class
+
+!*/target/*.class
+!*/target/*.xml
+!*/target/*.yml
 
 !*/build/*.java
 !*/build/*.html

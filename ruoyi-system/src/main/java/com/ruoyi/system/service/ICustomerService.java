@@ -7,7 +7,7 @@ import com.ruoyi.system.domain.Customer;
  * 我的客户Service接口
  * 
  * @author hanke
- * @date 2020-10-19
+ * @date 2020-10-21
  */
 public interface ICustomerService 
 {
