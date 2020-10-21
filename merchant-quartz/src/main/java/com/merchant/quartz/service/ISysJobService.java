@@ -1,9 +1,10 @@
-package com.ruoyi.quartz.service;
+package com.merchant.quartz.service;
 
 import java.util.List;
+
+import com.merchant.quartz.domain.SysJob;
 import org.quartz.SchedulerException;
 import com.merchant.common.exception.job.TaskException;
-import com.ruoyi.quartz.domain.SysJob;
 
 /**
  * 定时任务调度信息信息 服务层

@@ -1,4 +1,4 @@
-package com.ruoyi.generator.service;
+package com.merchant.generator.service;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -10,6 +10,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+
+import com.merchant.generator.domain.GenTableColumn;
+import com.merchant.generator.mapper.GenTableColumnMapper;
+import com.merchant.generator.mapper.GenTableMapper;
 import org.apache.commons.io.IOUtils;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
@@ -28,13 +32,10 @@ import com.merchant.common.exception.CustomException;
 import com.merchant.common.utils.SecurityUtils;
 import com.merchant.common.utils.StringUtils;
 import com.merchant.common.utils.file.FileUtils;
-import com.ruoyi.generator.domain.GenTable;
-import com.ruoyi.generator.domain.GenTableColumn;
-import com.ruoyi.generator.mapper.GenTableColumnMapper;
-import com.ruoyi.generator.mapper.GenTableMapper;
-import com.ruoyi.generator.util.GenUtils;
-import com.ruoyi.generator.util.VelocityInitializer;
-import com.ruoyi.generator.util.VelocityUtils;
+import com.merchant.generator.domain.GenTable;
+import com.merchant.generator.util.GenUtils;
+import com.merchant.generator.util.VelocityInitializer;
+import com.merchant.generator.util.VelocityUtils;
 
 /**
  * 业务 服务层实现

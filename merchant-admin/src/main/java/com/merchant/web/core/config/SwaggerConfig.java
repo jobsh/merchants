@@ -1,4 +1,4 @@
-package com.soso.web.core.config;
+package com.merchant.web.core.config;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import com.ruoyi.common.config.RuoYiConfig;
+import com.merchant.common.config.RuoYiConfig;
 import io.swagger.annotations.ApiOperation;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;

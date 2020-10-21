@@ -1,4 +1,4 @@
-package com.soso.web.controller.system;
+package com.merchant.web.controller.system;
 
 import java.util.List;
 import java.util.Set;
@@ -7,17 +7,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import com.ruoyi.common.constant.Constants;
-import com.ruoyi.common.core.domain.AjaxResult;
-import com.ruoyi.common.core.domain.entity.SysMenu;
-import com.ruoyi.common.core.domain.entity.SysUser;
-import com.ruoyi.common.core.domain.model.LoginBody;
-import com.ruoyi.common.core.domain.model.LoginUser;
-import com.ruoyi.common.utils.ServletUtils;
-import com.ruoyi.framework.web.service.SysLoginService;
-import com.ruoyi.framework.web.service.SysPermissionService;
-import com.ruoyi.framework.web.service.TokenService;
-import com.ruoyi.system.service.ISysMenuService;
+import com.merchant.common.constant.Constants;
+import com.merchant.common.core.domain.AjaxResult;
+import com.merchant.common.core.domain.entity.SysMenu;
+import com.merchant.common.core.domain.entity.SysUser;
+import com.merchant.common.core.domain.model.LoginBody;
+import com.merchant.common.core.domain.model.LoginUser;
+import com.merchant.common.utils.ServletUtils;
+import com.merchant.framework.web.service.SysLoginService;
+import com.merchant.framework.web.service.SysPermissionService;
+import com.merchant.framework.web.service.TokenService;
+import com.merchant.system.service.ISysMenuService;
 
 /**
  * 登录验证

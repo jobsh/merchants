@@ -1,4 +1,4 @@
-package com.ruoyi.framework.config;
+package com.merchant.framework.config;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;

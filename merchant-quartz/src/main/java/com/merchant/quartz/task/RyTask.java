@@ -1,4 +1,4 @@
-package com.ruoyi.quartz.task;
+package com.merchant.quartz.task;
 
 import org.springframework.stereotype.Component;
 import com.merchant.common.utils.StringUtils;

@@ -1,4 +1,4 @@
-package com.ruoyi.framework.web.domain.server;
+package com.merchant.framework.web.domain.server;
 
 /**
  * 系统文件相关信息

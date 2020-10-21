@@ -1,7 +1,7 @@
-package com.ruoyi.quartz.util;
+package com.merchant.quartz.util;
 
 import org.quartz.JobExecutionContext;
-import com.ruoyi.quartz.domain.SysJob;
+import com.merchant.quartz.domain.SysJob;
 
 /**
  * 定时任务处理（允许并发执行）

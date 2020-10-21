@@ -1,4 +1,4 @@
-package com.ruoyi.framework.interceptor.impl;
+package com.merchant.framework.interceptor.impl;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,7 +13,7 @@ import com.merchant.common.core.redis.RedisCache;
 import com.merchant.common.filter.RepeatedlyRequestWrapper;
 import com.merchant.common.utils.StringUtils;
 import com.merchant.common.utils.http.HttpHelper;
-import com.ruoyi.framework.interceptor.RepeatSubmitInterceptor;
+import com.merchant.framework.interceptor.RepeatSubmitInterceptor;
 
 /**
  * 判断请求url和数据是否和上一次相同，

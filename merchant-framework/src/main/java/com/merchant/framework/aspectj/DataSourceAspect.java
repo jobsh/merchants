@@ -1,4 +1,4 @@
-package com.ruoyi.framework.aspectj;
+package com.merchant.framework.aspectj;
 
 import java.util.Objects;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -13,7 +13,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import com.merchant.common.annotation.DataSource;
 import com.merchant.common.utils.StringUtils;
-import com.ruoyi.framework.datasource.DynamicDataSourceContextHolder;
+import com.merchant.framework.datasource.DynamicDataSourceContextHolder;
 
 /**
  * 多数据源处理

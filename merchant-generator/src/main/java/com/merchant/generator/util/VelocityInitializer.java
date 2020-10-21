@@ -1,4 +1,4 @@
-package com.ruoyi.generator.util;
+package com.merchant.generator.util;
 
 import java.util.Properties;
 import org.apache.velocity.app.Velocity;

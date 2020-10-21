@@ -1,4 +1,4 @@
-package com.ruoyi.quartz.domain;
+package com.merchant.quartz.domain;
 
 import java.util.Date;
 import org.apache.commons.lang3.builder.ToStringBuilder;

@@ -1,4 +1,4 @@
-package com.ruoyi.quartz.domain;
+package com.merchant.quartz.domain;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -12,7 +12,7 @@ import com.merchant.common.annotation.Excel.ColumnType;
 import com.merchant.common.constant.ScheduleConstants;
 import com.merchant.common.core.domain.BaseEntity;
 import com.merchant.common.utils.StringUtils;
-import com.ruoyi.quartz.util.CronUtils;
+import com.merchant.quartz.util.CronUtils;
 
 /**
  * 定时任务调度表 sys_job

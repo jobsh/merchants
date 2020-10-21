@@ -1,4 +1,4 @@
-package com.ruoyi.framework.config;
+package com.merchant.framework.config;
 
 import java.io.IOException;
 import java.util.ArrayList;

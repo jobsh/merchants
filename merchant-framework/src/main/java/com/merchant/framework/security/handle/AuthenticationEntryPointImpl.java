@@ -1,4 +1,4 @@
-package com.ruoyi.framework.security.handle;
+package com.merchant.framework.security.handle;
 
 import java.io.IOException;
 import java.io.Serializable;

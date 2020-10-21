@@ -1,4 +1,4 @@
-package com.soso.web.controller.system;
+package com.merchant.web.controller.system;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,14 +12,14 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.ruoyi.common.annotation.Log;
-import com.ruoyi.common.core.controller.BaseController;
-import com.ruoyi.common.core.domain.AjaxResult;
-import com.ruoyi.common.core.page.TableDataInfo;
-import com.ruoyi.common.enums.BusinessType;
-import com.ruoyi.common.utils.SecurityUtils;
-import com.ruoyi.system.domain.SysNotice;
-import com.ruoyi.system.service.ISysNoticeService;
+import com.merchant.common.annotation.Log;
+import com.merchant.common.core.controller.BaseController;
+import com.merchant.common.core.domain.AjaxResult;
+import com.merchant.common.core.page.TableDataInfo;
+import com.merchant.common.enums.BusinessType;
+import com.merchant.common.utils.SecurityUtils;
+import com.merchant.system.domain.SysNotice;
+import com.merchant.system.service.ISysNoticeService;
 
 /**
  * 公告 信息操作处理

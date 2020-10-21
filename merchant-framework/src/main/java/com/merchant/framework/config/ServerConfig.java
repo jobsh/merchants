@@ -1,4 +1,4 @@
-package com.ruoyi.framework.config;
+package com.merchant.framework.config;
 
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Component;

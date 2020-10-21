@@ -1,4 +1,4 @@
-package com.ruoyi.generator.domain;
+package com.merchant.generator.domain;
 
 import java.util.List;
 import javax.validation.Valid;

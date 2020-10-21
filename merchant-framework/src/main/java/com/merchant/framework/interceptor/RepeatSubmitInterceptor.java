@@ -1,4 +1,4 @@
-package com.ruoyi.framework.interceptor;
+package com.merchant.framework.interceptor;
 
 import java.lang.reflect.Method;
 import javax.servlet.http.HttpServletRequest;

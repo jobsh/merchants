@@ -1,4 +1,4 @@
-package com.ruoyi.framework.aspectj;
+package com.merchant.framework.aspectj;
 
 import java.lang.reflect.Method;
 import org.aspectj.lang.JoinPoint;
@@ -16,7 +16,7 @@ import com.merchant.common.core.domain.model.LoginUser;
 import com.merchant.common.utils.ServletUtils;
 import com.merchant.common.utils.StringUtils;
 import com.merchant.common.utils.spring.SpringUtils;
-import com.ruoyi.framework.web.service.TokenService;
+import com.merchant.framework.web.service.TokenService;
 
 /**
  * 数据过滤处理

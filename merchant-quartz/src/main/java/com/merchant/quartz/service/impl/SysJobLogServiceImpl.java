@@ -1,11 +1,12 @@
-package com.ruoyi.quartz.service.impl;
+package com.merchant.quartz.service.impl;
 
 import java.util.List;
+
+import com.merchant.quartz.domain.SysJobLog;
+import com.merchant.quartz.mapper.SysJobLogMapper;
+import com.merchant.quartz.service.ISysJobLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.ruoyi.quartz.domain.SysJobLog;
-import com.ruoyi.quartz.mapper.SysJobLogMapper;
-import com.ruoyi.quartz.service.ISysJobLogService;
 
 /**
  * 定时任务调度日志信息 服务层

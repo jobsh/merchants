@@ -1,4 +1,4 @@
-package com.ruoyi.framework.manager;
+package com.merchant.framework.manager;
 
 import java.util.TimerTask;
 import java.util.concurrent.ScheduledExecutorService;

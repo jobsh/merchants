@@ -1,4 +1,4 @@
-package com.ruoyi.framework.manager.factory;
+package com.merchant.framework.manager.factory;
 
 import java.util.TimerTask;
 import org.slf4j.Logger;
@@ -9,10 +9,10 @@ import com.merchant.common.utils.ServletUtils;
 import com.merchant.common.utils.ip.AddressUtils;
 import com.merchant.common.utils.ip.IpUtils;
 import com.merchant.common.utils.spring.SpringUtils;
-import com.ruoyi.system.domain.SysLogininfor;
-import com.ruoyi.system.domain.SysOperLog;
-import com.ruoyi.system.service.ISysLogininforService;
-import com.ruoyi.system.service.ISysOperLogService;
+import com.merchant.system.domain.SysLogininfor;
+import com.merchant.system.domain.SysOperLog;
+import com.merchant.system.service.ISysLogininforService;
+import com.merchant.system.service.ISysOperLogService;
 import eu.bitwalker.useragentutils.UserAgent;
 
 /**

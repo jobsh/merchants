@@ -1,4 +1,4 @@
-package com.ruoyi.quartz.util;
+package com.merchant.quartz.util;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -6,7 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import com.merchant.common.utils.StringUtils;
 import com.merchant.common.utils.spring.SpringUtils;
-import com.ruoyi.quartz.domain.SysJob;
+import com.merchant.quartz.domain.SysJob;
 
 /**
  * 任务执行工具

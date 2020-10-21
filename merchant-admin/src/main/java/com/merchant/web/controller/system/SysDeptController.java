@@ -1,4 +1,4 @@
-package com.soso.web.controller.system;
+package com.merchant.web.controller.system;
 
 import java.util.Iterator;
 import java.util.List;
@@ -14,15 +14,15 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.ruoyi.common.annotation.Log;
-import com.ruoyi.common.constant.UserConstants;
-import com.ruoyi.common.core.controller.BaseController;
-import com.ruoyi.common.core.domain.AjaxResult;
-import com.ruoyi.common.core.domain.entity.SysDept;
-import com.ruoyi.common.enums.BusinessType;
-import com.ruoyi.common.utils.SecurityUtils;
-import com.ruoyi.common.utils.StringUtils;
-import com.ruoyi.system.service.ISysDeptService;
+import com.merchant.common.annotation.Log;
+import com.merchant.common.constant.UserConstants;
+import com.merchant.common.core.controller.BaseController;
+import com.merchant.common.core.domain.AjaxResult;
+import com.merchant.common.core.domain.entity.SysDept;
+import com.merchant.common.enums.BusinessType;
+import com.merchant.common.utils.SecurityUtils;
+import com.merchant.common.utils.StringUtils;
+import com.merchant.system.service.ISysDeptService;
 
 /**
  * 部门信息

@@ -1,7 +1,12 @@
-package com.ruoyi.quartz.service.impl;
+package com.merchant.quartz.service.impl;
 
 import java.util.List;
 import javax.annotation.PostConstruct;
+
+import com.merchant.quartz.domain.SysJob;
+import com.merchant.quartz.mapper.SysJobMapper;
+import com.merchant.quartz.util.CronUtils;
+import com.merchant.quartz.util.ScheduleUtils;
 import org.quartz.JobDataMap;
 import org.quartz.JobKey;
 import org.quartz.Scheduler;
@@ -11,11 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.merchant.common.constant.ScheduleConstants;
 import com.merchant.common.exception.job.TaskException;
-import com.ruoyi.quartz.domain.SysJob;
-import com.ruoyi.quartz.mapper.SysJobMapper;
-import com.ruoyi.quartz.service.ISysJobService;
-import com.ruoyi.quartz.util.CronUtils;
-import com.ruoyi.quartz.util.ScheduleUtils;
+import com.merchant.quartz.service.ISysJobService;
 
 /**
  * 定时任务调度信息 服务层

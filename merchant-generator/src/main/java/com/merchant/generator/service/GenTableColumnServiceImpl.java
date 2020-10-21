@@ -1,11 +1,11 @@
-package com.ruoyi.generator.service;
+package com.merchant.generator.service;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.merchant.common.core.text.Convert;
-import com.ruoyi.generator.domain.GenTableColumn;
-import com.ruoyi.generator.mapper.GenTableColumnMapper;
+import com.merchant.generator.domain.GenTableColumn;
+import com.merchant.generator.mapper.GenTableColumnMapper;
 
 /**
  * 业务字段 服务层实现

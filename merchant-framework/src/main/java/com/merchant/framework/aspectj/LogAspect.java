@@ -1,4 +1,4 @@
-package com.ruoyi.framework.aspectj;
+package com.merchant.framework.aspectj;
 
 import java.lang.reflect.Method;
 import java.util.Map;
@@ -25,10 +25,10 @@ import com.merchant.common.utils.ServletUtils;
 import com.merchant.common.utils.StringUtils;
 import com.merchant.common.utils.ip.IpUtils;
 import com.merchant.common.utils.spring.SpringUtils;
-import com.ruoyi.framework.manager.AsyncManager;
-import com.ruoyi.framework.manager.factory.AsyncFactory;
-import com.ruoyi.framework.web.service.TokenService;
-import com.ruoyi.system.domain.SysOperLog;
+import com.merchant.framework.manager.AsyncManager;
+import com.merchant.framework.manager.factory.AsyncFactory;
+import com.merchant.framework.web.service.TokenService;
+import com.merchant.system.domain.SysOperLog;
 
 /**
  * 操作日志记录处理

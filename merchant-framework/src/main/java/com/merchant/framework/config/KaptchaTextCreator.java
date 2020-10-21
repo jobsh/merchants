@@ -1,4 +1,4 @@
-package com.ruoyi.framework.config;
+package com.merchant.framework.config;
 
 import java.util.Random;
 import com.google.code.kaptcha.text.impl.DefaultTextCreator;

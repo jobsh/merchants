@@ -1,15 +1,16 @@
-package com.ruoyi.generator.util;
+package com.merchant.generator.util;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+
+import com.merchant.generator.domain.GenTable;
+import com.merchant.generator.domain.GenTableColumn;
 import org.apache.velocity.VelocityContext;
 import com.alibaba.fastjson.JSONObject;
 import com.merchant.common.constant.GenConstants;
 import com.merchant.common.utils.DateUtils;
 import com.merchant.common.utils.StringUtils;
-import com.ruoyi.generator.domain.GenTable;
-import com.ruoyi.generator.domain.GenTableColumn;
 
 /**
  * 模板处理工具类

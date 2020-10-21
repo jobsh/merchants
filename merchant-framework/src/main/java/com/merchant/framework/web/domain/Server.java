@@ -1,4 +1,4 @@
-package com.ruoyi.framework.web.domain;
+package com.merchant.framework.web.domain;
 
 import java.net.UnknownHostException;
 import java.util.LinkedList;
@@ -6,11 +6,11 @@ import java.util.List;
 import java.util.Properties;
 import com.merchant.common.utils.Arith;
 import com.merchant.common.utils.ip.IpUtils;
-import com.ruoyi.framework.web.domain.server.Cpu;
-import com.ruoyi.framework.web.domain.server.Jvm;
-import com.ruoyi.framework.web.domain.server.Mem;
-import com.ruoyi.framework.web.domain.server.Sys;
-import com.ruoyi.framework.web.domain.server.SysFile;
+import com.merchant.framework.web.domain.server.Cpu;
+import com.merchant.framework.web.domain.server.Jvm;
+import com.merchant.framework.web.domain.server.Mem;
+import com.merchant.framework.web.domain.server.Sys;
+import com.merchant.framework.web.domain.server.SysFile;
 import oshi.SystemInfo;
 import oshi.hardware.CentralProcessor;
 import oshi.hardware.CentralProcessor.TickType;

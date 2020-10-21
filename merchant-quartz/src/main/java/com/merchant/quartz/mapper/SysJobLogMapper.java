@@ -1,7 +1,7 @@
-package com.ruoyi.quartz.mapper;
+package com.merchant.quartz.mapper;
 
 import java.util.List;
-import com.ruoyi.quartz.domain.SysJobLog;
+import com.merchant.quartz.domain.SysJobLog;
 
 /**
  * 调度任务日志信息 数据层

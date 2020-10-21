@@ -1,4 +1,4 @@
-package com.ruoyi.framework.config;
+package com.merchant.framework.config;
 
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;

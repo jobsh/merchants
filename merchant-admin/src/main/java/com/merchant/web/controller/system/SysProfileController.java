@@ -1,4 +1,4 @@
-package com.soso.web.controller.system;
+package com.merchant.web.controller.system;
 
 import java.io.IOException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,18 +10,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import com.ruoyi.common.annotation.Log;
-import com.ruoyi.common.config.RuoYiConfig;
-import com.ruoyi.common.core.controller.BaseController;
-import com.ruoyi.common.core.domain.AjaxResult;
-import com.ruoyi.common.core.domain.entity.SysUser;
-import com.ruoyi.common.core.domain.model.LoginUser;
-import com.ruoyi.common.enums.BusinessType;
-import com.ruoyi.common.utils.SecurityUtils;
-import com.ruoyi.common.utils.ServletUtils;
-import com.ruoyi.common.utils.file.FileUploadUtils;
-import com.ruoyi.framework.web.service.TokenService;
-import com.ruoyi.system.service.ISysUserService;
+import com.merchant.common.annotation.Log;
+import com.merchant.common.config.RuoYiConfig;
+import com.merchant.common.core.controller.BaseController;
+import com.merchant.common.core.domain.AjaxResult;
+import com.merchant.common.core.domain.entity.SysUser;
+import com.merchant.common.core.domain.model.LoginUser;
+import com.merchant.common.enums.BusinessType;
+import com.merchant.common.utils.SecurityUtils;
+import com.merchant.common.utils.ServletUtils;
+import com.merchant.common.utils.file.FileUploadUtils;
+import com.merchant.framework.web.service.TokenService;
+import com.merchant.system.service.ISysUserService;
 
 /**
  * 个人信息 业务处理

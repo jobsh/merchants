@@ -1,4 +1,4 @@
-package com.ruoyi.framework.web.domain.server;
+package com.merchant.framework.web.domain.server;
 
 import com.merchant.common.utils.Arith;
 

@@ -1,4 +1,4 @@
-package com.ruoyi.generator.domain;
+package com.merchant.generator.domain;
 
 import javax.validation.constraints.NotBlank;
 import com.merchant.common.core.domain.BaseEntity;

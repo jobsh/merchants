@@ -1,4 +1,4 @@
-package com.soso.web.controller.monitor;
+package com.merchant.web.controller.monitor;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -11,17 +11,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.ruoyi.common.annotation.Log;
-import com.ruoyi.common.constant.Constants;
-import com.ruoyi.common.core.controller.BaseController;
-import com.ruoyi.common.core.domain.AjaxResult;
-import com.ruoyi.common.core.domain.model.LoginUser;
-import com.ruoyi.common.core.page.TableDataInfo;
-import com.ruoyi.common.core.redis.RedisCache;
-import com.ruoyi.common.enums.BusinessType;
-import com.ruoyi.common.utils.StringUtils;
-import com.ruoyi.system.domain.SysUserOnline;
-import com.ruoyi.system.service.ISysUserOnlineService;
+import com.merchant.common.annotation.Log;
+import com.merchant.common.constant.Constants;
+import com.merchant.common.core.controller.BaseController;
+import com.merchant.common.core.domain.AjaxResult;
+import com.merchant.common.core.domain.model.LoginUser;
+import com.merchant.common.core.page.TableDataInfo;
+import com.merchant.common.core.redis.RedisCache;
+import com.merchant.common.enums.BusinessType;
+import com.merchant.common.utils.StringUtils;
+import com.merchant.system.domain.SysUserOnline;
+import com.merchant.system.service.ISysUserOnlineService;
 
 /**
  * 在线用户监控

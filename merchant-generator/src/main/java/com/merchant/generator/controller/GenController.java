@@ -1,10 +1,13 @@
-package com.ruoyi.generator.controller;
+package com.merchant.generator.controller;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
+
+import com.merchant.generator.domain.GenTableColumn;
+import com.merchant.generator.service.IGenTableService;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,10 +26,8 @@ import com.merchant.common.core.domain.AjaxResult;
 import com.merchant.common.core.page.TableDataInfo;
 import com.merchant.common.core.text.Convert;
 import com.merchant.common.enums.BusinessType;
-import com.ruoyi.generator.domain.GenTable;
-import com.ruoyi.generator.domain.GenTableColumn;
-import com.ruoyi.generator.service.IGenTableColumnService;
-import com.ruoyi.generator.service.IGenTableService;
+import com.merchant.generator.domain.GenTable;
+import com.merchant.generator.service.IGenTableColumnService;
 
 /**
  * 代码生成 操作处理

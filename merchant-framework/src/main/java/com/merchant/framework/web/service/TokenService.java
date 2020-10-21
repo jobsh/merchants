@@ -1,4 +1,4 @@
-package com.ruoyi.framework.web.service;
+package com.merchant.framework.web.service;
 
 import java.util.HashMap;
 import java.util.Map;

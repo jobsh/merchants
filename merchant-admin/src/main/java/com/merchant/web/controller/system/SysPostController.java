@@ -1,4 +1,4 @@
-package com.soso.web.controller.system;
+package com.merchant.web.controller.system;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,16 +12,16 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.ruoyi.common.annotation.Log;
-import com.ruoyi.common.constant.UserConstants;
-import com.ruoyi.common.core.controller.BaseController;
-import com.ruoyi.common.core.domain.AjaxResult;
-import com.ruoyi.common.core.page.TableDataInfo;
-import com.ruoyi.common.enums.BusinessType;
-import com.ruoyi.common.utils.SecurityUtils;
-import com.ruoyi.common.utils.poi.ExcelUtil;
-import com.ruoyi.system.domain.SysPost;
-import com.ruoyi.system.service.ISysPostService;
+import com.merchant.common.annotation.Log;
+import com.merchant.common.constant.UserConstants;
+import com.merchant.common.core.controller.BaseController;
+import com.merchant.common.core.domain.AjaxResult;
+import com.merchant.common.core.page.TableDataInfo;
+import com.merchant.common.enums.BusinessType;
+import com.merchant.common.utils.SecurityUtils;
+import com.merchant.common.utils.poi.ExcelUtil;
+import com.merchant.system.domain.SysPost;
+import com.merchant.system.service.ISysPostService;
 
 /**
  * 岗位信息操作处理

@@ -1,4 +1,4 @@
-package com.soso.web.controller.system;
+package com.merchant.web.controller.system;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,23 +14,23 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import com.ruoyi.common.annotation.Log;
-import com.ruoyi.common.constant.UserConstants;
-import com.ruoyi.common.core.controller.BaseController;
-import com.ruoyi.common.core.domain.AjaxResult;
-import com.ruoyi.common.core.domain.entity.SysRole;
-import com.ruoyi.common.core.domain.entity.SysUser;
-import com.ruoyi.common.core.domain.model.LoginUser;
-import com.ruoyi.common.core.page.TableDataInfo;
-import com.ruoyi.common.enums.BusinessType;
-import com.ruoyi.common.utils.SecurityUtils;
-import com.ruoyi.common.utils.ServletUtils;
-import com.ruoyi.common.utils.StringUtils;
-import com.ruoyi.common.utils.poi.ExcelUtil;
-import com.ruoyi.framework.web.service.TokenService;
-import com.ruoyi.system.service.ISysPostService;
-import com.ruoyi.system.service.ISysRoleService;
-import com.ruoyi.system.service.ISysUserService;
+import com.merchant.common.annotation.Log;
+import com.merchant.common.constant.UserConstants;
+import com.merchant.common.core.controller.BaseController;
+import com.merchant.common.core.domain.AjaxResult;
+import com.merchant.common.core.domain.entity.SysRole;
+import com.merchant.common.core.domain.entity.SysUser;
+import com.merchant.common.core.domain.model.LoginUser;
+import com.merchant.common.core.page.TableDataInfo;
+import com.merchant.common.enums.BusinessType;
+import com.merchant.common.utils.SecurityUtils;
+import com.merchant.common.utils.ServletUtils;
+import com.merchant.common.utils.StringUtils;
+import com.merchant.common.utils.poi.ExcelUtil;
+import com.merchant.framework.web.service.TokenService;
+import com.merchant.system.service.ISysPostService;
+import com.merchant.system.service.ISysRoleService;
+import com.merchant.system.service.ISysUserService;
 
 /**
  * 用户信息

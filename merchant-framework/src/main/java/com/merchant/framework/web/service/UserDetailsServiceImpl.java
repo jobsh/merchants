@@ -1,4 +1,4 @@
-package com.ruoyi.framework.web.service;
+package com.merchant.framework.web.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +12,7 @@ import com.merchant.common.core.domain.model.LoginUser;
 import com.merchant.common.enums.UserStatus;
 import com.merchant.common.exception.BaseException;
 import com.merchant.common.utils.StringUtils;
-import com.ruoyi.system.service.ISysUserService;
+import com.merchant.system.service.ISysUserService;
 
 /**
  * 用户验证处理

@@ -1,6 +1,8 @@
-package com.ruoyi.framework.web.service;
+package com.merchant.framework.web.service;
 
 import javax.annotation.Resource;
+
+import com.merchant.framework.manager.AsyncManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -15,8 +17,7 @@ import com.merchant.common.exception.user.CaptchaException;
 import com.merchant.common.exception.user.CaptchaExpireException;
 import com.merchant.common.exception.user.UserPasswordNotMatchException;
 import com.merchant.common.utils.MessageUtils;
-import com.ruoyi.framework.manager.AsyncManager;
-import com.ruoyi.framework.manager.factory.AsyncFactory;
+import com.merchant.framework.manager.factory.AsyncFactory;
 
 /**
  * 登录校验方法

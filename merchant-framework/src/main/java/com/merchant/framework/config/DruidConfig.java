@@ -1,4 +1,4 @@
-package com.ruoyi.framework.config;
+package com.merchant.framework.config;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -21,8 +21,8 @@ import com.alibaba.druid.spring.boot.autoconfigure.properties.DruidStatPropertie
 import com.alibaba.druid.util.Utils;
 import com.merchant.common.enums.DataSourceType;
 import com.merchant.common.utils.spring.SpringUtils;
-import com.ruoyi.framework.config.properties.DruidProperties;
-import com.ruoyi.framework.datasource.DynamicDataSource;
+import com.merchant.framework.config.properties.DruidProperties;
+import com.merchant.framework.datasource.DynamicDataSource;
 
 /**
  * druid 配置多数据源

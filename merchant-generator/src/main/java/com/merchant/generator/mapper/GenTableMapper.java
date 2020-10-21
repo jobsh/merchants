@@ -1,7 +1,7 @@
-package com.ruoyi.generator.mapper;
+package com.merchant.generator.mapper;
 
 import java.util.List;
-import com.ruoyi.generator.domain.GenTable;
+import com.merchant.generator.domain.GenTable;
 
 /**
  * 业务 数据层

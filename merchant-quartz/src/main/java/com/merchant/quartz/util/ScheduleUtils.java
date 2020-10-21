@@ -1,4 +1,4 @@
-package com.ruoyi.quartz.util;
+package com.merchant.quartz.util;
 
 import org.quartz.CronScheduleBuilder;
 import org.quartz.CronTrigger;
@@ -13,7 +13,7 @@ import org.quartz.TriggerKey;
 import com.merchant.common.constant.ScheduleConstants;
 import com.merchant.common.exception.job.TaskException;
 import com.merchant.common.exception.job.TaskException.Code;
-import com.ruoyi.quartz.domain.SysJob;
+import com.merchant.quartz.domain.SysJob;
 
 /**
  * 定时任务工具类

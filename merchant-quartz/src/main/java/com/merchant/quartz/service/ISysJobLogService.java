@@ -1,7 +1,8 @@
-package com.ruoyi.quartz.service;
+package com.merchant.quartz.service;
 
 import java.util.List;
-import com.ruoyi.quartz.domain.SysJobLog;
+
+import com.merchant.quartz.domain.SysJobLog;
 
 /**
  * 定时任务调度日志信息信息 服务层

@@ -1,4 +1,4 @@
-package com.ruoyi.framework.web.exception;
+package com.merchant.framework.web.exception;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

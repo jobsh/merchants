@@ -1,6 +1,9 @@
-package com.ruoyi.quartz.util;
+package com.merchant.quartz.util;
 
 import java.util.Date;
+
+import com.merchant.quartz.domain.SysJob;
+import com.merchant.quartz.domain.SysJobLog;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -12,9 +15,7 @@ import com.merchant.common.utils.ExceptionUtil;
 import com.merchant.common.utils.StringUtils;
 import com.merchant.common.utils.bean.BeanUtils;
 import com.merchant.common.utils.spring.SpringUtils;
-import com.ruoyi.quartz.domain.SysJob;
-import com.ruoyi.quartz.domain.SysJobLog;
-import com.ruoyi.quartz.service.ISysJobLogService;
+import com.merchant.quartz.service.ISysJobLogService;
 
 /**
  * 抽象quartz调用

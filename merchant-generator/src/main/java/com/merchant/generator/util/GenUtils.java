@@ -1,12 +1,13 @@
-package com.ruoyi.generator.util;
+package com.merchant.generator.util;
 
 import java.util.Arrays;
+
+import com.merchant.generator.domain.GenTableColumn;
 import org.apache.commons.lang3.RegExUtils;
 import com.merchant.common.constant.GenConstants;
 import com.merchant.common.utils.StringUtils;
-import com.ruoyi.generator.config.GenConfig;
-import com.ruoyi.generator.domain.GenTable;
-import com.ruoyi.generator.domain.GenTableColumn;
+import com.merchant.generator.config.GenConfig;
+import com.merchant.generator.domain.GenTable;
 
 /**
  * 代码生成器 工具类
