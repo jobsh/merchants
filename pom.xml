@@ -4,16 +4,15 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	
-    <groupId>com.ruoyi</groupId>
-    <artifactId>ruoyi</artifactId>
+    <groupId>com.merchant</groupId>
+    <artifactId>merchant</artifactId>
     <version>3.2.0</version>
 
-    <name>ruoyi</name>
-    <url>http://www.ruoyi.vip</url>
-    <description>若依管理系统</description>
+    <name>merchant</name>
+    <description>商户管理系统</description>
     
     <properties>
-        <ruoyi.version>3.2.0</ruoyi.version>
+        <merchant.version>3.2.0</merchant.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
@@ -161,49 +160,49 @@
             
             <!-- 定时任务-->
             <dependency>
-                <groupId>com.ruoyi</groupId>
-                <artifactId>ruoyi-quartz</artifactId>
-                <version>${ruoyi.version}</version>
+                <groupId>com.merchant</groupId>
+                <artifactId>merchant-quartz</artifactId>
+                <version>${merchant.version}</version>
             </dependency>
 	
             <!-- 代码生成-->
             <dependency>
-                <groupId>com.ruoyi</groupId>
-                <artifactId>ruoyi-generator</artifactId>
-                <version>${ruoyi.version}</version>
+                <groupId>com.merchant</groupId>
+                <artifactId>merchant-generator</artifactId>
+                <version>${merchant.version}</version>
             </dependency>
 			
             <!-- 核心模块-->
             <dependency>
-                <groupId>com.ruoyi</groupId>
-                <artifactId>ruoyi-framework</artifactId>
-                <version>${ruoyi.version}</version>
+                <groupId>com.merchant</groupId>
+                <artifactId>merchant-framework</artifactId>
+                <version>${merchant.version}</version>
             </dependency>
 			
             <!-- 系统模块-->
             <dependency>
-                <groupId>com.ruoyi</groupId>
-                <artifactId>ruoyi-system</artifactId>
-                <version>${ruoyi.version}</version>
+                <groupId>com.merchant</groupId>
+                <artifactId>merchant-system</artifactId>
+                <version>${merchant.version}</version>
             </dependency>
 			
             <!-- 通用工具-->
             <dependency>
-                <groupId>com.ruoyi</groupId>
-                <artifactId>ruoyi-common</artifactId>
-                <version>${ruoyi.version}</version>
+                <groupId>com.merchant</groupId>
+                <artifactId>merchant-common</artifactId>
+                <version>${merchant.version}</version>
             </dependency>
 
         </dependencies>
     </dependencyManagement>
 
     <modules>
-        <module>ruoyi-admin</module>
-        <module>ruoyi-framework</module>
-        <module>ruoyi-system</module>
-        <module>ruoyi-quartz</module>
-        <module>ruoyi-generator</module>
-        <module>ruoyi-common</module>
+        <module>merchant-admin</module>
+        <module>merchant-framework</module>
+        <module>merchant-system</module>
+        <module>merchant-quartz</module>
+        <module>merchant-generator</module>
+        <module>merchant-common</module>
     </modules>
     <packaging>pom</packaging>
 
