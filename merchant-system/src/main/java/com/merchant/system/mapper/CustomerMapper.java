@@ -59,4 +59,6 @@ public interface CustomerMapper
      * @return 结果
      */
     public int deleteCustomerByIds(Integer[] ids);
+
+    int deleteCustomerByPhoneAndStatus(String phone);
 }

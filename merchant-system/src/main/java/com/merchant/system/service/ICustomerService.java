@@ -62,12 +62,12 @@ public interface ICustomerService
 
     /**
      * 把客户变为线索
-     *//*
-    void convertCustomerToXiansuo(Integer id);
+     */
+    int convertCustomerToXiansuo(Integer id);
 
-    *//**
+    /**
      * 把线索变为客户
      * @param id
-     *//*
-    void convertXianSuoToCustomer(Integer id);*/
+     */
+    void convertXianSuoToCustomer(Integer id, String phone);
 }

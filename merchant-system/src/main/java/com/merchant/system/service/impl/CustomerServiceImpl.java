@@ -1,6 +1,8 @@
 package com.merchant.system.service.impl;
 
 import java.util.List;
+
+import com.merchant.common.enums.CustomerStatus;
 import com.merchant.common.utils.DateUtils;
 import com.merchant.system.domain.Customer;
 import com.merchant.system.mapper.CustomerMapper;
@@ -94,14 +96,23 @@ public class CustomerServiceImpl implements ICustomerService
         return customerMapper.deleteCustomerById(id);
     }
 
-   /* @Override
-    public void convertCustomerToXiansuo(Integer id) {
+    @Override
+    public int convertCustomerToXiansuo(Integer id) {
         Customer customer = new Customer();
+        // 将客户状态设置为失效
+        customer.setStatus(CustomerStatus.DISABLE.getCode());
+        return customerMapper.updateCustomer(customer);
     }
 
     @Override
-    public void convertXianSuoToCustomer(Integer id) {
+    public void convertXianSuoToCustomer(Integer id, String phone) {
+        Customer customer = new Customer();
+        // 由线索变为客户
+        customer.setStatus(CustomerStatus.OK.getCode());
 
-    }*/
+        customerMapper.updateCustomer(customer);
+        // 删除重复线索
+        customerMapper.deleteCustomerByPhoneAndStatus(phone);
+    }
 
 }

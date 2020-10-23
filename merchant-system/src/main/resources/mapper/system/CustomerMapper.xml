@@ -6,7 +6,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <resultMap type="Customer" id="CustomerResult">
         <result property="id"    column="id"    />
-        <result property="xiansuoId"    column="xiansuo_id"    />
         <result property="name"    column="name"    />
         <result property="phone"    column="phone"    />
         <result property="level"    column="level"    />
@@ -81,7 +80,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <update id="updateCustomer" parameterType="Customer">
         update biz_customer
         <trim prefix="SET" suffixOverrides=",">
-            <if test="xiansuoId != null">xiansuo_id = #{xiansuoId},</if>
             <if test="name != null and name != ''">name = #{name},</if>
             <if test="phone != null and phone != ''">phone = #{phone},</if>
             <if test="level != null">level = #{level},</if>
@@ -106,5 +104,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
-    
+
+    <!-- 认领线索为客户时去重 -->
+    <delete id="deleteCustomerByPhoneAndStatus" parameterType="Integer">
+        delete from biz_customer where status = 0 and phone= #{phone}
+    </delete>
+
 </mapper>

@@ -100,4 +100,24 @@ public class CustomerController extends BaseController
     {
         return toAjax(customerService.deleteCustomerByIds(ids));
     }
+
+    /**
+     * 客户变为线索
+     */
+    @Log(title = "我的客户", businessType = BusinessType.DELETE)
+    @PostMapping("/{id}")
+    public AjaxResult modifyCustomerStatus(@PathVariable Integer id) {
+
+        return toAjax(customerService.convertCustomerToXiansuo(id));
+    }
+
+    /**
+     * 认领客户
+     */
+    @PostMapping("pick/{id}")
+    public AjaxResult pickXianSuo(@PathVariable Integer id, String phone) {
+        return AjaxResult.success();
+    }
+
+
 }
