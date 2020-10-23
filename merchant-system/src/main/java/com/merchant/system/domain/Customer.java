@@ -1,5 +1,6 @@
 package com.merchant.system.domain;
 
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.merchant.common.annotation.Excel;
@@ -11,15 +12,13 @@ import com.merchant.common.core.domain.BaseEntity;
  * @author hanke
  * @date 2020-10-19
  */
+@Data
 public class Customer extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
     /** 客户id */
     private Integer id;
-
-    /** $column.columnComment */
-    private Integer xiansuoId;
 
     /** 客户名称 */
     @Excel(name = "客户名称")
@@ -57,123 +56,4 @@ public class Customer extends BaseEntity
 
     /** 标识客户还是线索 （0：线索；1：客户）*/
     private Integer status;
-
-    public void setId(Integer id)
-    {
-        this.id = id;
-    }
-
-    public Integer getId()
-    {
-        return id;
-    }
-    public void setXiansuoId(Integer xiansuoId)
-    {
-        this.xiansuoId = xiansuoId;
-    }
-
-    public Integer getXiansuoId()
-    {
-        return xiansuoId;
-    }
-    public void setName(String name)
-    {
-        this.name = name;
-    }
-
-    public String getName()
-    {
-        return name;
-    }
-    public void setPhone(String phone)
-    {
-        this.phone = phone;
-    }
-
-    public String getPhone()
-    {
-        return phone;
-    }
-    public void setLevel(Integer level)
-    {
-        this.level = level;
-    }
-
-    public Integer getLevel()
-    {
-        return level;
-    }
-    public void setCompanyId(Integer companyId)
-    {
-        this.companyId = companyId;
-    }
-
-    public Integer getCompanyId()
-    {
-        return companyId;
-    }
-    public void setProvince(String province)
-    {
-        this.province = province;
-    }
-
-    public String getProvince()
-    {
-        return province;
-    }
-    public void setCity(String city)
-    {
-        this.city = city;
-    }
-
-    public String getCity()
-    {
-        return city;
-    }
-    public void setGenjinStatus(Integer genjinStatus)
-    {
-        this.genjinStatus = genjinStatus;
-    }
-
-    public Integer getGenjinStatus()
-    {
-        return genjinStatus;
-    }
-    public void setResource(String resource)
-    {
-        this.resource = resource;
-    }
-
-    public String getResource()
-    {
-        return resource;
-    }
-    public void setSysUserId(Integer sysUserId)
-    {
-        this.sysUserId = sysUserId;
-    }
-
-    public Integer getSysUserId()
-    {
-        return sysUserId;
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", getId())
-            .append("xiansuoId", getXiansuoId())
-            .append("name", getName())
-            .append("phone", getPhone())
-            .append("level", getLevel())
-            .append("companyId", getCompanyId())
-            .append("province", getProvince())
-            .append("city", getCity())
-            .append("genjinStatus", getGenjinStatus())
-            .append("resource", getResource())
-            .append("sysUserId", getSysUserId())
-            .append("createTime", getCreateTime())
-            .append("updateTime", getUpdateTime())
-            .toString();
-    }
 }
