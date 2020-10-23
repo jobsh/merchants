@@ -59,4 +59,15 @@ public interface ICustomerService
      * @return 结果
      */
     public int deleteCustomerById(Integer id);
+
+    /**
+     * 把客户变为线索
+     *//*
+    void convertCustomerToXiansuo(Integer id);
+
+    *//**
+     * 把线索变为客户
+     * @param id
+     *//*
+    void convertXianSuoToCustomer(Integer id);*/
 }

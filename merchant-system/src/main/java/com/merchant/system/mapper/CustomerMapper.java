@@ -1,8 +1,8 @@
 package com.merchant.system.mapper;
 
-import java.util.List;
-
 import com.merchant.system.domain.Customer;
+
+import java.util.List;
 
 /**
  * 我的客户Mapper接口
@@ -10,7 +10,7 @@ import com.merchant.system.domain.Customer;
  * @author hanke
  * @date 2020-10-19
  */
-public interface CustomerMapper 
+public interface CustomerMapper
 {
     /**
      * 查询我的客户

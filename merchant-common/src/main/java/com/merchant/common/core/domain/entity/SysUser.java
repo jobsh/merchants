@@ -25,7 +25,7 @@ public class SysUser extends BaseEntity
 
     /** 用户ID */
     @Excel(name = "用户序号", cellType = Excel.ColumnType.NUMERIC, prompt = "用户编号")
-    private Long userId;
+    private Long id;
 
     /** 部门ID */
     @Excel(name = "部门编号", type = Excel.Type.IMPORT)
@@ -96,24 +96,24 @@ public class SysUser extends BaseEntity
 
     }
 
-    public SysUser(Long userId)
+    public SysUser(Long id)
     {
-        this.userId = userId;
+        this.id = id;
     }
 
-    public Long getUserId()
+    public Long getId()
     {
-        return userId;
+        return id;
     }
 
-    public void setUserId(Long userId)
+    public void setId(Long id)
     {
-        this.userId = userId;
+        this.id = id;
     }
 
     public boolean isAdmin()
     {
-        return isAdmin(this.userId);
+        return isAdmin(this.id);
     }
 
     public static boolean isAdmin(Long userId)
@@ -302,7 +302,7 @@ public class SysUser extends BaseEntity
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("userId", getUserId())
+            .append("userId", getId())
             .append("deptId", getDeptId())
             .append("userName", getUserName())
             .append("nickName", getNickName())

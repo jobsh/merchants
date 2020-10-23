@@ -93,4 +93,15 @@ public class CustomerServiceImpl implements ICustomerService
     {
         return customerMapper.deleteCustomerById(id);
     }
+
+   /* @Override
+    public void convertCustomerToXiansuo(Integer id) {
+        Customer customer = new Customer();
+    }
+
+    @Override
+    public void convertXianSuoToCustomer(Integer id) {
+
+    }*/
+
 }

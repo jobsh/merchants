@@ -49,7 +49,7 @@ public class SysMenuController extends BaseController
     public AjaxResult list(SysMenu menu)
     {
         LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
-        Long userId = loginUser.getUser().getUserId();
+        Long userId = loginUser.getUser().getId();
         List<SysMenu> menus = menuService.selectMenuList(menu, userId);
         return AjaxResult.success(menus);
     }
@@ -71,7 +71,7 @@ public class SysMenuController extends BaseController
     public AjaxResult treeselect(SysMenu menu)
     {
         LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
-        Long userId = loginUser.getUser().getUserId();
+        Long userId = loginUser.getUser().getId();
         List<SysMenu> menus = menuService.selectMenuList(menu, userId);
         return AjaxResult.success(menuService.buildMenuTreeSelect(menus));
     }
@@ -83,7 +83,7 @@ public class SysMenuController extends BaseController
     public AjaxResult roleMenuTreeselect(@PathVariable("roleId") Long roleId)
     {
         LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
-        List<SysMenu> menus = menuService.selectMenuList(loginUser.getUser().getUserId());
+        List<SysMenu> menus = menuService.selectMenuList(loginUser.getUser().getId());
         AjaxResult ajax = AjaxResult.success();
         ajax.put("checkedKeys", menuService.selectMenuListByRoleId(roleId));
         ajax.put("menus", menuService.buildMenuTreeSelect(menus));

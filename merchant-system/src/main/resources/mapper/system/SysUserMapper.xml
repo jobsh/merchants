@@ -5,7 +5,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="com.merchant.system.mapper.SysUserMapper">
 
 	<resultMap type="SysUser" id="SysUserResult">
-		<id     property="userId"       column="user_id"      />
+		<id     property="id"       column="id"      />
 		<result property="deptId"       column="dept_id"      />
 		<result property="userName"     column="user_name"    />
 		<result property="nickName"     column="nick_name"    />
@@ -46,17 +46,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</resultMap>
 	
 	<sql id="selectUserVo">
-        select u.user_id, u.dept_id, u.user_name, u.nick_name, u.email, u.avatar, u.phonenumber, u.password, u.sex, u.status, u.del_flag, u.login_ip, u.login_date, u.create_by, u.create_time, u.remark, 
+        select u.id, u.dept_id, u.user_name, u.nick_name, u.email, u.avatar, u.phonenumber, u.password, u.sex, u.status, u.del_flag, u.login_ip, u.login_date, u.create_by, u.create_time, u.remark,
         d.dept_id, d.parent_id, d.dept_name, d.order_num, d.leader, d.status as dept_status,
         r.role_id, r.role_name, r.role_key, r.role_sort, r.data_scope, r.status as role_status
         from sys_user u
 		    left join sys_dept d on u.dept_id = d.dept_id
-		    left join sys_user_role ur on u.user_id = ur.user_id
+		    left join sys_user_role ur on u.id = ur.user_id
 		    left join sys_role r on r.role_id = ur.role_id
     </sql>
     
     <select id="selectUserList" parameterType="SysUser" resultMap="SysUserResult">
-		select u.user_id, u.dept_id, u.nick_name, u.user_name, u.email, u.avatar, u.phonenumber, u.password, u.sex, u.status, u.del_flag, u.login_ip, u.login_date, u.create_by, u.create_time, u.remark, d.dept_name, d.leader from sys_user u
+		select u.id, u.dept_id, u.nick_name, u.user_name, u.email, u.avatar, u.phonenumber, u.password, u.sex, u.status, u.del_flag, u.login_ip, u.login_date, u.create_by, u.create_time, u.remark, d.dept_name, d.leader from sys_user u
 		left join sys_dept d on u.dept_id = d.dept_id
 		where u.del_flag = '0'
 		<if test="userName != null and userName != ''">
@@ -88,7 +88,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	<select id="selectUserById" parameterType="Long" resultMap="SysUserResult">
 		<include refid="selectUserVo"/>
-		where u.user_id = #{userId}
+		where u.id = #{userId}
 	</select>
 	
 	<select id="checkUserNameUnique" parameterType="String" resultType="int">
@@ -96,16 +96,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 	
 	<select id="checkPhoneUnique" parameterType="String" resultMap="SysUserResult">
-		select user_id, phonenumber from sys_user where phonenumber = #{phonenumber} limit 1
+		select id, phonenumber from sys_user where phonenumber = #{phonenumber} limit 1
 	</select>
 	
 	<select id="checkEmailUnique" parameterType="String" resultMap="SysUserResult">
-		select user_id, email from sys_user where email = #{email} limit 1
+		select id, email from sys_user where email = #{email} limit 1
 	</select>
 	
-	<insert id="insertUser" parameterType="SysUser" useGeneratedKeys="true" keyProperty="userId">
+	<insert id="insertUser" parameterType="SysUser" useGeneratedKeys="true" keyProperty="id">
  		insert into sys_user(
- 			<if test="userId != null and userId != 0">user_id,</if>
+ 			<if test="id != null and id != 0">id,</if>
  			<if test="deptId != null and deptId != 0">dept_id,</if>
  			<if test="userName != null and userName != ''">user_name,</if>
  			<if test="nickName != null and nickName != ''">nick_name,</if>
@@ -119,7 +119,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  			<if test="remark != null and remark != ''">remark,</if>
  			create_time
  		)values(
- 			<if test="userId != null and userId != ''">#{userId},</if>
+ 			<if test="id != null and id != ''">#{id},</if>
  			<if test="deptId != null and deptId != ''">#{deptId},</if>
  			<if test="userName != null and userName != ''">#{userName},</if>
  			<if test="nickName != null and nickName != ''">#{nickName},</if>
@@ -153,11 +153,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  			<if test="remark != null">remark = #{remark},</if>
  			update_time = sysdate()
  		</set>
- 		where user_id = #{userId}
+ 		where id = #{id}
 	</update>
 	
 	<update id="updateUserStatus" parameterType="SysUser">
- 		update sys_user set status = #{status} where user_id = #{userId}
+ 		update sys_user set status = #{status} where id = #{id}
 	</update>
 	
 	<update id="updateUserAvatar" parameterType="SysUser">
@@ -169,12 +169,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</update>
 	
 	<delete id="deleteUserById" parameterType="Long">
- 		delete from sys_user where user_id = #{userId}
+ 		delete from sys_user where id = #{userId}
  	</delete>
  	
  	<delete id="deleteUserByIds" parameterType="Long">
- 		update sys_user set del_flag = '2' where user_id in
- 		<foreach collection="array" item="userId" open="(" separator="," close=")">
+ 		update sys_user set del_flag = '2' where id in
+ 		<foreach collection="array" item="id" open="(" separator="," close=")">
  			#{userId}
         </foreach> 
  	</delete>

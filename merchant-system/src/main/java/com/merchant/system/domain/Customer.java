@@ -26,7 +26,6 @@ public class Customer extends BaseEntity
     private String name;
 
     /** 客户电话 */
-    @Excel(name = "客户电话")
     private String phone;
 
     /** 客户等级 */
@@ -54,105 +53,107 @@ public class Customer extends BaseEntity
     private String resource;
 
     /** 负责人 */
-    @Excel(name = "负责人")
     private Integer sysUserId;
 
-    public void setId(Integer id) 
+    /** 标识客户还是线索 （0：线索；1：客户）*/
+    private Integer status;
+
+    public void setId(Integer id)
     {
         this.id = id;
     }
 
-    public Integer getId() 
+    public Integer getId()
     {
         return id;
     }
-    public void setXiansuoId(Integer xiansuoId) 
+    public void setXiansuoId(Integer xiansuoId)
     {
         this.xiansuoId = xiansuoId;
     }
 
-    public Integer getXiansuoId() 
+    public Integer getXiansuoId()
     {
         return xiansuoId;
     }
-    public void setName(String name) 
+    public void setName(String name)
     {
         this.name = name;
     }
 
-    public String getName() 
+    public String getName()
     {
         return name;
     }
-    public void setPhone(String phone) 
+    public void setPhone(String phone)
     {
         this.phone = phone;
     }
 
-    public String getPhone() 
+    public String getPhone()
     {
         return phone;
     }
-    public void setLevel(Integer level) 
+    public void setLevel(Integer level)
     {
         this.level = level;
     }
 
-    public Integer getLevel() 
+    public Integer getLevel()
     {
         return level;
     }
-    public void setCompanyId(Integer companyId) 
+    public void setCompanyId(Integer companyId)
     {
         this.companyId = companyId;
     }
 
-    public Integer getCompanyId() 
+    public Integer getCompanyId()
     {
         return companyId;
     }
-    public void setProvince(String province) 
+    public void setProvince(String province)
     {
         this.province = province;
     }
 
-    public String getProvince() 
+    public String getProvince()
     {
         return province;
     }
-    public void setCity(String city) 
+    public void setCity(String city)
     {
         this.city = city;
     }
 
-    public String getCity() 
+    public String getCity()
     {
         return city;
     }
-    public void setGenjinStatus(Integer genjinStatus) 
+    public void setGenjinStatus(Integer genjinStatus)
     {
         this.genjinStatus = genjinStatus;
     }
 
-    public Integer getGenjinStatus() 
+    public Integer getGenjinStatus()
     {
         return genjinStatus;
     }
-    public void setResource(String resource) 
+    public void setResource(String resource)
     {
         this.resource = resource;
     }
 
-    public String getResource() 
+    public String getResource()
     {
         return resource;
     }
-    public void setSysUserId(Integer sysUserId) 
+    public void setSysUserId(Integer sysUserId)
     {
         this.sysUserId = sysUserId;
     }
 
-    public Integer getSysUserId() 
+    public Integer getSysUserId()
     {
         return sysUserId;
     }

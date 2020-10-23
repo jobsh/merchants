@@ -21,7 +21,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectCustomerVo">
-        select id, xiansuo_id, name, phone, level, company_id, province, city, genjin_status, resource, sys_user_id, create_time, update_time from customer
+        select id, xiansuo_id, name, phone, level, company_id, province, city, genjin_status, resource, sys_user_id, create_time, update_time from biz_customer
     </sql>
 
     <select id="selectCustomerList" parameterType="Customer" resultMap="CustomerResult">
@@ -47,7 +47,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
         
     <insert id="insertCustomer" parameterType="Customer" useGeneratedKeys="true" keyProperty="id">
-        insert into customer
+        insert into biz_customer
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="xiansuoId != null">xiansuo_id,</if>
             <if test="name != null and name != ''">name,</if>
@@ -79,7 +79,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </insert>
 
     <update id="updateCustomer" parameterType="Customer">
-        update customer
+        update biz_customer
         <trim prefix="SET" suffixOverrides=",">
             <if test="xiansuoId != null">xiansuo_id = #{xiansuoId},</if>
             <if test="name != null and name != ''">name = #{name},</if>
@@ -97,11 +97,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteCustomerById" parameterType="Integer">
-        delete from customer where id = #{id}
+        delete from biz_customer where id = #{id}
     </delete>
 
     <delete id="deleteCustomerByIds" parameterType="String">
-        delete from customer where id in 
+        delete from biz_customer where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
