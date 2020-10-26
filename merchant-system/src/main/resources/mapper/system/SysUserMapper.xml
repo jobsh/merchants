@@ -19,9 +19,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="loginIp"      column="login_ip"     />
 		<result property="loginDate"    column="login_date"   />
 		<result property="createBy"     column="create_by"    />
-		<result property="createTime"   column="create_time"  />
+		<result property="createTime"   column="create_date"  />
 		<result property="updateBy"     column="update_by"    />
-		<result property="updateTime"   column="update_time"  />
+		<result property="updateTime"   column="update_date"  />
 		<result property="remark"       column="remark"       />
 		<association property="dept"    column="dept_id" javaType="SysDept" resultMap="deptResult" />
 		<collection  property="roles"   javaType="java.util.List"        resultMap="RoleResult" />
@@ -46,7 +46,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</resultMap>
 	
 	<sql id="selectUserVo">
-        select u.id, u.dept_id, u.user_name, u.nick_name, u.email, u.avatar, u.phonenumber, u.password, u.sex, u.status, u.del_flag, u.login_ip, u.login_date, u.create_by, u.create_time, u.remark,
+        select u.id, u.dept_id, u.user_name, u.nick_name, u.email, u.avatar, u.phonenumber, u.password, u.sex, u.status, u.del_flag, u.login_ip, u.login_date, u.create_by, u.create_date, u.remark,
         d.dept_id, d.parent_id, d.dept_name, d.order_num, d.leader, d.status as dept_status,
         r.role_id, r.role_name, r.role_key, r.role_sort, r.data_scope, r.status as role_status
         from sys_user u
@@ -56,7 +56,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </sql>
     
     <select id="selectUserList" parameterType="SysUser" resultMap="SysUserResult">
-		select u.id, u.dept_id, u.nick_name, u.user_name, u.email, u.avatar, u.phonenumber, u.password, u.sex, u.status, u.del_flag, u.login_ip, u.login_date, u.create_by, u.create_time, u.remark, d.dept_name, d.leader from sys_user u
+		select u.id, u.dept_id, u.nick_name, u.user_name, u.email, u.avatar, u.phonenumber, u.password, u.sex, u.status, u.del_flag, u.login_ip, u.login_date, u.create_by, u.create_date, u.remark, d.dept_name, d.leader from sys_user u
 		left join sys_dept d on u.dept_id = d.dept_id
 		where u.del_flag = '0'
 		<if test="userName != null and userName != ''">
@@ -69,10 +69,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			AND u.phonenumber like concat('%', #{phonenumber}, '%')
 		</if>
 		<if test="beginTime != null and beginTime != ''"><!-- 开始时间检索 -->
-			AND date_format(u.create_time,'%y%m%d') &gt;= date_format(#{beginTime},'%y%m%d')
+			AND date_format(u.create_date,'%y%m%d') &gt;= date_format(#{beginTime},'%y%m%d')
 		</if>
 		<if test="endTime != null and endTime != ''"><!-- 结束时间检索 -->
-			AND date_format(u.create_time,'%y%m%d') &lt;= date_format(#{endTime},'%y%m%d')
+			AND date_format(u.create_date,'%y%m%d') &lt;= date_format(#{endTime},'%y%m%d')
 		</if>
 		<if test="deptId != null and deptId != 0">
 			AND (u.dept_id = #{deptId} OR u.dept_id IN ( SELECT t.dept_id FROM sys_dept t WHERE find_in_set(#{deptId}, ancestors) ))
@@ -117,7 +117,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  			<if test="status != null and status != ''">status,</if>
  			<if test="createBy != null and createBy != ''">create_by,</if>
  			<if test="remark != null and remark != ''">remark,</if>
- 			create_time
+ 			create_date
  		)values(
  			<if test="id != null and id != ''">#{id},</if>
  			<if test="deptId != null and deptId != ''">#{deptId},</if>
