@@ -5,7 +5,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="com.merchant.system.mapper.SysDeptMapper">
 
 	<resultMap type="SysDept" id="SysDeptResult">
-		<id     property="deptId"     column="dept_id"     />
+		<id     property="deptId"     column="id"     />
 		<result property="parentId"   column="parent_id"   />
 		<result property="ancestors"  column="ancestors"   />
 		<result property="deptName"   column="dept_name"   />
@@ -17,13 +17,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="delFlag"    column="del_flag"    />
 		<result property="parentName" column="parent_name" />
 		<result property="createBy"   column="create_by"   />
-		<result property="createTime" column="create_time" />
+		<result property="createTime" column="create_date" />
 		<result property="updateBy"   column="update_by"   />
-		<result property="updateTime" column="update_time" />
+		<result property="updateTime" column="update_date" />
 	</resultMap>
 	
 	<sql id="selectDeptVo">
-        select d.dept_id, d.parent_id, d.ancestors, d.dept_name, d.order_num, d.leader, d.phone, d.email, d.status, d.del_flag, d.create_by, d.create_time 
+        select d.id, d.parent_id, d.ancestors, d.dept_name, d.order_num, d.leader, d.phone, d.email, d.status, d.del_flag, d.create_by, d.create_date
         from sys_dept d
     </sql>
     
@@ -45,19 +45,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
     
     <select id="selectDeptListByRoleId" resultType="Integer">
-		select d.dept_id
+		select d.id
 		from sys_dept d
-            left join sys_role_dept rd on d.dept_id = rd.dept_id
+            left join sys_role_dept rd on d.id = rd.id
         where rd.role_id = #{roleId}
             <if test="deptCheckStrictly">
-              and d.dept_id not in (select d.parent_id from sys_dept d inner join sys_role_dept rd on d.dept_id = rd.dept_id and rd.role_id = #{roleId})
+              and d.id not in (select d.parent_id from sys_dept d inner join sys_role_dept rd on d.id = rd.id and rd.role_id = #{roleId})
             </if>
 		order by d.parent_id, d.order_num
 	</select>
     
     <select id="selectDeptById" parameterType="Long" resultMap="SysDeptResult">
 		<include refid="selectDeptVo"/>
-		where dept_id = #{deptId}
+		where id = #{deptId}
 	</select>
     
     <select id="checkDeptExistUser" parameterType="Long" resultType="int">
@@ -84,7 +84,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <insert id="insertDept" parameterType="SysDept">
  		insert into sys_dept(
- 			<if test="deptId != null and deptId != 0">dept_id,</if>
+ 			<if test="deptId != null and deptId != 0">id,</if>
  			<if test="parentId != null and parentId != 0">parent_id,</if>
  			<if test="deptName != null and deptName != ''">dept_name,</if>
  			<if test="ancestors != null and ancestors != ''">ancestors,</if>
@@ -94,7 +94,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  			<if test="email != null and email != ''">email,</if>
  			<if test="status != null">status,</if>
  			<if test="createBy != null and createBy != ''">create_by,</if>
- 			create_time
+ 			create_date
  		)values(
  			<if test="deptId != null and deptId != 0">#{deptId},</if>
  			<if test="parentId != null and parentId != 0">#{parentId},</if>
@@ -122,18 +122,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  			<if test="email != null">email = #{email},</if>
  			<if test="status != null and status != ''">status = #{status},</if>
  			<if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
- 			update_time = sysdate()
+ 			update_date = sysdate()
  		</set>
- 		where dept_id = #{deptId}
+ 		where id = #{deptId}
 	</update>
 	
 	<update id="updateDeptChildren" parameterType="java.util.List">
 	    update sys_dept set ancestors =
 	    <foreach collection="depts" item="item" index="index"
-	        separator=" " open="case dept_id" close="end">
+	        separator=" " open="case id" close="end">
 	        when #{item.deptId} then #{item.ancestors}
 	    </foreach>
-	    where dept_id in
+	    where id in
 	    <foreach collection="depts" item="item" index="index"
 	        separator="," open="(" close=")">
 	        #{item.deptId}
@@ -145,13 +145,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  	    <set>
  	        <if test="status != null and status != ''">status = #{status},</if>
  	        <if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
- 	        update_time = sysdate()
+ 	        update_date = sysdate()
         </set>
- 	    where dept_id in (${ancestors})
+ 	    where id in (${ancestors})
 	</update>
 	
 	<delete id="deleteDeptById" parameterType="Long">
-		update sys_dept set del_flag = '2' where dept_id = #{deptId}
+		update sys_dept set del_flag = '2' where id = #{deptId}
 	</delete>
 
 </mapper> 
