@@ -1,80 +1,103 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.merchant.system.mapper.CustomerMapper">
-    
+
     <resultMap type="Customer" id="CustomerResult">
-        <result property="id"    column="id"    />
-        <result property="name"    column="name"    />
-        <result property="phone"    column="phone"    />
-        <result property="level"    column="level"    />
-        <result property="companyId"    column="company_id"    />
-        <result property="province"    column="province"    />
-        <result property="city"    column="city"    />
-        <result property="genjinStatus"    column="genjin_status"    />
-        <result property="resource"    column="resource"    />
-        <result property="sysUserId"    column="sys_user_id"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="updateTime"    column="update_time"    />
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="phone" column="phone"/>
+        <result property="level" column="level"/>
+        <result property="customerNeeds" column="customer_needs"/>
+        <result property="companyName" column="company_name"/>
+        <result property="province" column="province"/>
+        <result property="dianmianAddress" column="dianmian_address"/>
+        <result property="city" column="city"/>
+        <result property="district" column="district"/>
+        <result property="resource" column="resource"/>
+        <result property="userId" column="user_id"/>
+        <result property="username" column="username"/>
+        <result property="luruName" column="luru_name"/>
+        <result property="experience" column="experience"/>
+        <result property="remark" column="remark"/>
+        <result property="status" column="status"/>
+        <result property="inputDate" column="input_date"/>
+        <result property="updateDate" column="update_date"/>
     </resultMap>
 
     <sql id="selectCustomerVo">
-        select id, xiansuo_id, name, phone, level, company_id, province, city, genjin_status, resource, sys_user_id, create_time, update_time from biz_customer
+        select id, name, phone, level, customer_needs, company_name, province, dianmian_address, city, district, resource, user_id, username, luru_name, experience, remark, status, input_date, update_date from biz_customer
     </sql>
 
     <select id="selectCustomerList" parameterType="Customer" resultMap="CustomerResult">
         <include refid="selectCustomerVo"/>
-        <where>  
-            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
-            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
-            <if test="level != null "> and level = #{level}</if>
-            <if test="companyId != null "> and company_id = #{companyId}</if>
-            <if test="province != null  and province != ''"> and province = #{province}</if>
-            <if test="city != null  and city != ''"> and city = #{city}</if>
-            <if test="genjinStatus != null "> and genjin_status = #{genjinStatus}</if>
-            <if test="resource != null  and resource != ''"> and resource = #{resource}</if>
-            <if test="sysUserId != null "> and sys_user_id = #{sysUserId}</if>
-            <if test="createTime != null "> and create_time = #{createTime}</if>
-            <if test="updateTime != null "> and update_time = #{updateTime}</if>
+        <where>
+            <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
+            <if test="phone != null  and phone != ''">and phone = #{phone}</if>
+            <if test="level != null  and level != ''">and level = #{level}</if>
+            <if test="customerNeeds != null  and customerNeeds != ''">and customer_needs = #{customerNeeds}</if>
+            <if test="companyName != null  and companyName != ''">and company_name like concat('%', #{companyName},
+                '%')
+            </if>
+            <if test="province != null  and province != ''">and province = #{province}</if>
+            <if test="dianmianAddress != null  and dianmianAddress != ''">and dianmian_address = #{dianmianAddress}</if>
+            <if test="city != null  and city != ''">and city = #{city}</if>
+            <if test="district != null  and district != ''">and district = #{district}</if>
+            <if test="resource != null  and resource != ''">and resource = #{resource}</if>
+            <if test="username != null  and username != ''">and username like concat('%', #{username}, '%')</if>
+            <if test="inputDate != null ">and input_date = #{inputDate}</if>
+            <if test="status != null ">and status = #{status}</if>
         </where>
     </select>
-    
+
     <select id="selectCustomerById" parameterType="Integer" resultMap="CustomerResult">
         <include refid="selectCustomerVo"/>
         where id = #{id}
     </select>
-        
+
     <insert id="insertCustomer" parameterType="Customer" useGeneratedKeys="true" keyProperty="id">
         insert into biz_customer
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="xiansuoId != null">xiansuo_id,</if>
             <if test="name != null and name != ''">name,</if>
             <if test="phone != null and phone != ''">phone,</if>
-            <if test="level != null">level,</if>
-            <if test="companyId != null">company_id,</if>
+            <if test="level != null and level != ''">level,</if>
+            <if test="customerNeeds != null and customerNeeds != ''">customer_needs,</if>
+            <if test="companyName != null and companyName != ''">company_name,</if>
             <if test="province != null and province != ''">province,</if>
+            <if test="dianmianAddress != null and dianmianAddress != ''">dianmian_address,</if>
             <if test="city != null and city != ''">city,</if>
-            <if test="genjinStatus != null">genjin_status,</if>
+            <if test="district != null and district != ''">district,</if>
             <if test="resource != null and resource != ''">resource,</if>
-            <if test="sysUserId != null">sys_user_id,</if>
-            create_time,
-            update_time,
-         </trim>
+            <if test="userId != null">user_id,</if>
+            <if test="username != null and username != ''">username,</if>
+            <if test="luruName != null and luruName != ''">luru_name,</if>
+            <if test="experience != null and experience != ''">experience,</if>
+            <if test="remark != null and remark != ''">remark,</if>
+            <if test="status != null and status != ''">status,</if>
+            <if test="inputDate != null">input_date,</if>
+            <if test="updateDate != null">update_date,</if>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="xiansuoId != null">#{xiansuoId},</if>
             <if test="name != null and name != ''">#{name},</if>
             <if test="phone != null and phone != ''">#{phone},</if>
-            <if test="level != null">#{level},</if>
-            <if test="companyId != null">#{companyId},</if>
+            <if test="level != null and level != ''">#{level},</if>
+            <if test="customerNeeds != null and customerNeeds != ''">#{customerNeeds},</if>
+            <if test="companyName != null and companyName != ''">#{companyName},</if>
             <if test="province != null and province != ''">#{province},</if>
+            <if test="dianmianAddress != null and dianmianAddress != ''">#{dianmianAddress},</if>
             <if test="city != null and city != ''">#{city},</if>
-            <if test="genjinStatus != null">#{genjinStatus},</if>
+            <if test="district != null and district != ''">#{district},</if>
             <if test="resource != null and resource != ''">#{resource},</if>
-            <if test="sysUserId != null">#{sysUserId},</if>
-            now(),
-            now()
-         </trim>
+            <if test="userId != null">#{userId},</if>
+            <if test="username != null and username != ''">#{username},</if>
+            <if test="luruName != null and luruName != ''">#{luruName},</if>
+            <if test="experience != null and experience != ''">#{experience},</if>
+            <if test="remark != null and remark != ''">#{remark},</if>
+            <if test="status != null and status != ''">#{status},</if>
+            <if test="inputDate != null">#{inputDate},</if>
+            <if test="updateDate != null">#{updateDate},</if>
+        </trim>
     </insert>
 
     <update id="updateCustomer" parameterType="Customer">
@@ -82,14 +105,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="SET" suffixOverrides=",">
             <if test="name != null and name != ''">name = #{name},</if>
             <if test="phone != null and phone != ''">phone = #{phone},</if>
-            <if test="level != null">level = #{level},</if>
-            <if test="companyId != null">company_id = #{companyId},</if>
+            <if test="level != null and level != ''">level = #{level},</if>
+            <if test="customerNeeds != null and customerNeeds != ''">customer_needs = #{customerNeeds},</if>
+            <if test="companyName != null and companyName != ''">company_name = #{companyName},</if>
             <if test="province != null and province != ''">province = #{province},</if>
+            <if test="dianmianAddress != null and dianmianAddress != ''">dianmian_address = #{dianmianAddress},</if>
             <if test="city != null and city != ''">city = #{city},</if>
-            <if test="genjinStatus != null">genjin_status = #{genjinStatus},</if>
+            <if test="district != null and district != ''">district = #{district},</if>
             <if test="resource != null and resource != ''">resource = #{resource},</if>
-            <if test="sysUserId != null">sys_user_id = #{sysUserId},</if>
-            update_time = now()
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="username != null and username != ''">username = #{username},</if>
+            <if test="luruName != null and luruName != ''">luru_name = #{luruName},</if>
+            <if test="experience != null and experience != ''">experience = #{experience},</if>
+            <if test="remark != null and remark != ''">remark = #{remark},</if>
+            <if test="status != null and status != ''">status = #{status},</if>
+            <if test="inputDate != null">input_date = #{inputDate},</if>
+            <if test="updateDate != null">update_date = #{updateDate},</if>
         </trim>
         where id = #{id}
     </update>
@@ -105,9 +136,27 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </foreach>
     </delete>
 
-    <!-- 认领线索为客户时去重 -->
-    <delete id="deleteCustomerByPhoneAndStatus" parameterType="Integer">
-        delete from biz_customer where status = 0 and phone= #{phone}
+
+    <delete id="clearRedundantXiansuo" parameterType="String">
+        DELETE
+        FROM
+            biz_customer
+        WHERE
+            biz_customer.`status` = 0
+        and
+            biz_customer.phone = #{phone}
+        AND biz_customer.update_date not in (
+            SELECT temp.update_date from
+                (SELECT
+                    max(update_date) update_date
+                FROM
+                    biz_customer
+                GROUP BY
+                    phone
+                HAVING
+                    count(phone) > 1
+                ) as temp
+        )
     </delete>
 
 </mapper>

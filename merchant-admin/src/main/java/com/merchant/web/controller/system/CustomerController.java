@@ -1,6 +1,9 @@
 package com.merchant.web.controller.system;
 
 import java.util.List;
+
+import com.merchant.common.constant.HttpStatus;
+import com.merchant.system.domain.bo.CustomerBO;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,14 +25,13 @@ import com.merchant.common.core.page.TableDataInfo;
 
 /**
  * 我的客户Controller
- * 
+ *
  * @author hanke
- * @date 2020-10-19
+ * @date 2020-10-28
  */
 @RestController
-@RequestMapping("/system/customer")
-public class CustomerController extends BaseController
-{
+@RequestMapping("/system")
+public class CustomerController extends BaseController {
     @Autowired
     private ICustomerService customerService;
 
@@ -37,22 +39,32 @@ public class CustomerController extends BaseController
      * 查询我的客户列表
      */
     @PreAuthorize("@ss.hasPermi('system:customer:list')")
-    @GetMapping("/list")
-    public TableDataInfo list(Customer customer)
-    {
+    @GetMapping("/customer/list")
+    public TableDataInfo customerList(Customer customer) {
         startPage();
         List<Customer> list = customerService.selectCustomerList(customer);
         return getDataTable(list);
     }
 
     /**
+     * 查询我的线索列表
+     */
+    @PreAuthorize("@ss.hasPermi('system:customer:list')")
+    @GetMapping("/xiansuo/list")
+    public TableDataInfo xiansuoList(Customer customer) {
+        startPage();
+        List<Customer> list = customerService.selectXiansuoList(customer);
+        return getDataTable(list);
+    }
+
+
+    /**
      * 导出我的客户列表
      */
     @PreAuthorize("@ss.hasPermi('system:customer:export')")
     @Log(title = "我的客户", businessType = BusinessType.EXPORT)
-    @GetMapping("/export")
-    public AjaxResult export(Customer customer)
-    {
+    @GetMapping("/customer/export")
+    public AjaxResult export(Customer customer) {
         List<Customer> list = customerService.selectCustomerList(customer);
         ExcelUtil<Customer> util = new ExcelUtil<Customer>(Customer.class);
         return util.exportExcel(list, "customer");
@@ -62,9 +74,8 @@ public class CustomerController extends BaseController
      * 获取我的客户详细信息
      */
     @PreAuthorize("@ss.hasPermi('system:customer:query')")
-    @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Integer id)
-    {
+    @GetMapping(value = "/customer/{id}")
+    public AjaxResult getInfo(@PathVariable("id") Integer id) {
         return AjaxResult.success(customerService.selectCustomerById(id));
     }
 
@@ -73,9 +84,8 @@ public class CustomerController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('system:customer:add')")
     @Log(title = "我的客户", businessType = BusinessType.INSERT)
-    @PostMapping
-    public AjaxResult add(@RequestBody Customer customer)
-    {
+    @PostMapping("/customer")
+    public AjaxResult add(@RequestBody Customer customer) {
         return toAjax(customerService.insertCustomer(customer));
     }
 
@@ -84,9 +94,8 @@ public class CustomerController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('system:customer:edit')")
     @Log(title = "我的客户", businessType = BusinessType.UPDATE)
-    @PutMapping
-    public AjaxResult edit(@RequestBody Customer customer)
-    {
+    @PutMapping("/customer")
+    public AjaxResult edit(@RequestBody Customer customer) {
         return toAjax(customerService.updateCustomer(customer));
     }
 
@@ -95,28 +104,47 @@ public class CustomerController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('system:customer:remove')")
     @Log(title = "我的客户", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Integer[] ids)
-    {
+    @DeleteMapping("/customer/{ids}")
+    public AjaxResult remove(@PathVariable Integer[] ids) {
         return toAjax(customerService.deleteCustomerByIds(ids));
     }
 
     /**
-     * 客户变为线索
+     * 转移客户
      */
-    @Log(title = "我的客户", businessType = BusinessType.DELETE)
-    @PostMapping("/{id}")
-    public AjaxResult modifyCustomerStatus(@PathVariable Integer id) {
+    @PreAuthorize("@ss.hasPermi('system:customer:edit')")
+    @Log(title = "转移客户", businessType = BusinessType.UPDATE)
+    @PostMapping("/customer/transfer")
+    public AjaxResult transferCustomer(@RequestBody CustomerBO customerBO) {
 
-        return toAjax(customerService.convertCustomerToXiansuo(id));
+        int result = customerService.transferCustomer(customerBO);
+        if (result == -1) {
+            AjaxResult.error(HttpStatus.NOT_FIND_SYSUSER, "没有该负责人");
+        } else if (result == 0) {
+            AjaxResult.error(HttpStatus.ERROR, "更新失败");
+
+        }
+        return AjaxResult.success("转移客户成功");
+
     }
 
     /**
-     * 认领客户
+     * 转成客户
      */
-    @PostMapping("pick/{id}")
-    public AjaxResult pickXianSuo(@PathVariable Integer id, String phone) {
-        return AjaxResult.success();
+    @PreAuthorize("@ss.hasPermi('system:customer:edit')")
+    @Log(title = "线索转为客户", businessType = BusinessType.UPDATE)
+    @PostMapping("/customer/evolve")
+    public AjaxResult evolveCustomer(@RequestBody CustomerBO customerBO) {
+
+        int result = customerService.evolveCustomer(customerBO);
+        if (result == -1) {
+            AjaxResult.error(HttpStatus.NOT_FIND_SYSUSER, "没有该负责人");
+        } else if (result == 0) {
+            AjaxResult.error(HttpStatus.ERROR, "更新失败");
+
+        }
+        return AjaxResult.success("转为客户成功");
+
     }
 
 

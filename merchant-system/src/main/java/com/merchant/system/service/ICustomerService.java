@@ -1,14 +1,14 @@
 package com.merchant.system.service;
 
 import java.util.List;
-
 import com.merchant.system.domain.Customer;
+import com.merchant.system.domain.bo.CustomerBO;
 
 /**
  * 我的客户Service接口
  * 
  * @author hanke
- * @date 2020-10-19
+ * @date 2020-10-28
  */
 public interface ICustomerService 
 {
@@ -27,6 +27,14 @@ public interface ICustomerService
      * @return 我的客户集合
      */
     public List<Customer> selectCustomerList(Customer customer);
+
+    /**
+     * 查询我的线索列表
+     *
+     * @param customer 我的客户
+     * @return 我的线索集合
+     */
+    public List<Customer> selectXiansuoList(Customer customer);
 
     /**
      * 新增我的客户
@@ -61,13 +69,16 @@ public interface ICustomerService
     public int deleteCustomerById(Integer id);
 
     /**
-     * 把客户变为线索
+     * 更换客户负责人相关信息
+     * @param customerBO：我的客户
+     * @return
      */
-    int convertCustomerToXiansuo(Integer id);
+    int transferCustomer(CustomerBO customerBO);
 
     /**
-     * 把线索变为客户
-     * @param id
+     * 线索升级为客户
+     * @param customerBO
+     * @return
      */
-    void convertXianSuoToCustomer(Integer id, String phone);
+    int evolveCustomer(CustomerBO customerBO);
 }

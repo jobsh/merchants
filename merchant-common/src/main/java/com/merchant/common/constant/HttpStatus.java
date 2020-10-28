@@ -78,6 +78,11 @@ public class HttpStatus
     public static final int UNSUPPORTED_TYPE = 415;
 
     /**
+     * 用户不存在
+     */
+    public static final int NOT_FIND_SYSUSER = 416;
+
+    /**
      * 系统内部错误
      */
     public static final int ERROR = 500;

@@ -1,16 +1,15 @@
 package com.merchant.system.mapper;
 
-import com.merchant.system.domain.Customer;
-
 import java.util.List;
+import com.merchant.system.domain.Customer;
 
 /**
  * 我的客户Mapper接口
  * 
  * @author hanke
- * @date 2020-10-19
+ * @date 2020-10-28
  */
-public interface CustomerMapper
+public interface CustomerMapper 
 {
     /**
      * 查询我的客户
@@ -60,5 +59,9 @@ public interface CustomerMapper
      */
     public int deleteCustomerByIds(Integer[] ids);
 
-    int deleteCustomerByPhoneAndStatus(String phone);
+    /**
+     * 去除指定手机号相同的线索
+     * @param phone
+     */
+    void clearRedundantXiansuo(String phone);
 }

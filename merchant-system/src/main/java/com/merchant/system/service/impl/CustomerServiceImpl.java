@@ -2,26 +2,35 @@ package com.merchant.system.service.impl;
 
 import java.util.List;
 
+import com.merchant.common.core.domain.entity.SysUser;
+import com.merchant.common.core.domain.model.LoginUser;
 import com.merchant.common.enums.CustomerStatus;
-import com.merchant.common.utils.DateUtils;
-import com.merchant.system.domain.Customer;
-import com.merchant.system.mapper.CustomerMapper;
-import com.merchant.system.service.ICustomerService;
+import com.merchant.common.utils.ServletUtils;
+import com.merchant.common.utils.spring.SpringUtils;
+import com.merchant.system.domain.bo.CustomerBO;
+import com.merchant.system.mapper.SysUserMapper;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import com.merchant.system.mapper.CustomerMapper;
+import com.merchant.system.domain.Customer;
+import com.merchant.system.service.ICustomerService;
 /**
  * 我的客户Service业务层处理
  * 
  * @author hanke
- * @date 2020-10-19
+ * @date 2020-10-28
  */
+@Slf4j
 @Service
-public class CustomerServiceImpl implements ICustomerService
+public class CustomerServiceImpl implements ICustomerService 
 {
     @Autowired
     private CustomerMapper customerMapper;
 
+    @Autowired
+    private SysUserMapper sysUserMapper;
     /**
      * 查询我的客户
      * 
@@ -43,6 +52,20 @@ public class CustomerServiceImpl implements ICustomerService
     @Override
     public List<Customer> selectCustomerList(Customer customer)
     {
+        customer.setStatus(CustomerStatus.OK.getCode());
+        return customerMapper.selectCustomerList(customer);
+    }
+
+    /**
+     * 查询我的线索列表
+     *
+     * @param customer 我的客户
+     * @return 我的线索集合
+     */
+
+    @Override
+    public List<Customer> selectXiansuoList(Customer customer) {
+        customer.setStatus(CustomerStatus.DISABLE.getCode());
         return customerMapper.selectCustomerList(customer);
     }
 
@@ -55,7 +78,6 @@ public class CustomerServiceImpl implements ICustomerService
     @Override
     public int insertCustomer(Customer customer)
     {
-        customer.setCreateTime(DateUtils.getNowDate());
         return customerMapper.insertCustomer(customer);
     }
 
@@ -68,7 +90,6 @@ public class CustomerServiceImpl implements ICustomerService
     @Override
     public int updateCustomer(Customer customer)
     {
-        customer.setUpdateTime(DateUtils.getNowDate());
         return customerMapper.updateCustomer(customer);
     }
 
@@ -97,22 +118,38 @@ public class CustomerServiceImpl implements ICustomerService
     }
 
     @Override
-    public int convertCustomerToXiansuo(Integer id) {
-        Customer customer = new Customer();
-        // 将客户状态设置为失效
-        customer.setStatus(CustomerStatus.DISABLE.getCode());
-        return customerMapper.updateCustomer(customer);
+    public int transferCustomer(CustomerBO customerBO) {
+        // 根据负责人phone 查询出负责人id和负责人name
+        SysUser sysUser = new SysUser();
+        sysUser.setPhonenumber(customerBO.getManagerPhone());
+        // 获取要转移给的人的User信息
+        List<SysUser> sysUsers = sysUserMapper.selectUserList(sysUser);
+        Customer customer = customerMapper.selectCustomerById(customerBO.getId());
+        if (!sysUsers.isEmpty()){
+            sysUser = sysUsers.get(0);
+            customerBO.setUserId(sysUser.getId().intValue());
+            customerBO.setUsername(sysUser.getUserName());
+            customer.setStatus(CustomerStatus.OK.getCode());
+            // 更新customer负责人id和username
+
+            int result = customerMapper.updateCustomer(customerBO);
+            if (result > 0){
+                log.info("客户：{}由{}名下转移到{}名下",customer.getName(),customer.getUsername(),sysUser.getUserName());
+                return result;
+            } else
+                return 0;
+        } else {
+            return -1;
+        }
     }
 
     @Override
-    public void convertXianSuoToCustomer(Integer id, String phone) {
-        Customer customer = new Customer();
-        // 由线索变为客户
-        customer.setStatus(CustomerStatus.OK.getCode());
-
-        customerMapper.updateCustomer(customer);
-        // 删除重复线索
-        customerMapper.deleteCustomerByPhoneAndStatus(phone);
+    public int evolveCustomer(CustomerBO customerBO) {
+        // 清理冗余线索（phone相同的线索为冗余线索）,只保留一条最新更改的线索
+        customerMapper.clearRedundantXiansuo(customerBO.getPhone());
+        // 修改客户表status为线索状态（status由0置为1）
+        customerBO.setStatus(CustomerStatus.OK.getCode());
+        // 设置负责人用户名
+        return customerMapper.updateCustomer(customerBO);
     }
-
 }
