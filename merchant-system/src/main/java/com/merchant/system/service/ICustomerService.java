@@ -3,6 +3,7 @@ package com.merchant.system.service;
 import java.util.List;
 import com.merchant.system.domain.Customer;
 import com.merchant.system.domain.bo.CustomerBO;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 我的客户Service接口
@@ -53,6 +54,14 @@ public interface ICustomerService
     public int updateCustomer(Customer customer);
 
     /**
+     * 批量修改我的客户
+     *
+     * @param customerBO 我的客户
+     * @return 结果
+     */
+    public int updateCustomerByIds(CustomerBO customerBO);
+
+    /**
      * 批量删除我的客户
      * 
      * @param ids 需要删除的我的客户ID
@@ -81,4 +90,11 @@ public interface ICustomerService
      * @return
      */
     int evolveCustomer(CustomerBO customerBO);
+
+    /**
+     * 根据手机号判断用户是否存在
+     * @param phone
+     * @return
+     */
+    int existCustomer(@Param("phone") String phone);
 }

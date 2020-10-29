@@ -3,13 +3,9 @@ package com.merchant.system.service.impl;
 import java.util.List;
 
 import com.merchant.common.core.domain.entity.SysUser;
-import com.merchant.common.core.domain.model.LoginUser;
 import com.merchant.common.enums.CustomerStatus;
-import com.merchant.common.utils.ServletUtils;
-import com.merchant.common.utils.spring.SpringUtils;
 import com.merchant.system.domain.bo.CustomerBO;
 import com.merchant.system.mapper.SysUserMapper;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,6 +38,8 @@ public class CustomerServiceImpl implements ICustomerService
     {
         return customerMapper.selectCustomerById(id);
     }
+
+
 
     /**
      * 查询我的客户列表
@@ -93,6 +91,19 @@ public class CustomerServiceImpl implements ICustomerService
         return customerMapper.updateCustomer(customer);
     }
 
+
+    /**
+     * 批量修改我的客户
+     *
+     * @param customerBO 我的客户
+     * @return 结果
+     */
+    @Override
+    public int updateCustomerByIds(CustomerBO customerBO)
+    {
+        return customerMapper.updateCustomerByIds(customerBO);
+    }
+
     /**
      * 批量删除我的客户
      * 
@@ -124,32 +135,33 @@ public class CustomerServiceImpl implements ICustomerService
         sysUser.setPhonenumber(customerBO.getManagerPhone());
         // 获取要转移给的人的User信息
         List<SysUser> sysUsers = sysUserMapper.selectUserList(sysUser);
-        Customer customer = customerMapper.selectCustomerById(customerBO.getId());
-        if (!sysUsers.isEmpty()){
-            sysUser = sysUsers.get(0);
-            customerBO.setUserId(sysUser.getId().intValue());
-            customerBO.setUsername(sysUser.getUserName());
-            customer.setStatus(CustomerStatus.OK.getCode());
-            // 更新customer负责人id和username
-
-            int result = customerMapper.updateCustomer(customerBO);
-            if (result > 0){
-                log.info("客户：{}由{}名下转移到{}名下",customer.getName(),customer.getUsername(),sysUser.getUserName());
-                return result;
-            } else
-                return 0;
-        } else {
+        List<Customer> customers = customerMapper.selectCustomerByIds(customerBO);
+        if (sysUsers.isEmpty()){
             return -1;
         }
+        if (customers.size() == 0 || customers == null || customers.isEmpty()) {
+            return -2;
+        }
+        sysUser = sysUsers.get(0);
+        customerBO.setUserId(sysUser.getId().intValue());
+        customerBO.setUsername(sysUser.getUserName());
+
+        // 更新customer负责人id和username
+        return customerMapper.updateCustomerByIds(customerBO);
     }
 
     @Override
     public int evolveCustomer(CustomerBO customerBO) {
         // 清理冗余线索（phone相同的线索为冗余线索）,只保留一条最新更改的线索
-        customerMapper.clearRedundantXiansuo(customerBO.getPhone());
+//        customerMapper.clearRedundantXiansuo(customerBO.getPhone());
         // 修改客户表status为线索状态（status由0置为1）
         customerBO.setStatus(CustomerStatus.OK.getCode());
         // 设置负责人用户名
-        return customerMapper.updateCustomer(customerBO);
+        return customerMapper.updateCustomerByIds(customerBO);
+    }
+
+    @Override
+    public int existCustomer(String phone) {
+        return customerMapper.countCustomerByPhone(phone);
     }
 }

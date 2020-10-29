@@ -13,9 +13,11 @@ import sun.rmi.server.InactiveGroupException;
 @Data
 public class CustomerBO extends Customer {
 
-    /** 客户id */
-    private Integer id;
-    /** 负责人手机号 */
+    /** 前端传来的客户ids */
+    private Integer[] ids;
+    /** 前端传来的客户手机号 */
+    private String[] phones;
+    /** 前端传来的负责人手机号 */
     private String managerPhone;
 
 }

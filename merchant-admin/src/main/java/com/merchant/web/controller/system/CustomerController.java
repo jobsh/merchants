@@ -86,7 +86,13 @@ public class CustomerController extends BaseController {
     @Log(title = "我的客户", businessType = BusinessType.INSERT)
     @PostMapping("/customer")
     public AjaxResult add(@RequestBody Customer customer) {
-        return toAjax(customerService.insertCustomer(customer));
+        // 根据手机号判断用户是否存在
+        int result = customerService.existCustomer(customer.getPhone());
+        if (result > 0) {
+            return AjaxResult.error(HttpStatus.EXIST_CUSTOMER,"该客户已存在");
+        }
+        customerService.insertCustomer(customer);
+        return AjaxResult.success("新增成功");
     }
 
     /**
@@ -97,6 +103,16 @@ public class CustomerController extends BaseController {
     @PutMapping("/customer")
     public AjaxResult edit(@RequestBody Customer customer) {
         return toAjax(customerService.updateCustomer(customer));
+    }
+
+    /**
+     * 批量修改我的客户
+     */
+    @PreAuthorize("@ss.hasPermi('system:customer:edit')")
+    @Log(title = "我的客户", businessType = BusinessType.UPDATE)
+    @PutMapping("/customers")
+    public AjaxResult edit(@RequestBody CustomerBO customerBO) {
+        return toAjax(customerService.updateCustomerByIds(customerBO));
     }
 
     /**
@@ -119,8 +135,11 @@ public class CustomerController extends BaseController {
 
         int result = customerService.transferCustomer(customerBO);
         if (result == -1) {
-            AjaxResult.error(HttpStatus.NOT_FIND_SYSUSER, "没有该负责人");
-        } else if (result == 0) {
+            return AjaxResult.error(HttpStatus.NOT_FIND_SYSUSER, "没有该负责人");
+        } else if (result == -2) {
+            return AjaxResult.error(HttpStatus.ERROR, "该客户在您操作前被删除或转为线索");
+        }
+        else if (result == 0) {
             AjaxResult.error(HttpStatus.ERROR, "更新失败");
 
         }
@@ -144,6 +163,24 @@ public class CustomerController extends BaseController {
 
         }
         return AjaxResult.success("转为客户成功");
+
+    }
+
+    /**
+     * 通过手机号判断该线索/客户是否存在
+     * @param phone
+     * @return
+     */
+    @GetMapping("/customer/exist")
+    public AjaxResult existCustomer(@RequestBody String phone) {
+
+        int result = customerService.existCustomer(phone);
+
+        if (result > 0) {
+            return AjaxResult.error(HttpStatus.EXIST_CUSTOMER,"该客户已存在");
+        }
+
+        return AjaxResult.success();
 
     }
 

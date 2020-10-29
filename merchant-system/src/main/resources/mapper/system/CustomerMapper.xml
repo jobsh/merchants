@@ -7,6 +7,7 @@
     <resultMap type="Customer" id="CustomerResult">
         <result property="id" column="id"/>
         <result property="name" column="name"/>
+        <result property="num" column="num"/>
         <result property="phone" column="phone"/>
         <result property="level" column="level"/>
         <result property="customerNeeds" column="customer_needs"/>
@@ -27,7 +28,7 @@
     </resultMap>
 
     <sql id="selectCustomerVo">
-        select id, name, phone, level, customer_needs, company_name, province, dianmian_address, city, district, resource, user_id, username, luru_name, experience, remark, status, input_date, update_date from biz_customer
+        select id,num, name, phone, level, customer_needs, company_name, province, dianmian_address, city, district, resource, user_id, username, luru_name, experience, remark, status, input_date, update_date from biz_customer
     </sql>
 
     <select id="selectCustomerList" parameterType="Customer" resultMap="CustomerResult">
@@ -56,6 +57,36 @@
         where id = #{id}
     </select>
 
+    <select id="selectXiansuoById" parameterType="Integer" resultMap="CustomerResult">
+        <include refid="selectCustomerVo"/>
+        where biz_customer.status = 0 and id = #{id}
+    </select>
+
+    <select id="selectCustomerByIds" parameterType="CustomerBO" resultMap="CustomerResult">
+        <include refid="selectCustomerVo"/>
+        where biz_customer.status = 1 and id in
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <select id="selectXiansuoByIds" parameterType="CustomerBO" resultMap="CustomerResult">
+        <include refid="selectCustomerVo"/>
+        where biz_customer.status = 0 and id in
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <select id="countCustomerByPhone" parameterType="String" resultType="java.lang.Integer">
+        select
+            count(*)
+        from
+            biz_customer c
+        where
+            c.phone = #{phone}
+    </select>
+
     <insert id="insertCustomer" parameterType="Customer" useGeneratedKeys="true" keyProperty="id">
         insert into biz_customer
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -75,8 +106,8 @@
             <if test="experience != null and experience != ''">experience,</if>
             <if test="remark != null and remark != ''">remark,</if>
             <if test="status != null and status != ''">status,</if>
-            <if test="inputDate != null">input_date,</if>
-            <if test="updateDate != null">update_date,</if>
+            input_date,
+            update_date,
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="name != null and name != ''">#{name},</if>
@@ -95,8 +126,7 @@
             <if test="experience != null and experience != ''">#{experience},</if>
             <if test="remark != null and remark != ''">#{remark},</if>
             <if test="status != null and status != ''">#{status},</if>
-            <if test="inputDate != null">#{inputDate},</if>
-            <if test="updateDate != null">#{updateDate},</if>
+            now(),now()
         </trim>
     </insert>
 
@@ -119,10 +149,37 @@
             <if test="experience != null and experience != ''">experience = #{experience},</if>
             <if test="remark != null and remark != ''">remark = #{remark},</if>
             <if test="status != null and status != ''">status = #{status},</if>
-            <if test="inputDate != null">input_date = #{inputDate},</if>
-            <if test="updateDate != null">update_date = #{updateDate},</if>
+            update_date = now()
         </trim>
         where id = #{id}
+    </update>
+
+    <update id="updateCustomerByIds" parameterType="CustomerBO">
+        update biz_customer
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="phone != null and phone != ''">phone = #{phone},</if>
+            <if test="level != null and level != ''">level = #{level},</if>
+            <if test="customerNeeds != null and customerNeeds != ''">customer_needs = #{customerNeeds},</if>
+            <if test="companyName != null and companyName != ''">company_name = #{companyName},</if>
+            <if test="province != null and province != ''">province = #{province},</if>
+            <if test="dianmianAddress != null and dianmianAddress != ''">dianmian_address = #{dianmianAddress},</if>
+            <if test="city != null and city != ''">city = #{city},</if>
+            <if test="district != null and district != ''">district = #{district},</if>
+            <if test="resource != null and resource != ''">resource = #{resource},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="username != null and username != ''">username = #{username},</if>
+            <if test="luruName != null and luruName != ''">luru_name = #{luruName},</if>
+            <if test="experience != null and experience != ''">experience = #{experience},</if>
+            <if test="remark != null and remark != ''">remark = #{remark},</if>
+            <if test="status != null and status != ''">status = #{status},</if>
+            update_date = now()
+        </trim>
+        where id in
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+
     </update>
 
     <delete id="deleteCustomerById" parameterType="Integer">

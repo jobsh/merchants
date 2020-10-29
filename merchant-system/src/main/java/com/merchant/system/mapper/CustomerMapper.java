@@ -2,6 +2,7 @@ package com.merchant.system.mapper;
 
 import java.util.List;
 import com.merchant.system.domain.Customer;
+import com.merchant.system.domain.bo.CustomerBO;
 
 /**
  * 我的客户Mapper接口
@@ -13,11 +14,35 @@ public interface CustomerMapper
 {
     /**
      * 查询我的客户
-     * 
+     *
      * @param id 我的客户ID
      * @return 我的客户
      */
     public Customer selectCustomerById(Integer id);
+
+    /**
+     * 查询我的线索
+     *
+     * @param id 我的客户ID
+     * @return 我的客户
+     */
+    public Customer selectXiansuoById(Integer id);
+
+    /**
+     * 查询我的客户
+     *
+     * @param customerBO 我的客户ID
+     * @return 我的客户
+     */
+    public List<Customer> selectCustomerByIds(CustomerBO customerBO);
+
+    /**
+     * 查询我的线索
+     *
+     * @param customerBO 我的客户ID
+     * @return 我的客户
+     */
+    public List<Customer> selectXiansuoByIds(CustomerBO customerBO);
 
     /**
      * 查询我的客户列表
@@ -44,6 +69,13 @@ public interface CustomerMapper
     public int updateCustomer(Customer customer);
 
     /**
+     * 批量修改客户信息
+     * @param customerBO
+     * @return
+     */
+    int updateCustomerByIds(CustomerBO customerBO);
+
+    /**
      * 删除我的客户
      * 
      * @param id 我的客户ID
@@ -59,9 +91,17 @@ public interface CustomerMapper
      */
     public int deleteCustomerByIds(Integer[] ids);
 
+
     /**
      * 去除指定手机号相同的线索
      * @param phone
      */
     void clearRedundantXiansuo(String phone);
+
+    /**
+     * 根据手机号判断客户是否存在
+     * @param phone
+     * @return
+     */
+    int countCustomerByPhone(String phone);
 }

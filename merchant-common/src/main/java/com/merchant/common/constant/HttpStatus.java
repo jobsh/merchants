@@ -83,6 +83,11 @@ public class HttpStatus
     public static final int NOT_FIND_SYSUSER = 416;
 
     /**
+     * 线索/客户已存在
+     */
+    public static final int EXIST_CUSTOMER = 417;
+
+    /**
      * 系统内部错误
      */
     public static final int ERROR = 500;
