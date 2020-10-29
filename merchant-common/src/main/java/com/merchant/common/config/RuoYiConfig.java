@@ -99,6 +99,22 @@ public class RuoYiConfig
     }
 
     /**
+     * 获取跟进上传路径
+     */
+    public static String getGenjinPath()
+    {
+        return getProfile() + "/genjin";
+    }
+
+    /**
+     * 获取店面上传路径
+     */
+    public static String getDianmianPath()
+    {
+        return getProfile() + "/dianmian";
+    }
+
+    /**
      * 获取下载路径
      */
     public static String getDownloadPath()

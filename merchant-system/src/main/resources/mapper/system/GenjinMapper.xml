@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.merchant.system.mapper.GenjinMapper">
+    
+    <resultMap type="Genjin" id="GenjinResult">
+        <result property="id"    column="id"    />
+        <result property="customerId"    column="customer_id"    />
+        <result property="customerName"    column="customer_name"    />
+        <result property="sysUserId"    column="sys_user_id"    />
+        <result property="content"    column="content"    />
+        <result property="method"    column="method"    />
+        <result property="status"    column="status"    />
+        <result property="image"    column="image"    />
+        <result property="genjinDate"    column="genjin_date"    />
+        <result property="updateDate"    column="update_date"    />
+    </resultMap>
+
+    <sql id="selectGenjinVo">
+        select id, customer_id, customer_name, sys_user_id, content, method, status, image, genjin_date, update_date from biz_genjin
+    </sql>
+
+    <select id="selectGenjinList" parameterType="Integer" resultMap="GenjinResult">
+        <include refid="selectGenjinVo"/>
+        <where>
+            biz_genjin.customer_id = #{customerId}
+        </where>
+    </select>
+    
+    <select id="selectGenjinById" parameterType="Integer" resultMap="GenjinResult">
+        <include refid="selectGenjinVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertGenjin" parameterType="Genjin" useGeneratedKeys="true" keyProperty="id">
+        insert into biz_genjin
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="customerId != null">customer_id,</if>
+            <if test="customerName != null and customerName != ''">customer_name,</if>
+            <if test="sysUserId != null">sys_user_id,</if>
+            <if test="content != null and content != ''">content,</if>
+            <if test="method != null and method != ''">method,</if>
+            <if test="status != null and status != ''">status,</if>
+            <if test="image != null and image != ''">image,</if>
+            genjin_date,
+            update_date,
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="customerId != null">#{customerId},</if>
+            <if test="customerName != null and customerName != ''">#{customerName},</if>
+            <if test="sysUserId != null">#{sysUserId},</if>
+            <if test="content != null and content != ''">#{content},</if>
+            <if test="method != null and method != ''">#{method},</if>
+            <if test="status != null and status != ''">#{status},</if>
+            <if test="image != null and image != ''">#{image},</if>
+            now(),now()
+         </trim>
+    </insert>
+
+    <update id="updateGenjin" parameterType="Genjin">
+        update biz_genjin
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="customerId != null">customer_id = #{customerId},</if>
+            <if test="customerName != null and customerName != ''">customer_name = #{customerName},</if>
+            <if test="sysUserId != null">sys_user_id = #{sysUserId},</if>
+            <if test="content != null and content != ''">content = #{content},</if>
+            <if test="method != null and method != ''">method = #{method},</if>
+            <if test="status != null and status != ''">status = #{status},</if>
+            <if test="image != null and image != ''">image = #{image},</if>
+            update_date = now()
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteGenjinById" parameterType="Integer">
+        delete from biz_genjin where id = #{id}
+    </delete>
+
+    <delete id="deleteGenjinByIds" parameterType="String">
+        delete from biz_genjin where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>
