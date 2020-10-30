@@ -35,6 +35,10 @@
             <artifactId>merchant-common</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.merchant</groupId>
+            <artifactId>merchant-system</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

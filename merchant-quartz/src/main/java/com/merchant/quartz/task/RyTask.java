@@ -1,5 +1,10 @@
 package com.merchant.quartz.task;
 
+import com.merchant.common.config.RuoYiConfig;
+import com.merchant.system.service.ICustomerService;
+import com.merchant.system.service.ISysConfigService;
+import io.swagger.models.auth.In;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.merchant.common.utils.StringUtils;
 
@@ -9,8 +14,15 @@ import com.merchant.common.utils.StringUtils;
  * @author hanke
  */
 @Component("ryTask")
-public class RyTask
-{
+public class RyTask {
+
+    @Autowired
+    private ICustomerService customerService;
+
+    @Autowired
+    private ISysConfigService configService;
+
+
     public void ryMultipleParams(String s, Boolean b, Long l, Double d, Integer i)
     {
         System.out.println(StringUtils.format("执行多参方法： 字符串类型{}，布尔类型{}，长整型{}，浮点型{}，整形{}", s, b, l, d, i));
@@ -25,4 +37,12 @@ public class RyTask
     {
         System.out.println("执行无参方法");
     }
+
+    public void autoDegradeToXiansuo() {
+
+        Integer intervalDays = Integer.valueOf(configService.selectConfigByKey("sys.customer.autoDegrade"));
+
+        customerService.degradeToXiansuo(intervalDays);
+    }
+
 }

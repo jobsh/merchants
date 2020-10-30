@@ -6,7 +6,10 @@ import java.util.List;
 import com.merchant.common.config.RuoYiConfig;
 import com.merchant.common.core.domain.AjaxResult;
 import com.merchant.common.utils.file.FileUploadUtils;
+import com.merchant.system.domain.Customer;
+import com.merchant.system.domain.bo.CustomerBO;
 import com.merchant.system.domain.bo.GenjinBO;
+import com.merchant.system.service.ICustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.merchant.system.mapper.GenjinMapper;
@@ -24,6 +27,8 @@ public class GenjinServiceImpl implements IGenjinService {
     @Autowired
     private GenjinMapper genjinMapper;
 
+    @Autowired
+    private ICustomerService customerService;
     /**
      * 查询客户跟进
      *
@@ -58,6 +63,8 @@ public class GenjinServiceImpl implements IGenjinService {
             String imgPath = FileUploadUtils.upload(RuoYiConfig.getGenjinPath(), genjinBO.getImg());
             genjinBO.setImage(imgPath);
         }
+        // 更新customer最新跟进时间
+        customerService.updateGenjinDate(genjinBO.getCustomerId());
         return genjinMapper.insertGenjin(genjinBO);
     }
 

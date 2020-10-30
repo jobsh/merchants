@@ -1,6 +1,7 @@
 package com.merchant.system.domain.bo;
 
 import com.merchant.system.domain.Genjin;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -13,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Data
 public class GenjinBO extends Genjin {
 
+    @ApiModelProperty(value = "二进制图片", name = "img")
     private MultipartFile img;
 
 }

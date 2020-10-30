@@ -1,6 +1,8 @@
 package com.merchant.system.service;
 
 import java.util.List;
+
+import com.merchant.common.core.domain.entity.SysUser;
 import com.merchant.system.domain.Customer;
 import com.merchant.system.domain.bo.CustomerBO;
 import org.apache.ibatis.annotations.Param;
@@ -24,18 +26,18 @@ public interface ICustomerService
     /**
      * 查询我的客户列表
      * 
-     * @param customer 我的客户
+     * @param customerBO 我的客户
      * @return 我的客户集合
      */
-    public List<Customer> selectCustomerList(Customer customer);
+    public List<Customer> selectCustomerList(CustomerBO customerBO);
 
     /**
      * 查询我的线索列表
      *
-     * @param customer 我的客户
+     * @param customerBO 我的客户
      * @return 我的线索集合
      */
-    public List<Customer> selectXiansuoList(Customer customer);
+    public List<Customer> selectXiansuoList(CustomerBO customerBO);
 
     /**
      * 新增我的客户
@@ -52,6 +54,9 @@ public interface ICustomerService
      * @return 结果
      */
     public int updateCustomer(Customer customer);
+
+    public int updateGenjinDate(Integer id);
+
 
     /**
      * 批量修改我的客户
@@ -97,4 +102,19 @@ public interface ICustomerService
      * @return
      */
     int existCustomer(@Param("phone") String phone);
+
+    /**
+     * 导入用户数据
+     *
+     * @param userList 用户数据列表
+     * @param isUpdateSupport 是否更新支持，如果已存在，则进行更新数据
+     * @param operName 操作用户
+     * @return 结果
+     */
+    String importCustomer(List<Customer> userList, Boolean isUpdateSupport, String operName);
+
+    /**
+     * 定时任务：30天未跟进的客户转为线索
+     */
+    void degradeToXiansuo(int intervalDays);
 }

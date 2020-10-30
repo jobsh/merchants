@@ -28,10 +28,12 @@
     </resultMap>
 
     <sql id="selectCustomerVo">
-        select id,num, name, phone, level, customer_needs, company_name, province, dianmian_address, city, district, resource, user_id, username, luru_name, experience, remark, status, input_date, update_date from biz_customer
+        select id,num, name, phone, level, customer_needs, company_name, province, dianmian_address, city, district, resource, user_id, username, luru_name, experience, remark, status, input_date, update_date,
+         genjin_date
+         from biz_customer
     </sql>
 
-    <select id="selectCustomerList" parameterType="Customer" resultMap="CustomerResult">
+    <select id="selectCustomerList" parameterType="CustomerBO" resultMap="CustomerResult">
         <include refid="selectCustomerVo"/>
         <where>
             <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
@@ -47,7 +49,8 @@
             <if test="district != null  and district != ''">and district = #{district}</if>
             <if test="resource != null  and resource != ''">and resource = #{resource}</if>
             <if test="username != null  and username != ''">and username like concat('%', #{username}, '%')</if>
-            <if test="inputDate != null ">and input_date = #{inputDate}</if>
+            <if test="inputDate != null ">and input_date &gt;= #{inputDateStart}</if>
+            <if test="inputDate != null ">and input_date &lt;= #{inputDateEnd}</if>
             <if test="status != null ">and status = #{status}</if>
         </where>
     </select>
@@ -180,6 +183,23 @@
             #{id}
         </foreach>
 
+    </update>
+
+    <update id="autoDegradeToXianSuo" parameterType="Integer">
+        update
+            biz_customer c
+        SET
+            c.`status` = 0,
+            c.update_date = NOW()
+        WHERE
+            c.`status` = 1
+        and
+            c.genjin_date &lt; DATE_SUB(NOW(),INTERVAL #{intervalDays} DAY)
+    </update>
+
+    <!-- 更新客户最新跟进时间 -->
+    <update id="updateGenjinDate" parameterType="Integer">
+        update biz_customer c set c.genjin_date = now() where c.id = #{id}
     </update>
 
     <delete id="deleteCustomerById" parameterType="Integer">

@@ -47,10 +47,10 @@ public interface CustomerMapper
     /**
      * 查询我的客户列表
      * 
-     * @param customer 我的客户
+     * @param customerBO 我的客户
      * @return 我的客户集合
      */
-    public List<Customer> selectCustomerList(Customer customer);
+    public List<Customer> selectCustomerList(CustomerBO customerBO);
 
     /**
      * 新增我的客户
@@ -74,6 +74,20 @@ public interface CustomerMapper
      * @return
      */
     int updateCustomerByIds(CustomerBO customerBO);
+
+    /**
+     * 超过intervalDay天数自动转为线索
+     * @param intervalDay ： 未跟进天数
+     * @return
+     */
+    int autoDegradeToXianSuo(Integer intervalDay);
+
+    /**
+     * 更新客户跟进最新时间
+     * @param id 客户id
+     * @return
+     */
+    int updateGenjinDate(Integer id);
 
     /**
      * 删除我的客户

@@ -75,21 +75,16 @@ public class Customer extends BaseEntity
     @Excel(name = "录入人")
     private String luruName;
 
-    public String getUsername() {
-        return username;
-    }
-
-    public void setLuruName(String luruName) {
-        this.luruName = luruName;
-    }
-
     /** 中介经验 */
     @Excel(name = "中介经验")
     private String experience;
 
-    /**  */
+    /** 客户状态（0：线索，1：客户）  */
     private String status;
 
+    /** 最新跟进时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date genjinDate;
     /** 创建时间 */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Excel(name = "创建时间", width = 30, dateFormat = "yyyy-MM-dd")

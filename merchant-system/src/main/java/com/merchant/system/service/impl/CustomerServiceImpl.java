@@ -4,6 +4,9 @@ import java.util.List;
 
 import com.merchant.common.core.domain.entity.SysUser;
 import com.merchant.common.enums.CustomerStatus;
+import com.merchant.common.exception.CustomException;
+import com.merchant.common.utils.SecurityUtils;
+import com.merchant.common.utils.StringUtils;
 import com.merchant.system.domain.bo.CustomerBO;
 import com.merchant.system.mapper.SysUserMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -44,27 +47,27 @@ public class CustomerServiceImpl implements ICustomerService
     /**
      * 查询我的客户列表
      * 
-     * @param customer 我的客户
+     * @param customerBO 我的客户
      * @return 我的客户
      */
     @Override
-    public List<Customer> selectCustomerList(Customer customer)
+    public List<Customer> selectCustomerList(CustomerBO customerBO)
     {
-        customer.setStatus(CustomerStatus.OK.getCode());
-        return customerMapper.selectCustomerList(customer);
+        customerBO.setStatus(CustomerStatus.OK.getCode());
+        return customerMapper.selectCustomerList(customerBO);
     }
 
     /**
      * 查询我的线索列表
      *
-     * @param customer 我的客户
+     * @param customerBO 我的客户
      * @return 我的线索集合
      */
 
     @Override
-    public List<Customer> selectXiansuoList(Customer customer) {
-        customer.setStatus(CustomerStatus.DISABLE.getCode());
-        return customerMapper.selectCustomerList(customer);
+    public List<Customer> selectXiansuoList(CustomerBO customerBO) {
+        customerBO.setStatus(CustomerStatus.DISABLE.getCode());
+        return customerMapper.selectCustomerList(customerBO);
     }
 
     /**
@@ -89,6 +92,11 @@ public class CustomerServiceImpl implements ICustomerService
     public int updateCustomer(Customer customer)
     {
         return customerMapper.updateCustomer(customer);
+    }
+
+    @Override
+    public int updateGenjinDate(Integer id) {
+        return customerMapper.updateGenjinDate(id);
     }
 
 
@@ -164,4 +172,67 @@ public class CustomerServiceImpl implements ICustomerService
     public int existCustomer(String phone) {
         return customerMapper.countCustomerByPhone(phone);
     }
+
+    @Override
+    public String importCustomer(List<Customer> customerList, Boolean isUpdateSupport, String operName) {
+        if (StringUtils.isNull(customerList) || customerList.size() == 0)
+        {
+            throw new CustomException("导入用户数据不能为空！");
+        }
+        int successNum = 0;
+        int failureNum = 0;
+        StringBuilder successMsg = new StringBuilder();
+        StringBuilder failureMsg = new StringBuilder();
+        for (Customer customer : customerList)
+        {
+            try
+            {
+                // 验证是否存在这个用户
+                int res = customerMapper.countCustomerByPhone(customer.getPhone());
+                if (res == 0)
+                {
+                    customer.setCreateBy(operName);
+                    this.insertCustomer(customer);
+                    successNum++;
+                    successMsg.append("<br/>" + successNum + "、用户： " + customer.getName() + " 导入成功");
+                }
+                else if (isUpdateSupport)
+                {
+                    customer.setUpdateBy(operName);
+                    this.updateCustomer(customer);
+                    successNum++;
+                    successMsg.append("<br/>" + successNum + "、账号 " + customer.getName() + " 更新成功");
+                }
+                else
+                {
+                    failureNum++;
+                    failureMsg.append("<br/>" + failureNum + "、账号 " + customer.getName() + " 已存在");
+                }
+            }
+            catch (Exception e)
+            {
+                failureNum++;
+                String msg = "<br/>" + failureNum + "、账号 " + customer.getName() + " 导入失败：";
+                failureMsg.append(msg + e.getMessage());
+                log.error(msg, e);
+            }
+        }
+        if (failureNum > 0)
+        {
+            failureMsg.insert(0, "很抱歉，导入失败！共 " + failureNum + " 条数据格式不正确，错误如下：");
+            throw new CustomException(failureMsg.toString());
+        }
+        else
+        {
+            successMsg.insert(0, "恭喜您，数据已全部导入成功！共 " + successNum + " 条，数据如下：");
+        }
+        return successMsg.toString();
+    }
+
+    @Override
+    public void degradeToXiansuo(int intervalDays) {
+        customerMapper.autoDegradeToXianSuo(intervalDays);
+    }
+
+
 }
