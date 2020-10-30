@@ -36,7 +36,7 @@
     <select id="selectCustomerList" parameterType="CustomerBO" resultMap="CustomerResult">
         <include refid="selectCustomerVo"/>
         <where>
-            <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
+            <if test="name !=  null  and name != ''">and name like concat('%', #{name}, '%')</if>
             <if test="phone != null  and phone != ''">and phone = #{phone}</if>
             <if test="level != null  and level != ''">and level = #{level}</if>
             <if test="customerNeeds != null  and customerNeeds != ''">and customer_needs = #{customerNeeds}</if>
