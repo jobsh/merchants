@@ -1,9 +1,7 @@
 package com.merchant.quartz.task;
 
-import com.merchant.common.config.RuoYiConfig;
 import com.merchant.system.service.ICustomerService;
 import com.merchant.system.service.ISysConfigService;
-import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.merchant.common.utils.StringUtils;

@@ -7,7 +7,7 @@ import com.merchant.common.utils.DateUtils;
 import com.merchant.common.utils.StringUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.web.multipart.MultipartFile;
-import com.merchant.common.config.RuoYiConfig;
+import com.merchant.common.config.MerchantConfig;
 import com.merchant.common.constant.Constants;
 import com.merchant.common.exception.file.FileNameLengthLimitExceededException;
 import com.merchant.common.exception.file.FileSizeLimitExceededException;
@@ -34,7 +34,7 @@ public class FileUploadUtils
     /**
      * 默认上传的地址
      */
-    private static String defaultBaseDir = RuoYiConfig.getProfile();
+    private static String defaultBaseDir = MerchantConfig.getProfile();
 
     public static void setDefaultBaseDir(String defaultBaseDir)
     {
@@ -145,7 +145,7 @@ public class FileUploadUtils
 
     private static final String getPathFileName(String uploadDir, String fileName) throws IOException
     {
-        int dirLastIndex = RuoYiConfig.getProfile().length() + 1;
+        int dirLastIndex = MerchantConfig.getProfile().length() + 1;
         String currentDir = StringUtils.substring(uploadDir, dirLastIndex);
         String pathFileName = Constants.RESOURCE_PREFIX + "/" + currentDir + "/" + fileName;
         return pathFileName;

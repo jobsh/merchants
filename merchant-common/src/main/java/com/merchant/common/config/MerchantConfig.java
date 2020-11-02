@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @ConfigurationProperties(prefix = "merchant")
-public class RuoYiConfig
+public class MerchantConfig
 {
     /** 项目名称 */
     private String name;
@@ -77,7 +77,7 @@ public class RuoYiConfig
 
     public void setProfile(String profile)
     {
-        RuoYiConfig.profile = profile;
+        MerchantConfig.profile = profile;
     }
 
     public static boolean isAddressEnabled()
@@ -87,7 +87,7 @@ public class RuoYiConfig
 
     public void setAddressEnabled(boolean addressEnabled)
     {
-        RuoYiConfig.addressEnabled = addressEnabled;
+        MerchantConfig.addressEnabled = addressEnabled;
     }
 
     /**

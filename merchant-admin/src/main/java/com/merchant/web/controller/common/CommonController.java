@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import com.merchant.common.config.RuoYiConfig;
+import com.merchant.common.config.MerchantConfig;
 import com.merchant.common.constant.Constants;
 import com.merchant.common.core.domain.AjaxResult;
 import com.merchant.common.utils.StringUtils;
@@ -46,7 +46,7 @@ public class CommonController
                 throw new Exception(StringUtils.format("文件名称({})非法，不允许下载。 ", fileName));
             }
             String realFileName = System.currentTimeMillis() + fileName.substring(fileName.indexOf("_") + 1);
-            String filePath = RuoYiConfig.getDownloadPath() + fileName;
+            String filePath = MerchantConfig.getDownloadPath() + fileName;
 
             response.setCharacterEncoding("utf-8");
             response.setContentType("multipart/form-data");
@@ -73,7 +73,7 @@ public class CommonController
         try
         {
             // 上传文件路径
-            String filePath = RuoYiConfig.getUploadPath();
+            String filePath = MerchantConfig.getUploadPath();
             // 上传并返回新文件名称
             String fileName = FileUploadUtils.upload(filePath, file);
             String url = serverConfig.getUrl() + fileName;
@@ -95,7 +95,7 @@ public class CommonController
     public void resourceDownload(String name, HttpServletRequest request, HttpServletResponse response) throws Exception
     {
         // 本地资源路径
-        String localPath = RuoYiConfig.getProfile();
+        String localPath = MerchantConfig.getProfile();
         // 数据库资源地址
         String downloadPath = localPath + StringUtils.substringAfter(name, Constants.RESOURCE_PREFIX);
         // 下载名称

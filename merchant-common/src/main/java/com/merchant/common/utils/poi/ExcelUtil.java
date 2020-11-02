@@ -47,7 +47,7 @@ import com.merchant.common.annotation.Excel;
 import com.merchant.common.annotation.Excel.ColumnType;
 import com.merchant.common.annotation.Excel.Type;
 import com.merchant.common.annotation.Excels;
-import com.merchant.common.config.RuoYiConfig;
+import com.merchant.common.config.MerchantConfig;
 import com.merchant.common.core.domain.AjaxResult;
 import com.merchant.common.core.text.Convert;
 import com.merchant.common.exception.CustomException;
@@ -811,7 +811,7 @@ public class ExcelUtil<T>
      */
     public String getAbsoluteFile(String filename)
     {
-        String downloadPath = RuoYiConfig.getDownloadPath() + filename;
+        String downloadPath = MerchantConfig.getDownloadPath() + filename;
         File desc = new File(downloadPath);
         if (!desc.getParentFile().exists())
         {

@@ -31,12 +31,33 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="remark"    column="remark"    />
         <collection property="customer" ofType="com.merchant.system.domain.Customer">
             <id column="id" property="id"/>
+            <result column="user_id" property="userId"/>
+            <result column="phone" property="phone"/>
+            <result column="name" property="name"/>
             <result column="username" property="username"/>
+            <result column="num" property="num"/>
+            <result column="level" property="level"/>
+            <result column="customer_needs" property="customerNeeds"/>
+            <result column="company_name" property="companyName"/>
+            <result column="province" property="province"/>
+            <result column="city" property="city"/>
+            <result column="district" property="district"/>
+            <result column="dianmian_address" property="dianmianAddress"/>
+            <result column="resource" property="resource"/>
+            <result column="status" property="status"/>
+            <result column="luru_name" property="luruName"/>
+            <result column="experience" property="experience"/>
+            <result column="remark" property="remark"/>
+            <result column="genjin_date" property="genjinDate"/>
+            <result column="remark" property="remark"/>
+            <result column="input_date" property="inputDate"/>
+            <result column="update_date" property="updateDate"/>
         </collection>
     </resultMap>
 
     <sql id="selectDianmianVo">
-        select d.id, d.diandong_id, d.diandong_name, d.diandong_phone, d.sys_user_id, d.company_id, d.name, d.status, d.provice, d.city, d.district, d.longitude, d.latitude, d.address, d.check_result, d.open_date, d.contractNum, d.type, d.area, d.close_date, d.close_days, d.close_reason, d.check_info, d.remark
+        select d.id, d.diandong_id, d.diandong_name, d.diandong_phone, d.sys_user_id, d.company_id, d.name, d.status, d.provice, d.city, d.district, d.longitude, d.latitude, d.address, d.check_result, d.open_date, d.contractNum, d.type, d.area, d.close_date, d.close_days, d.close_reason, d.check_info, d.remark,
+        c.*
         from
             biz_dianmian d
         left join

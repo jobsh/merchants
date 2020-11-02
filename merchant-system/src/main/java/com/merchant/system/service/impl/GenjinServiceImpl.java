@@ -3,11 +3,8 @@ package com.merchant.system.service.impl;
 import java.io.IOException;
 import java.util.List;
 
-import com.merchant.common.config.RuoYiConfig;
-import com.merchant.common.core.domain.AjaxResult;
+import com.merchant.common.config.MerchantConfig;
 import com.merchant.common.utils.file.FileUploadUtils;
-import com.merchant.system.domain.Customer;
-import com.merchant.system.domain.bo.CustomerBO;
 import com.merchant.system.domain.bo.GenjinBO;
 import com.merchant.system.service.ICustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,7 +57,7 @@ public class GenjinServiceImpl implements IGenjinService {
     @Override
     public int insertGenjin(GenjinBO genjinBO) throws IOException {
         if (genjinBO.getImg() != null) {
-            String imgPath = FileUploadUtils.upload(RuoYiConfig.getGenjinPath(), genjinBO.getImg());
+            String imgPath = FileUploadUtils.upload(MerchantConfig.getGenjinPath(), genjinBO.getImg());
             genjinBO.setImage(imgPath);
         }
         // 更新customer最新跟进时间
