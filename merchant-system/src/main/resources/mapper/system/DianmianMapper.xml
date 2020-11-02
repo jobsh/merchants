@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.merchant.system.mapper.DianmianMapper">
+    
+    <resultMap type="com.merchant.system.domain.vo.DianmianVO" id="DianmianResult">
+        <result property="id"    column="id"    />
+        <result property="diandongId"    column="diandong_id"    />
+        <result property="diandongName"    column="diandong_name"    />
+        <result property="diandongPhone"    column="diandong_phone"    />
+        <result property="sysUserId"    column="sys_user_id"    />
+        <result property="companyId"    column="company_id"    />
+        <result property="name"    column="name"    />
+        <result property="status"    column="status"    />
+        <result property="provice"    column="provice"    />
+        <result property="city"    column="city"    />
+        <result property="district"    column="district"    />
+        <result property="longitude"    column="longitude"    />
+        <result property="latitude"    column="latitude"    />
+        <result property="address"    column="address"    />
+        <result property="checkResult"    column="check_result"    />
+        <result property="openDate"    column="open_date"    />
+        <result property="contractnum"    column="contractNum"    />
+        <result property="type"    column="type"    />
+        <result property="area"    column="area"    />
+        <result property="closeDate"    column="close_date"    />
+        <result property="closeDays"    column="close_days"    />
+        <result property="closeReason"    column="close_reason"    />
+        <result property="checkInfo"    column="check_info"    />
+        <result property="remark"    column="remark"    />
+        <collection property="customer" ofType="com.merchant.system.domain.Customer">
+            <id column="id" property="id"/>
+            <result column="username" property="username"/>
+        </collection>
+    </resultMap>
+
+    <sql id="selectDianmianVo">
+        select d.id, d.diandong_id, d.diandong_name, d.diandong_phone, d.sys_user_id, d.company_id, d.name, d.status, d.provice, d.city, d.district, d.longitude, d.latitude, d.address, d.check_result, d.open_date, d.contractNum, d.type, d.area, d.close_date, d.close_days, d.close_reason, d.check_info, d.remark
+        from
+            biz_dianmian d
+        left join
+            biz_customer c
+        on
+            d.diandong_id = c.id
+    </sql>
+
+    <select id="selectDianmianList" parameterType="Dianmian" resultMap="DianmianResult">
+        <include refid="selectDianmianVo"/>
+        <where>
+            <if test="diandongId != null "> and diandong_id = #{diandongId}</if>
+            <if test="diandongName != null  and diandongName != ''"> and diandong_name like concat('%', #{diandongName}, '%')</if>
+            <if test="diandongPhone != null  and diandongPhone != ''"> and diandong_phone = #{diandongPhone}</if>
+            <if test="companyId != null "> and company_id = #{companyId}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="provice != null  and provice != ''"> and provice = #{provice}</if>
+            <if test="city != null  and city != ''"> and city = #{city}</if>
+            <if test="district != null  and district != ''"> and district = #{district}</if>
+            <if test="address != null  and address != ''"> and address = #{address}</if>
+            <if test="checkResult != null  and checkResult != ''"> and check_result = #{checkResult}</if>
+            <if test="openDate != null "> and open_date = #{openDate}</if>
+            <if test="contractnum != null  and contractnum != ''"> and contractNum = #{contractnum}</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="area != null  and area != ''"> and area = #{area}</if>
+        </where>
+    </select>
+    
+    <select id="selectDianmianById" parameterType="Integer" resultMap="DianmianResult">
+        <include refid="selectDianmianVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertDianmian" parameterType="Dianmian" useGeneratedKeys="true" keyProperty="id">
+        insert into biz_dianmian
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="diandongId != null">diandong_id,</if>
+            <if test="diandongName != null and diandongName != ''">diandong_name,</if>
+            <if test="diandongPhone != null and diandongPhone != ''">diandong_phone,</if>
+            <if test="sysUserId != null">sys_user_id,</if>
+            <if test="companyId != null">company_id,</if>
+            <if test="name != null and name != ''">name,</if>
+            <if test="status != null and status != ''">status,</if>
+            <if test="provice != null and provice != ''">provice,</if>
+            <if test="city != null and city != ''">city,</if>
+            <if test="district != null and district != ''">district,</if>
+            <if test="longitude != null and longitude != ''">longitude,</if>
+            <if test="latitude != null and latitude != ''">latitude,</if>
+            <if test="address != null and address != ''">address,</if>
+            <if test="checkResult != null and checkResult != ''">check_result,</if>
+            <if test="openDate != null">open_date,</if>
+            <if test="contractnum != null and contractnum != ''">contractNum,</if>
+            <if test="type != null and type != ''">type,</if>
+            <if test="area != null and area != ''">area,</if>
+            <if test="closeDate != null">close_date,</if>
+            <if test="closeDays != null">close_days,</if>
+            <if test="closeReason != null">close_reason,</if>
+            <if test="checkInfo != null">check_info,</if>
+            <if test="remark != null and remark != ''">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="diandongId != null">#{diandongId},</if>
+            <if test="diandongName != null and diandongName != ''">#{diandongName},</if>
+            <if test="diandongPhone != null and diandongPhone != ''">#{diandongPhone},</if>
+            <if test="sysUserId != null">#{sysUserId},</if>
+            <if test="companyId != null">#{companyId},</if>
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="status != null and status != ''">#{status},</if>
+            <if test="provice != null and provice != ''">#{provice},</if>
+            <if test="city != null and city != ''">#{city},</if>
+            <if test="district != null and district != ''">#{district},</if>
+            <if test="longitude != null and longitude != ''">#{longitude},</if>
+            <if test="latitude != null and latitude != ''">#{latitude},</if>
+            <if test="address != null and address != ''">#{address},</if>
+            <if test="checkResult != null and checkResult != ''">#{checkResult},</if>
+            <if test="openDate != null">#{openDate},</if>
+            <if test="contractnum != null and contractnum != ''">#{contractnum},</if>
+            <if test="type != null and type != ''">#{type},</if>
+            <if test="area != null and area != ''">#{area},</if>
+            <if test="closeDate != null">#{closeDate},</if>
+            <if test="closeDays != null">#{closeDays},</if>
+            <if test="closeReason != null">#{closeReason},</if>
+            <if test="checkInfo != null">#{checkInfo},</if>
+            <if test="remark != null and remark != ''">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDianmian" parameterType="Dianmian">
+        update biz_dianmian
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="diandongId != null">diandong_id = #{diandongId},</if>
+            <if test="diandongName != null and diandongName != ''">diandong_name = #{diandongName},</if>
+            <if test="diandongPhone != null and diandongPhone != ''">diandong_phone = #{diandongPhone},</if>
+            <if test="sysUserId != null">sys_user_id = #{sysUserId},</if>
+            <if test="companyId != null">company_id = #{companyId},</if>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="status != null and status != ''">status = #{status},</if>
+            <if test="provice != null and provice != ''">provice = #{provice},</if>
+            <if test="city != null and city != ''">city = #{city},</if>
+            <if test="district != null and district != ''">district = #{district},</if>
+            <if test="longitude != null and longitude != ''">longitude = #{longitude},</if>
+            <if test="latitude != null and latitude != ''">latitude = #{latitude},</if>
+            <if test="address != null and address != ''">address = #{address},</if>
+            <if test="checkResult != null and checkResult != ''">check_result = #{checkResult},</if>
+            <if test="openDate != null">open_date = #{openDate},</if>
+            <if test="contractnum != null and contractnum != ''">contractNum = #{contractnum},</if>
+            <if test="type != null and type != ''">type = #{type},</if>
+            <if test="area != null and area != ''">area = #{area},</if>
+            <if test="closeDate != null">close_date = #{closeDate},</if>
+            <if test="closeDays != null">close_days = #{closeDays},</if>
+            <if test="closeReason != null">close_reason = #{closeReason},</if>
+            <if test="checkInfo != null">check_info = #{checkInfo},</if>
+            <if test="remark != null and remark != ''">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteDianmianById" parameterType="Integer">
+        delete from biz_dianmian where id = #{id}
+    </delete>
+
+    <delete id="deleteDianmianByIds" parameterType="String">
+        delete from biz_dianmian where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>
