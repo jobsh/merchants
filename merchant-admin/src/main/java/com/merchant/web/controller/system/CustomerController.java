@@ -12,14 +12,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.merchant.common.annotation.Log;
 import com.merchant.common.core.controller.BaseController;
 import com.merchant.common.core.domain.AjaxResult;
@@ -53,6 +46,7 @@ public class CustomerController extends BaseController {
     @GetMapping("/customer/list")
     public TableDataInfo customerList(CustomerBO customerBO) {
         startPage();
+        System.out.println("customerBO : " + customerBO) ;
         List<Customer> list = customerService.selectCustomerList(customerBO);
         return getDataTable(list);
     }
@@ -110,7 +104,7 @@ public class CustomerController extends BaseController {
     }
 
     /**
-     * 新增我的客户
+     * 新增我的客户/线索（取决于前端传的status，0：线索；1：客户）
      */
     @ApiOperation(value = "新增客户", notes = "新增客户", httpMethod = "POST")
     @PreAuthorize("@ss.hasPermi('system:customer:add')")

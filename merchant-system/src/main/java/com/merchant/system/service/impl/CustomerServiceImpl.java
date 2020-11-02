@@ -1,20 +1,20 @@
 package com.merchant.system.service.impl;
 
-import java.util.List;
-
 import com.merchant.common.core.domain.entity.SysUser;
 import com.merchant.common.enums.CustomerStatus;
 import com.merchant.common.exception.CustomException;
-import com.merchant.common.utils.SecurityUtils;
 import com.merchant.common.utils.StringUtils;
+import com.merchant.system.domain.Customer;
 import com.merchant.system.domain.bo.CustomerBO;
+import com.merchant.system.mapper.CustomerMapper;
 import com.merchant.system.mapper.SysUserMapper;
+import com.merchant.system.service.ICustomerService;
 import lombok.extern.slf4j.Slf4j;
+import org.n3r.idworker.Sid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.merchant.system.mapper.CustomerMapper;
-import com.merchant.system.domain.Customer;
-import com.merchant.system.service.ICustomerService;
+
+import java.util.List;
 /**
  * 我的客户Service业务层处理
  * 
@@ -27,6 +27,9 @@ public class CustomerServiceImpl implements ICustomerService
 {
     @Autowired
     private CustomerMapper customerMapper;
+
+    @Autowired
+    private Sid sid;
 
     @Autowired
     private SysUserMapper sysUserMapper;
@@ -79,6 +82,8 @@ public class CustomerServiceImpl implements ICustomerService
     @Override
     public int insertCustomer(Customer customer)
     {
+        String customerNum = sid.nextShort();
+        customer.setNum(customerNum);
         return customerMapper.insertCustomer(customer);
     }
 

@@ -49,15 +49,15 @@
             <if test="district != null  and district != ''">and district = #{district}</if>
             <if test="resource != null  and resource != ''">and resource = #{resource}</if>
             <if test="username != null  and username != ''">and username like concat('%', #{username}, '%')</if>
-            <if test="inputDate != null ">and input_date &gt;= #{inputDateStart}</if>
-            <if test="inputDate != null ">and input_date &lt;= #{inputDateEnd}</if>
+            <if test="inputDateStart != null ">and date_format(input_date,'%y%m%d') &gt;= date_format(#{inputDateStart},'%y%m%d')</if>
+            <if test="inputDateEnd != null ">and date_format(input_date,'%y%m%d')  &lt;= date_format(#{inputDateEnd},'%y%m%d')</if>
             <if test="status != null ">and status = #{status}</if>
         </where>
     </select>
 
     <select id="selectCustomerById" parameterType="Integer" resultMap="CustomerResult">
         <include refid="selectCustomerVo"/>
-        where id = #{id}
+        where id = #{id} and  biz_customer.status = 0
     </select>
 
     <select id="selectXiansuoById" parameterType="Integer" resultMap="CustomerResult">
@@ -65,7 +65,7 @@
         where biz_customer.status = 0 and id = #{id}
     </select>
 
-    <select id="selectCustomerByIds" parameterType="CustomerBO" resultMap="CustomerResult">
+    <select id="selectCustomerByIds" parameterType="com.merchant.system.domain.bo.CustomerBO" resultMap="CustomerResult">
         <include refid="selectCustomerVo"/>
         where biz_customer.status = 1 and id in
         <foreach item="id" collection="ids" open="(" separator="," close=")">
@@ -93,6 +93,7 @@
     <insert id="insertCustomer" parameterType="Customer" useGeneratedKeys="true" keyProperty="id">
         insert into biz_customer
         <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="num != null and num != ''">num,</if>
             <if test="name != null and name != ''">name,</if>
             <if test="phone != null and phone != ''">phone,</if>
             <if test="level != null and level != ''">level,</if>
@@ -113,6 +114,7 @@
             update_date,
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="num != null and num != ''">#{num},</if>
             <if test="name != null and name != ''">#{name},</if>
             <if test="phone != null and phone != ''">#{phone},</if>
             <if test="level != null and level != ''">#{level},</if>
