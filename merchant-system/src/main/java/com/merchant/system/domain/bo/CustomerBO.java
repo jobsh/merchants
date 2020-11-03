@@ -33,7 +33,10 @@ public class CustomerBO extends Customer {
     @ApiModelProperty(value = "最近录入时间", name = "inputDateEnd")
     private String inputDateEnd;
 
+    @ApiModelProperty(value = "关键字（公司、姓名、手机号）模糊搜索", name = "keywords")
+    private String keywords;
     /** 客户表主键id */
+    @ApiModelProperty(value = "客户表主键id", name = "id")
     private Integer id;
 
     private String num;

@@ -79,6 +79,11 @@ public class SysUserServiceImpl implements ISysUserService
         return userMapper.selectUserByUserName(userName);
     }
 
+    @Override
+    public List<SysUser> selectUserByKeywords(String keywords) {
+        return userMapper.selectUserByKeywords(keywords);
+    }
+
     /**
      * 通过用户ID查询用户
      * 

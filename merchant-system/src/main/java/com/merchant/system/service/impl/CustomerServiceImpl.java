@@ -45,6 +45,11 @@ public class CustomerServiceImpl implements ICustomerService
         return customerMapper.selectCustomerById(id);
     }
 
+    @Override
+    public Customer selectXiansuoById(Integer id)
+    {
+        return customerMapper.selectXiansuoById(id);
+    }
 
 
     /**
@@ -84,6 +89,7 @@ public class CustomerServiceImpl implements ICustomerService
     {
         String customerNum = sid.nextShort();
         customer.setNum(customerNum);
+
         return customerMapper.insertCustomer(customer);
     }
 

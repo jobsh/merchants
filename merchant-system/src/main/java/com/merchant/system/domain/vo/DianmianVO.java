@@ -42,7 +42,7 @@ public class DianmianVO {
     private String status;
 
     /** 所属省 */
-    private String provice;
+    private String province;
 
     /** 所属市 */
     private String city;

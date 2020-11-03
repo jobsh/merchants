@@ -28,6 +28,13 @@ public interface SysUserMapper
     public SysUser selectUserByUserName(String userName);
 
     /**
+     * 根据关键字查询
+     * @param keywords
+     * @return
+     */
+    List<SysUser> selectUserByKeywords(String keywords);
+
+    /**
      * 通过用户ID查询用户
      * 
      * @param userId 用户ID

@@ -56,8 +56,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </sql>
     
     <select id="selectUserList" parameterType="SysUser" resultMap="SysUserResult">
-		select u.id, u.dept_id, u.nick_name, u.user_name, u.email, u.avatar, u.phonenumber, u.password, u.sex, u.status, u.del_flag, u.login_ip, u.login_date, u.create_by, u.create_date, u.remark, d.dept_name, d.leader from sys_user u
-		left join sys_dept d on u.dept_id = d.id
+		<include refid="selectUserVo"/>
 		where u.del_flag = '0'
 		<if test="userName != null and userName != ''">
 			AND u.user_name like concat('%', #{userName}, '%')
@@ -77,10 +76,24 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<if test="deptId != null and deptId != 0">
 			AND (u.dept_id = #{deptId} OR u.dept_id IN ( SELECT t.id FROM sys_dept t WHERE find_in_set(#{deptId}, ancestors) ))
 		</if>
+		<if test="keywords != null and keywords != ''">and (
+			instr(u.user_name, #{keywords}) +
+			instr(u.phonenumber, #{keywords}) +
+			instr(r.role_name, #{keywords})
+			) > 0</if>
 		<!-- 数据范围过滤 -->
 		${params.dataScope}
 	</select>
-	
+
+	<select id="selectUserByKeywords" parameterType="String" resultMap="SysUserResult">
+		<include refid="selectUserVo"/>
+		where u.del_flag = '0'
+		<if test="keywords != null and keywords != ''">and (
+			instr(u.user_name, #{keywords}) +
+			instr(u.phonenumber, #{keywords})
+			) > 0</if>
+	</select>
+
 	<select id="selectUserByUserName" parameterType="String" resultMap="SysUserResult">
 	    <include refid="selectUserVo"/>
 		where u.user_name = #{userName}

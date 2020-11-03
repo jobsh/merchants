@@ -2,6 +2,7 @@ package com.merchant.system.mapper;
 
 import java.util.List;
 import com.merchant.system.domain.Dianmian;
+import com.merchant.system.domain.vo.DianmianVO;
 
 /**
  * 店面管理Mapper接口
@@ -17,7 +18,7 @@ public interface DianmianMapper
      * @param id 店面管理ID
      * @return 店面管理
      */
-    public Dianmian selectDianmianById(Integer id);
+    public DianmianVO selectDianmianById(Integer id);
 
     /**
      * 查询店面管理列表
@@ -25,7 +26,7 @@ public interface DianmianMapper
      * @param dianmian 店面管理
      * @return 店面管理集合
      */
-    public List<Dianmian> selectDianmianList(Dianmian dianmian);
+    public List<DianmianVO> selectDianmianList(Dianmian dianmian);
 
     /**
      * 新增店面管理

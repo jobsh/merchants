@@ -13,7 +13,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="companyId"    column="company_id"    />
         <result property="name"    column="name"    />
         <result property="status"    column="status"    />
-        <result property="provice"    column="provice"    />
+        <result property="province"    column="province"    />
         <result property="city"    column="city"    />
         <result property="district"    column="district"    />
         <result property="longitude"    column="longitude"    />
@@ -56,7 +56,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectDianmianVo">
-        select d.id, d.diandong_id, d.diandong_name, d.diandong_phone, d.sys_user_id, d.company_id, d.name, d.status, d.provice, d.city, d.district, d.longitude, d.latitude, d.address, d.check_result, d.open_date, d.contractNum, d.type, d.area, d.close_date, d.close_days, d.close_reason, d.check_info, d.remark,
+        select d.id, d.diandong_id, d.diandong_name, d.diandong_phone, d.sys_user_id, d.company_id, d.name, d.status, d.province, d.city, d.district, d.longitude, d.latitude, d.address, d.check_result, d.open_date, d.contractNum, d.type, d.area, d.close_date, d.close_days, d.close_reason, d.check_info, d.remark,
         c.*
         from
             biz_dianmian d
@@ -75,7 +75,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="companyId != null "> and company_id = #{companyId}</if>
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
             <if test="status != null  and status != ''"> and status = #{status}</if>
-            <if test="provice != null  and provice != ''"> and provice = #{provice}</if>
+            <if test="province != null  and province != ''"> and province = #{province}</if>
             <if test="city != null  and city != ''"> and city = #{city}</if>
             <if test="district != null  and district != ''"> and district = #{district}</if>
             <if test="address != null  and address != ''"> and address = #{address}</if>
@@ -89,7 +89,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <select id="selectDianmianById" parameterType="Integer" resultMap="DianmianResult">
         <include refid="selectDianmianVo"/>
-        where id = #{id}
+        where d.id = #{id}
     </select>
         
     <insert id="insertDianmian" parameterType="Dianmian" useGeneratedKeys="true" keyProperty="id">
@@ -102,7 +102,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="companyId != null">company_id,</if>
             <if test="name != null and name != ''">name,</if>
             <if test="status != null and status != ''">status,</if>
-            <if test="provice != null and provice != ''">provice,</if>
+            <if test="province != null and province != ''">province,</if>
             <if test="city != null and city != ''">city,</if>
             <if test="district != null and district != ''">district,</if>
             <if test="longitude != null and longitude != ''">longitude,</if>
@@ -127,7 +127,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="companyId != null">#{companyId},</if>
             <if test="name != null and name != ''">#{name},</if>
             <if test="status != null and status != ''">#{status},</if>
-            <if test="provice != null and provice != ''">#{provice},</if>
+            <if test="province != null and province != ''">#{province},</if>
             <if test="city != null and city != ''">#{city},</if>
             <if test="district != null and district != ''">#{district},</if>
             <if test="longitude != null and longitude != ''">#{longitude},</if>
@@ -156,7 +156,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="companyId != null">company_id = #{companyId},</if>
             <if test="name != null and name != ''">name = #{name},</if>
             <if test="status != null and status != ''">status = #{status},</if>
-            <if test="provice != null and provice != ''">provice = #{provice},</if>
+            <if test="province != null and province != ''">province = #{province},</if>
             <if test="city != null and city != ''">city = #{city},</if>
             <if test="district != null and district != ''">district = #{district},</if>
             <if test="longitude != null and longitude != ''">longitude = #{longitude},</if>
@@ -173,15 +173,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="checkInfo != null">check_info = #{checkInfo},</if>
             <if test="remark != null and remark != ''">remark = #{remark},</if>
         </trim>
-        where id = #{id}
+        where d.id = #{id}
     </update>
 
     <delete id="deleteDianmianById" parameterType="Integer">
-        delete from biz_dianmian where id = #{id}
+        delete from biz_dianmian where d.id = #{id}
     </delete>
 
     <delete id="deleteDianmianByIds" parameterType="String">
-        delete from biz_dianmian where id in 
+        delete from biz_dianmian where d.id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

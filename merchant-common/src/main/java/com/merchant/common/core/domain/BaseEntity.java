@@ -44,6 +44,8 @@ public class BaseEntity implements Serializable
     @JsonIgnore
     private String endTime;
 
+    private String keywords;
+
     /** 请求参数 */
     private Map<String, Object> params;
 
@@ -139,5 +141,13 @@ public class BaseEntity implements Serializable
     public void setParams(Map<String, Object> params)
     {
         this.params = params;
+    }
+
+    public String getKeywords() {
+        return keywords;
+    }
+
+    public void setKeywords(String keywords) {
+        this.keywords = keywords;
     }
 }

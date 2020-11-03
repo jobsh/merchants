@@ -1,6 +1,8 @@
 package com.merchant.web.controller.system;
 
 import java.util.List;
+
+import com.merchant.system.domain.vo.DianmianVO;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,7 +43,7 @@ public class DianmianController extends BaseController
     public TableDataInfo list(Dianmian dianmian)
     {
         startPage();
-        List<Dianmian> list = dianmianService.selectDianmianList(dianmian);
+        List<DianmianVO> list = dianmianService.selectDianmianList(dianmian);
         return getDataTable(list);
     }
 
@@ -53,8 +55,8 @@ public class DianmianController extends BaseController
     @GetMapping("/export")
     public AjaxResult export(Dianmian dianmian)
     {
-        List<Dianmian> list = dianmianService.selectDianmianList(dianmian);
-        ExcelUtil<Dianmian> util = new ExcelUtil<Dianmian>(Dianmian.class);
+        List<DianmianVO> list = dianmianService.selectDianmianList(dianmian);
+        ExcelUtil<DianmianVO> util = new ExcelUtil<DianmianVO>(DianmianVO.class);
         return util.exportExcel(list, "dianmianManager");
     }
 

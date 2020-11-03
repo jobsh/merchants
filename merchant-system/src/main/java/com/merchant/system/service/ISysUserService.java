@@ -26,6 +26,8 @@ public interface ISysUserService
      */
     public SysUser selectUserByUserName(String userName);
 
+    List<SysUser> selectUserByKeywords (String keyWords);
+
     /**
      * 通过用户ID查询用户
      * 

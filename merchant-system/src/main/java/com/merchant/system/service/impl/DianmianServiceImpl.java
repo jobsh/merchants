@@ -1,6 +1,8 @@
 package com.merchant.system.service.impl;
 
 import java.util.List;
+
+import com.merchant.system.domain.vo.DianmianVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.merchant.system.mapper.DianmianMapper;
@@ -26,7 +28,7 @@ public class DianmianServiceImpl implements IDianmianService
      * @return 店面管理
      */
     @Override
-    public Dianmian selectDianmianById(Integer id)
+    public DianmianVO selectDianmianById(Integer id)
     {
         return dianmianMapper.selectDianmianById(id);
     }
@@ -38,7 +40,7 @@ public class DianmianServiceImpl implements IDianmianService
      * @return 店面管理
      */
     @Override
-    public List<Dianmian> selectDianmianList(Dianmian dianmian)
+    public List<DianmianVO> selectDianmianList(Dianmian dianmian)
     {
         return dianmianMapper.selectDianmianList(dianmian);
     }

@@ -65,6 +65,16 @@ public class SysUserController extends BaseController
         return getDataTable(list);
     }
 
+    @PreAuthorize("@ss.hasPermi('system:user:list')")
+    @GetMapping("/list/{keywords}")
+    public TableDataInfo listByKeywords(@PathVariable String keywords)
+    {
+        startPage();
+        List<SysUser> list = userService.selectUserByKeywords(keywords);
+        return getDataTable(list);
+    }
+
+
     @Log(title = "用户管理", businessType = BusinessType.EXPORT)
     @PreAuthorize("@ss.hasPermi('system:user:export')")
     @GetMapping("/export")

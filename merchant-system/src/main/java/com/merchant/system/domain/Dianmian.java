@@ -50,7 +50,7 @@ public class Dianmian extends BaseEntity
 
     /** 所属省 */
     @Excel(name = "所属省")
-    private String provice;
+    private String province;
 
     /** 所属市 */
     @Excel(name = "所属市")
@@ -179,14 +179,14 @@ public class Dianmian extends BaseEntity
     {
         return status;
     }
-    public void setProvice(String provice) 
+    public void setProvince(String province)
     {
-        this.provice = provice;
+        this.province = province;
     }
 
-    public String getProvice() 
+    public String getProvince()
     {
-        return provice;
+        return province;
     }
     public void setCity(String city) 
     {
@@ -326,7 +326,7 @@ public class Dianmian extends BaseEntity
             .append("companyId", getCompanyId())
             .append("name", getName())
             .append("status", getStatus())
-            .append("provice", getProvice())
+            .append("province", getProvince())
             .append("city", getCity())
             .append("district", getDistrict())
             .append("longitude", getLongitude())

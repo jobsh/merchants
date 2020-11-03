@@ -24,6 +24,14 @@ public interface ICustomerService
     public Customer selectCustomerById(Integer id);
 
     /**
+     * 查询我的线索
+     *
+     * @param id 我的线索ID
+     * @return 我的线索
+     */
+    public Customer selectXiansuoById(Integer id);
+
+    /**
      * 查询我的客户列表
      * 
      * @param customerBO 我的客户

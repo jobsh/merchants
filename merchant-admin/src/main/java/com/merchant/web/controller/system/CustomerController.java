@@ -41,7 +41,7 @@ public class CustomerController extends BaseController {
     /**
      * 查询我的客户列表
      */
-    @ApiOperation(value = "查寻客户", notes = "查寻客户", httpMethod = "GET")
+    @ApiOperation(value = "查询客户", notes = "查询客户", httpMethod = "GET")
     @PreAuthorize("@ss.hasPermi('system:customer:list')")
     @GetMapping("/customer/list")
     public TableDataInfo customerList(CustomerBO customerBO) {
@@ -97,9 +97,23 @@ public class CustomerController extends BaseController {
     @ApiOperation(value = "根据id获取客户详情", notes = "根据id获取客户详情", httpMethod = "GET")
     @PreAuthorize("@ss.hasPermi('system:customer:query')")
     @GetMapping(value = "/customer/{id}")
-    public AjaxResult getInfo(
+    public AjaxResult getCustomerById(
             @ApiParam(name = "id", value = "客户id", required = true)
             @PathVariable("id") Integer id) {
+        System.out.println("id" + id);
+        return AjaxResult.success(customerService.selectCustomerById(id));
+    }
+
+    /**
+     * 获取我的客户详细信息
+     */
+    @ApiOperation(value = "根据id获取客户详情", notes = "根据id获取客户详情", httpMethod = "GET")
+    @PreAuthorize("@ss.hasPermi('system:customer:query')")
+    @GetMapping(value = "/xiansuo/{id}")
+    public AjaxResult getXiansuoById(
+            @ApiParam(name = "id", value = "客户id", required = true)
+            @PathVariable("id") Integer id) {
+        System.out.println("id" + id);
         return AjaxResult.success(customerService.selectCustomerById(id));
     }
 

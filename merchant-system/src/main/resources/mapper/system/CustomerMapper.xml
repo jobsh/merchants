@@ -49,20 +49,25 @@
             <if test="district != null  and district != ''">and district = #{district}</if>
             <if test="resource != null  and resource != ''">and resource = #{resource}</if>
             <if test="username != null  and username != ''">and username like concat('%', #{username}, '%')</if>
-            <if test="inputDateStart != null ">and date_format(input_date,'%y%m%d') &gt;= date_format(#{inputDateStart},'%y%m%d')</if>
-            <if test="inputDateEnd != null ">and date_format(input_date,'%y%m%d')  &lt;= date_format(#{inputDateEnd},'%y%m%d')</if>
-            <if test="status != null ">and status = #{status}</if>
+            <if test="inputDateStart != null  and inputDateStart != ''">and date_format(input_date,'%y%m%d') &gt;= date_format(#{inputDateStart},'%y%m%d')</if>
+            <if test="inputDateEnd != null and inputDateEnd != ''">and date_format(input_date,'%y%m%d')  &lt;= date_format(#{inputDateEnd},'%y%m%d')</if>
+            <if test="status != null and status != ''">and status = #{status}</if>
+            <if test="keywords != null and keywords != ''">and (
+                instr(biz_customer.company_name, #{keywords}) +
+                instr(biz_customer.name, #{keywords}) +
+                instr(biz_customer.phone, #{keywords})
+                ) > 0</if>
         </where>
     </select>
 
     <select id="selectCustomerById" parameterType="Integer" resultMap="CustomerResult">
         <include refid="selectCustomerVo"/>
-        where id = #{id} and  biz_customer.status = 0
+        where id = #{id} and  biz_customer.status = 1
     </select>
 
     <select id="selectXiansuoById" parameterType="Integer" resultMap="CustomerResult">
         <include refid="selectCustomerVo"/>
-        where biz_customer.status = 0 and id = #{id}
+        where id = #{id} and  biz_customer.status = 0
     </select>
 
     <select id="selectCustomerByIds" parameterType="com.merchant.system.domain.bo.CustomerBO" resultMap="CustomerResult">
