@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.merchant.system.mapper.ConstractMapper">
+<mapper namespace="com.merchant.system.mapper.ContractMapper">
     
-    <resultMap type="Constract" id="ConstractResult">
+    <resultMap type="Contract" id="ContractResult">
         <result property="id"    column="id"    />
         <result property="num"    column="num"    />
         <result property="customerName"    column="customer_name"    />
@@ -26,22 +26,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="remark"    column="remark"    />
     </resultMap>
 
-    <sql id="selectConstractVo">
-        select id, num, customer_name, customer_id, customer_phone, type, produce, dianmian_name, dianmian_num, guarantee, fee, operation, manager, sign_date, sign_user, begin_date, end_date, status, remark from biz_constract
+    <sql id="selectContractVo">
+        select id, num, customer_name, customer_id, customer_phone, type, produce, dianmian_name, dianmian_num, guarantee, fee, operation, manager, sign_date, sign_user, begin_date, end_date, status, remark from biz_contract
     </sql>
 
-    <select id="selectConstractList" parameterType="Constract" resultMap="ConstractResult">
-        <include refid="selectConstractVo"/>
+    <select id="selectContractList" parameterType="Contract" resultMap="ContractResult">
+        <include refid="selectContractVo"/>
         <where>  
             <if test="num != null  and num != ''"> and num = #{num}</if>
             <if test="customerName != null  and customerName != ''"> and customer_name like concat('%', #{customerName}, '%')</if>
             <if test="customerPhone != null  and customerPhone != ''"> and customer_phone = #{customerPhone}</if>
             <if test="type != null  and type != ''"> and type = #{type}</if>
             <if test="produce != null  and produce != ''"> and produce = #{produce}</if>
-            <if test="dianmianName != null  and dianmianName != ''"> and dianmian_name like concat('%', #{dianmianName}, '%')</if>
-            <if test="dianmianNum != null "> and dianmian_num = #{dianmianNum}</if>
             <if test="operation != null  and operation != ''"> and operation = #{operation}</if>
-            <if test="manager != null  and manager != ''"> and manager = #{manager}</if>
             <if test="signDate != null "> and sign_date = #{signDate}</if>
             <if test="beginDate != null "> and begin_date = #{beginDate}</if>
             <if test="endDate != null  and endDate != ''"> and end_date = #{endDate}</if>
@@ -49,13 +46,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </where>
     </select>
     
-    <select id="selectConstractById" parameterType="Integer" resultMap="ConstractResult">
-        <include refid="selectConstractVo"/>
+    <select id="selectContractById" parameterType="Integer" resultMap="ContractResult">
+        <include refid="selectContractVo"/>
         where id = #{id}
     </select>
         
-    <insert id="insertConstract" parameterType="Constract" useGeneratedKeys="true" keyProperty="id">
-        insert into biz_constract
+    <insert id="insertContract" parameterType="Contract" useGeneratedKeys="true" keyProperty="id">
+        insert into biz_contract
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="num != null and num != ''">num,</if>
             <if test="customerName != null and customerName != ''">customer_name,</if>
@@ -98,8 +95,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
     </insert>
 
-    <update id="updateConstract" parameterType="Constract">
-        update biz_constract
+    <update id="updateContract" parameterType="Contract">
+        update biz_contract
         <trim prefix="SET" suffixOverrides=",">
             <if test="num != null and num != ''">num = #{num},</if>
             <if test="customerName != null and customerName != ''">customer_name = #{customerName},</if>
@@ -123,12 +120,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </update>
 
-    <delete id="deleteConstractById" parameterType="Integer">
-        delete from biz_constract where id = #{id}
+    <delete id="deleteContractById" parameterType="Integer">
+        delete from biz_contract where id = #{id}
     </delete>
 
-    <delete id="deleteConstractByIds" parameterType="String">
-        delete from biz_constract where id in 
+    <delete id="deleteContractByIds" parameterType="String">
+        delete from biz_contract where id in 
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

@@ -8,12 +8,12 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
- * 合同管理对象 biz_constract
+ * 合同对象 biz_contract
  * 
  * @author hanke
- * @date 2020-11-02
+ * @date 2020-11-03
  */
-public class Constract extends BaseEntity
+public class Contract extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
@@ -29,14 +29,14 @@ public class Constract extends BaseEntity
     private String customerName;
 
     /** 客户id */
-    private Long customerId;
+    private Integer customerId;
 
-    /** 客户手机号 */
-    @Excel(name = "客户手机号")
+    /** 客户手机号（可以有多个手机号，逗号分隔） */
+    @Excel(name = "客户手机号", readConverterExp = "可=以有多个手机号，逗号分隔")
     private String customerPhone;
 
-    /** 合同类型 */
-    @Excel(name = "合同类型")
+    /** 合同类型(0：新签:1：续签) */
+    @Excel(name = "合同类型(0：新签:1：续签)")
     private String type;
 
     /** 签约产品 */
@@ -53,10 +53,10 @@ public class Constract extends BaseEntity
 
     /** 保证金 */
     @Excel(name = "保证金")
-    private Long guarantee;
+    private Integer guarantee;
 
-    /** 费用 */
-    @Excel(name = "费用")
+    /** 各种费用 */
+    @Excel(name = "各种费用")
     private String fee;
 
     /** 操作 */
@@ -116,12 +116,12 @@ public class Constract extends BaseEntity
     {
         return customerName;
     }
-    public void setCustomerId(Long customerId) 
+    public void setCustomerId(Integer customerId) 
     {
         this.customerId = customerId;
     }
 
-    public Long getCustomerId() 
+    public Integer getCustomerId() 
     {
         return customerId;
     }
@@ -170,12 +170,12 @@ public class Constract extends BaseEntity
     {
         return dianmianNum;
     }
-    public void setGuarantee(Long guarantee) 
+    public void setGuarantee(Integer guarantee) 
     {
         this.guarantee = guarantee;
     }
 
-    public Long getGuarantee() 
+    public Integer getGuarantee() 
     {
         return guarantee;
     }
