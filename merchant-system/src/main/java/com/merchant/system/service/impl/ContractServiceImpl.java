@@ -52,6 +52,7 @@ public class ContractServiceImpl implements IContractService
     @Override
     public int insertContract(Contract contract)
     {
+
         return contractMapper.insertContract(contract);
     }
 
