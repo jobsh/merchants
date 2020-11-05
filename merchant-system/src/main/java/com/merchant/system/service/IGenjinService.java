@@ -32,7 +32,7 @@ public interface IGenjinService
     /**
      * 新增客户跟进
      * 
-     * @param genjin 客户跟进
+     * @param genjinBO 客户跟进
      * @return 结果
      */
     public int insertGenjin(GenjinBO genjinBO) throws IOException;
@@ -40,10 +40,10 @@ public interface IGenjinService
     /**
      * 修改客户跟进
      * 
-     * @param genjin 客户跟进
+     * @param genjinBO 客户跟进
      * @return 结果
      */
-    public int updateGenjin(Genjin genjin);
+    public int updateGenjin(GenjinBO genjinBO);
 
     /**
      * 批量删除客户跟进
@@ -60,4 +60,6 @@ public interface IGenjinService
      * @return 结果
      */
     public int deleteGenjinById(Integer id);
+
+    boolean updateGenjinImage(String imgPath);
 }

@@ -3,21 +3,19 @@ package com.merchant.web.controller.system;
 import java.io.IOException;
 import java.util.List;
 
+import com.merchant.common.config.MerchantConfig;
+import com.merchant.common.core.domain.model.LoginUser;
+import com.merchant.common.utils.ServletUtils;
+import com.merchant.common.utils.file.FileUploadUtils;
 import com.merchant.system.domain.bo.GenjinBO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.models.auth.In;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.merchant.common.annotation.Log;
 import com.merchant.common.core.controller.BaseController;
 import com.merchant.common.core.domain.AjaxResult;
@@ -26,6 +24,7 @@ import com.merchant.system.domain.Genjin;
 import com.merchant.system.service.IGenjinService;
 import com.merchant.common.utils.poi.ExcelUtil;
 import com.merchant.common.core.page.TableDataInfo;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 客户跟进Controller
@@ -84,14 +83,31 @@ public class GenjinController extends BaseController
     }
 
     /**
+     * 上传跟进图片
+     */
+    @PostMapping("/genjinImg")
+    public AjaxResult uploadGenjinImager(@RequestParam("img") MultipartFile img) throws IOException{
+        if (!img.isEmpty())
+        {
+            String imgPath = FileUploadUtils.upload(MerchantConfig.getDianmianPath(), img);
+            if (StringUtils.isNotBlank(imgPath)) {
+                AjaxResult ajax = AjaxResult.success();
+                ajax.put("imgUrl", imgPath);
+                return ajax;
+            }
+        }
+        return AjaxResult.error("上传图片异常，请联系管理员");
+    }
+
+    /**
      * 修改客户跟进
      */
     @PreAuthorize("@ss.hasPermi('system:genjin:edit')")
     @Log(title = "客户跟进", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody Genjin genjin)
+    public AjaxResult edit(@RequestBody GenjinBO genjinBO)
     {
-        return toAjax(genjinService.updateGenjin(genjin));
+        return toAjax(genjinService.updateGenjin(genjinBO));
     }
 
     /**

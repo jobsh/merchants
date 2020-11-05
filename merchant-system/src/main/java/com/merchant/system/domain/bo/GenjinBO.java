@@ -18,9 +18,6 @@ import java.util.Date;
 @Data
 public class GenjinBO {
 
-    @ApiModelProperty(value = "二进制图片", name = "img")
-    private MultipartFile img;
-
     /** 客户id */
     @ApiModelProperty(value = "客户id", name = "customerId")
     private Integer customerId;

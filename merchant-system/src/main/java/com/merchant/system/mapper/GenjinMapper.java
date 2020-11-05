@@ -42,7 +42,7 @@ public interface GenjinMapper
      * @param genjin 客户跟进
      * @return 结果
      */
-    public int updateGenjin(Genjin genjin);
+    public int updateGenjin(GenjinBO genjinBO);
 
     /**
      * 删除客户跟进

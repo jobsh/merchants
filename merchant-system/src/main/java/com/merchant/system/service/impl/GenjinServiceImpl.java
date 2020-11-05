@@ -56,10 +56,6 @@ public class GenjinServiceImpl implements IGenjinService {
      */
     @Override
     public int insertGenjin(GenjinBO genjinBO) throws IOException {
-        if (genjinBO.getImg() != null) {
-            String imgPath = FileUploadUtils.upload(MerchantConfig.getGenjinPath(), genjinBO.getImg());
-            genjinBO.setImage(imgPath);
-        }
         // 更新customer最新跟进时间
         customerService.updateGenjinDate(genjinBO.getCustomerId());
         return genjinMapper.insertGenjin(genjinBO);
@@ -68,12 +64,12 @@ public class GenjinServiceImpl implements IGenjinService {
     /**
      * 修改客户跟进
      *
-     * @param genjin 客户跟进
+     * @param genjinBO 客户跟进
      * @return 结果
      */
     @Override
-    public int updateGenjin(Genjin genjin) {
-        return genjinMapper.updateGenjin(genjin);
+    public int updateGenjin(GenjinBO genjinBO) {
+        return genjinMapper.updateGenjin(genjinBO);
     }
 
     /**
@@ -96,5 +92,12 @@ public class GenjinServiceImpl implements IGenjinService {
     @Override
     public int deleteGenjinById(Integer id) {
         return genjinMapper.deleteGenjinById(id);
+    }
+
+    @Override
+    public boolean updateGenjinImage(String imgPath) {
+        GenjinBO genjinBO = new GenjinBO();
+        genjinBO.setImage(imgPath);
+        return genjinMapper.updateGenjin(genjinBO) > 0;
     }
 }
