@@ -32,7 +32,7 @@ public class Contract extends BaseEntity
     private Integer customerId;
 
     /** 客户手机号（可以有多个手机号，逗号分隔） */
-    @Excel(name = "客户手机号", readConverterExp = "可=以有多个手机号，逗号分隔")
+    @Excel(name = "客户手机号", readConverterExp = "可以有多个手机号，逗号分隔")
     private String customerPhone;
 
     /** 合同类型(0：新签:1：续签) */
@@ -76,14 +76,20 @@ public class Contract extends BaseEntity
     @Excel(name = "签约人员")
     private String signUser;
 
+    /** 审核时间 */
+    @Excel(name = "签约人员")
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date checkDate;
+
     /** 合同开始日期 */
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "合同开始日期", width = 30, dateFormat = "yyyy-MM-dd")
     private Date beginDate;
 
     /** 合同结束日期 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "合同结束日期")
-    private String endDate;
+    private Date endDate;
 
     /** 生效失效状态 */
     @Excel(name = "生效失效状态")
@@ -233,12 +239,12 @@ public class Contract extends BaseEntity
     {
         return beginDate;
     }
-    public void setEndDate(String endDate) 
+    public void setEndDate(Date endDate)
     {
         this.endDate = endDate;
     }
 
-    public String getEndDate() 
+    public Date getEndDate()
     {
         return endDate;
     }
@@ -275,5 +281,13 @@ public class Contract extends BaseEntity
             .append("status", getStatus())
             .append("remark", getRemark())
             .toString();
+    }
+
+    public Date getCheckDate() {
+        return checkDate;
+    }
+
+    public void setCheckDate(Date checkDate) {
+        this.checkDate = checkDate;
     }
 }

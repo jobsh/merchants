@@ -30,7 +30,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select id, num, customer_name, customer_id, customer_phone, type, produce, dianmian_name, dianmian_num, guarantee, fee, operation, manager, sign_date, sign_user, begin_date, end_date, status, remark from biz_contract
     </sql>
 
-    <select id="selectContractList" parameterType="Contract" resultMap="ContractResult">
+    <select id="selectContractList" parameterType="ContractBO" resultMap="ContractResult">
         <include refid="selectContractVo"/>
         <where>  
             <if test="num != null  and num != ''"> and num = #{num}</if>
@@ -39,19 +39,25 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="type != null  and type != ''"> and type = #{type}</if>
             <if test="produce != null  and produce != ''"> and produce = #{produce}</if>
             <if test="operation != null  and operation != ''"> and operation = #{operation}</if>
-            <if test="signDate != null "> and sign_date = #{signDate}</if>
-            <if test="beginDate != null "> and begin_date = #{beginDate}</if>
-            <if test="endDate != null  and endDate != ''"> and end_date = #{endDate}</if>
+            <if test="signDateStart != null  and signDateStart != ''">and date_format(sign_date,'%y%m%d') &gt;= date_format(#{signDateStart},'%y%m%d')</if>
+            <if test="signDateEnd != null  and signDateEnd != ''">and date_format(sign_date,'%y%m%d') &lt;= date_format(#{signDateEnd},'%y%m%d')</if>
+            <if test="beginDateStart != null  and beginDateStart != ''">and date_format(begin_date,'%y%m%d') &gt;= date_format(#{beginDateStart},'%y%m%d')</if>
+            <if test="beginDateEnd != null  and beginDateEnd != ''">and date_format(begin_date,'%y%m%d') &lt;= date_format(#{beginDateEnd},'%y%m%d')</if>
+            <if test="checkDateStart != null  and checkDateStart != ''">and date_format(check_date,'%y%m%d') &gt;= date_format(#{checkDateStart},'%y%m%d')</if>
+            <if test="checkDateEnd != null  and checkDateEnd != ''">and date_format(check_date,'%y%m%d') &lt;= date_format(#{checkDateEnd},'%y%m%d')</if>
+            <if test="endDateStart != null  and endDateStart != ''">and date_format(end_date,'%y%m%d') &gt;= date_format(#{endDateStart},'%y%m%d')</if>
+            <if test="endDateEnd != null  and endDateEnd != ''">and date_format(end_date,'%y%m%d') &lt;= date_format(#{endDateEnd},'%y%m%d')</if>
             <if test="status != null  and status != ''"> and status = #{status}</if>
+
         </where>
     </select>
-    
+
     <select id="selectContractById" parameterType="Integer" resultMap="ContractResult">
         <include refid="selectContractVo"/>
         where id = #{id}
     </select>
         
-    <insert id="insertContract" parameterType="Contract" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insertContract" parameterType="ContractBO" useGeneratedKeys="true" keyProperty="id">
         insert into biz_contract
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="num != null and num != ''">num,</if>

@@ -43,8 +43,8 @@ public class CustomerController extends BaseController {
      */
     @ApiOperation(value = "查询客户", notes = "查询客户", httpMethod = "GET")
     @PreAuthorize("@ss.hasPermi('system:customer:list')")
-    @GetMapping("/customer/list")
-    public TableDataInfo customerList(CustomerBO customerBO) {
+    @PostMapping("/customer/list")
+    public TableDataInfo customerList(@RequestBody(required = false) CustomerBO customerBO) {
         startPage();
         System.out.println("customerBO : " + customerBO) ;
         List<Customer> list = customerService.selectCustomerList(customerBO);
@@ -56,7 +56,7 @@ public class CustomerController extends BaseController {
      */
     @ApiOperation(value = "查寻线索", notes = "查寻线索", httpMethod = "GET")
     @PreAuthorize("@ss.hasPermi('system:customer:list')")
-    @GetMapping("/xiansuo/list")
+    @PostMapping("/xiansuo/list")
     public TableDataInfo xiansuoList(CustomerBO customerBO) {
         startPage();
         List<Customer> list = customerService.selectXiansuoList(customerBO);

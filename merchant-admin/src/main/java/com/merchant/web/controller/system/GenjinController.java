@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.util.List;
 
 import com.merchant.system.domain.bo.GenjinBO;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import io.swagger.models.auth.In;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +33,7 @@ import com.merchant.common.core.page.TableDataInfo;
  * @author hanke
  * @date 2020-10-29
  */
+@Api(value = "客户跟进相关", tags = {"客户跟进相关相关的api接口"})
 @RestController
 @RequestMapping("/system/genjin")
 public class GenjinController extends BaseController
@@ -40,9 +44,11 @@ public class GenjinController extends BaseController
     /**
      * 查询客户跟进列表
      */
-    @PreAuthorize("@ss.hasPermi('system:genjin:list')")
+    @ApiOperation(value = "通过customerId查出跟进列表", notes = "通过customerId查出跟进列表", httpMethod = "GET")
     @GetMapping("/list/{customerId}")
-    public TableDataInfo list(@PathVariable("customerId") Integer customerId)
+    public TableDataInfo list(
+            @ApiParam(name = "customerId", value = "客户id", required = true)
+            @PathVariable("customerId") Integer customerId)
     {
         startPage();
         List<Genjin> list = genjinService.selectGenjinList(customerId);
@@ -63,6 +69,7 @@ public class GenjinController extends BaseController
     /**
      * 新增客户跟进
      */
+    @ApiOperation(value = "新增客户跟进", notes = "新增客户跟进", httpMethod = "GET")
     @PreAuthorize("@ss.hasPermi('system:genjin:add')")
     @Log(title = "客户跟进", businessType = BusinessType.INSERT)
     @PostMapping

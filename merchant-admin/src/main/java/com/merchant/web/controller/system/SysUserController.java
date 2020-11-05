@@ -57,8 +57,8 @@ public class SysUserController extends BaseController
      * 获取用户列表
      */
     @PreAuthorize("@ss.hasPermi('system:user:list')")
-    @GetMapping("/list")
-    public TableDataInfo list(SysUser user)
+    @PostMapping("/list")
+    public TableDataInfo list(@RequestBody SysUser user)
     {
         startPage();
         List<SysUser> list = userService.selectUserList(user);

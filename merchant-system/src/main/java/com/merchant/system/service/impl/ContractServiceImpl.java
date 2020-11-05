@@ -1,6 +1,10 @@
 package com.merchant.system.service.impl;
 
 import java.util.List;
+
+import com.merchant.common.utils.DateUtils;
+import com.merchant.system.domain.bo.ContractBO;
+import org.n3r.idworker.Sid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.merchant.system.mapper.ContractMapper;
@@ -19,6 +23,9 @@ public class ContractServiceImpl implements IContractService
     @Autowired
     private ContractMapper contractMapper;
 
+    @Autowired
+    private Sid sid;
+
     /**
      * 查询合同
      * 
@@ -34,26 +41,27 @@ public class ContractServiceImpl implements IContractService
     /**
      * 查询合同列表
      * 
-     * @param contract 合同
+     * @param contractBO 合同
      * @return 合同
      */
     @Override
-    public List<Contract> selectContractList(Contract contract)
+    public List<Contract> selectContractList(ContractBO contractBO)
     {
-        return contractMapper.selectContractList(contract);
+        return contractMapper.selectContractList(contractBO);
     }
 
     /**
      * 新增合同
      * 
-     * @param contract 合同
+     * @param contractBO 合同
      * @return 结果
      */
     @Override
-    public int insertContract(Contract contract)
+    public int insertContract(ContractBO contractBO)
     {
-
-        return contractMapper.insertContract(contract);
+        String contractNum = sid.nextShort();
+        contractBO.setNum(contractNum);
+        return contractMapper.insertContract(contractBO);
     }
 
     /**
@@ -90,5 +98,12 @@ public class ContractServiceImpl implements IContractService
     public int deleteContractById(Integer id)
     {
         return contractMapper.deleteContractById(id);
+    }
+
+    @Override
+    public List<Contract> selectContractListByCustomerId(Integer customerId) {
+        ContractBO contractBO = new ContractBO();
+        contractBO.setCustomerId(customerId);
+        return contractMapper.selectContractList(contractBO);
     }
 }

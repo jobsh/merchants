@@ -24,6 +24,7 @@
         <result property="remark" column="remark"/>
         <result property="status" column="status"/>
         <result property="inputDate" column="input_date"/>
+        <result property="genjinDate" column="genjin_date"/>
         <result property="updateDate" column="update_date"/>
     </resultMap>
 
@@ -117,6 +118,7 @@
             <if test="status != null and status != ''">status,</if>
             input_date,
             update_date,
+            genjin_date,
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="num != null and num != ''">#{num},</if>
@@ -136,7 +138,7 @@
             <if test="experience != null and experience != ''">#{experience},</if>
             <if test="remark != null and remark != ''">#{remark},</if>
             <if test="status != null and status != ''">#{status},</if>
-            now(),now()
+            now(),now(),now()
         </trim>
     </insert>
 

@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.n3r.idworker.Sid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 /**
@@ -59,9 +60,8 @@ public class CustomerServiceImpl implements ICustomerService
      * @return 我的客户
      */
     @Override
-    public List<Customer> selectCustomerList(CustomerBO customerBO)
+    public List<Customer> selectCustomerList(@RequestBody CustomerBO customerBO)
     {
-        customerBO.setStatus(CustomerStatus.OK.getCode());
         return customerMapper.selectCustomerList(customerBO);
     }
 
@@ -73,7 +73,7 @@ public class CustomerServiceImpl implements ICustomerService
      */
 
     @Override
-    public List<Customer> selectXiansuoList(CustomerBO customerBO) {
+    public List<Customer> selectXiansuoList(@RequestBody CustomerBO customerBO) {
         customerBO.setStatus(CustomerStatus.DISABLE.getCode());
         return customerMapper.selectCustomerList(customerBO);
     }

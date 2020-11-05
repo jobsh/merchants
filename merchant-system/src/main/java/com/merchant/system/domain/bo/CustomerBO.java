@@ -39,63 +39,67 @@ public class CustomerBO extends Customer {
     @ApiModelProperty(value = "客户表主键id", name = "id")
     private Integer id;
 
+    @ApiModelProperty(value = "店面数量", name = "num")
     private String num;
     /** 客户名称 */
-    @Excel(name = "客户名称")
+    @ApiModelProperty(value = "客户名称", name = "name")
     private String name;
 
     /** 客户电话 */
-    @Excel(name = "客户电话")
+    @ApiModelProperty(value = "客户电话", name = "phone")
     private String phone;
 
     /** 客户等级 */
-    @Excel(name = "客户等级")
+    @ApiModelProperty(value = "客户等级", name = "level")
     private String level;
 
     /** 客户需求 */
-    @Excel(name = "客户需求")
+    @ApiModelProperty(value = "客户需求", name = "customerNeeds")
     private String customerNeeds;
 
     /** 公司和部门 */
-    @Excel(name = "公司和部门")
+    @ApiModelProperty(value = "公司和部门", name = "companyName")
     private String companyName;
 
     /** 省 */
-    @Excel(name = "省")
+    @ApiModelProperty(value = "省", name = "province")
     private String province;
 
     /** 市 */
-    @Excel(name = "市")
+    @ApiModelProperty(value = "市", name = "city")
     private String city;
 
     /** 区 */
-    @Excel(name = "区")
+    @ApiModelProperty(value = "区", name = "district")
     private String district;
 
     /** 门店地址 */
-    @Excel(name = "门店地址")
+    @ApiModelProperty(value = "门店地址", name = "dianmianAddress")
     private String dianmianAddress;
 
     /** 客户来源 */
     @Excel(name = "客户来源")
+    @ApiModelProperty(value = "客户名称", name = "name")
     private String resource;
 
     /** 负责人id */
+    @ApiModelProperty(value = "负责人id", name = "userId")
     private Integer userId;
 
     /** 负责人姓名 */
-    @Excel(name = "负责人姓名")
+    @ApiModelProperty(value = "负责人姓名", name = "username")
     private String username;
 
     /** 录入人 */
-    @Excel(name = "录入人")
+    @ApiModelProperty(value = "录入人", name = "luruName")
     private String luruName;
 
     /** 中介经验 */
-    @Excel(name = "中介经验")
+    @ApiModelProperty(value = "中介经验", name = "experience")
     private String experience;
 
     /** 客户状态（0：线索，1：客户）  */
+    @ApiModelProperty(value = "客户状态", name = "status")
     private String status;
 
     /** 最新跟进时间 */

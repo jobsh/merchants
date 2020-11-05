@@ -2,6 +2,7 @@ package com.merchant.system.mapper;
 
 import java.util.List;
 import com.merchant.system.domain.Genjin;
+import com.merchant.system.domain.bo.GenjinBO;
 
 /**
  * 客户跟进Mapper接口
@@ -30,10 +31,10 @@ public interface GenjinMapper
     /**
      * 新增客户跟进
      * 
-     * @param genjin 客户跟进
+     * @param genjinBO 客户跟进
      * @return 结果
      */
-    public int insertGenjin(Genjin genjin);
+    public int insertGenjin(GenjinBO genjinBO);
 
     /**
      * 修改客户跟进

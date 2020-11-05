@@ -39,8 +39,8 @@ public class DianmianController extends BaseController
      * 查询店面管理列表
      */
     @PreAuthorize("@ss.hasPermi('dianmian:dianmianManager:list')")
-    @GetMapping("/list")
-    public TableDataInfo list(Dianmian dianmian)
+    @PostMapping("/list")
+    public TableDataInfo list(@RequestBody Dianmian dianmian)
     {
         startPage();
         List<DianmianVO> list = dianmianService.selectDianmianList(dianmian);

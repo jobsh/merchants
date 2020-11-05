@@ -1,6 +1,8 @@
 package com.merchant.web.controller.system;
 
 import java.util.List;
+
+import com.merchant.system.domain.bo.ContractBO;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,13 +39,25 @@ public class ContractController extends BaseController
      * 查询合同列表
      */
     @PreAuthorize("@ss.hasPermi('contract:contractManager:list')")
-    @GetMapping("/list")
-    public TableDataInfo list(Contract contract)
+    @PostMapping("/list")
+    public TableDataInfo list(@RequestBody ContractBO contractBO)
     {
         startPage();
-        List<Contract> list = contractService.selectContractList(contract);
+        List<Contract> list = contractService.selectContractList(contractBO);
         return getDataTable(list);
     }
+
+    /**
+     * 根据客户id查询出客户的合同列表
+     */
+    @PostMapping("/list/{customerId}")
+    public TableDataInfo list(@PathVariable("customerId") Integer customerId)
+    {
+        startPage();
+        List<Contract> list = contractService.selectContractListByCustomerId(customerId);
+        return getDataTable(list);
+    }
+
 
     /**
      * 导出合同列表
@@ -51,10 +65,10 @@ public class ContractController extends BaseController
     @PreAuthorize("@ss.hasPermi('contract:contractManager:export')")
     @Log(title = "合同", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
-    public AjaxResult export(Contract contract)
+    public AjaxResult export(ContractBO contractBO)
     {
-        List<Contract> list = contractService.selectContractList(contract);
-        ExcelUtil<Contract> util = new ExcelUtil<Contract>(Contract.class);
+        List<Contract> list = contractService.selectContractList(contractBO);
+        ExcelUtil<Contract> util = new ExcelUtil<>(Contract.class);
         return util.exportExcel(list, "contractManager");
     }
 
@@ -68,15 +82,17 @@ public class ContractController extends BaseController
         return AjaxResult.success(contractService.selectContractById(id));
     }
 
+
+
     /**
      * 新增合同
      */
     @PreAuthorize("@ss.hasPermi('contract:contractManager:add')")
     @Log(title = "合同", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody Contract contract)
+    public AjaxResult add(@RequestBody ContractBO contractBO)
     {
-        return toAjax(contractService.insertContract(contract));
+        return toAjax(contractService.insertContract(contractBO));
     }
 
     /**

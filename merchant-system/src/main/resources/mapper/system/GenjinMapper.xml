@@ -33,7 +33,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </select>
         
-    <insert id="insertGenjin" parameterType="Genjin" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insertGenjin" parameterType="GenjinBO" useGeneratedKeys="true">
         insert into biz_genjin
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="customerId != null">customer_id,</if>

@@ -2,6 +2,7 @@ package com.merchant.system.service;
 
 import java.util.List;
 import com.merchant.system.domain.Contract;
+import com.merchant.system.domain.bo.ContractBO;
 
 /**
  * 合同Service接口
@@ -22,18 +23,18 @@ public interface IContractService
     /**
      * 查询合同列表
      * 
-     * @param contract 合同
+     * @param contractBO 合同
      * @return 合同集合
      */
-    public List<Contract> selectContractList(Contract contract);
+    public List<Contract> selectContractList(ContractBO contractBO);
 
     /**
      * 新增合同
      * 
-     * @param contract 合同
+     * @param contractBO 合同
      * @return 结果
      */
-    public int insertContract(Contract contract);
+    public int insertContract(ContractBO contractBO);
 
     /**
      * 修改合同
@@ -58,4 +59,6 @@ public interface IContractService
      * @return 结果
      */
     public int deleteContractById(Integer id);
+
+    List<Contract> selectContractListByCustomerId(Integer customerId);
 }

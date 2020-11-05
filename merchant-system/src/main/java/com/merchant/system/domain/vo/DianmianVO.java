@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.merchant.common.annotation.Excel;
 import com.merchant.common.core.domain.entity.SysUser;
 import com.merchant.system.domain.Customer;
+import com.merchant.system.domain.Dianmian;
 import lombok.Data;
 
 import java.util.Date;
@@ -15,7 +16,7 @@ import java.util.Date;
  * @Created by hanke
  */
 @Data
-public class DianmianVO {
+public class DianmianVO extends Dianmian {
 
     /** 店面表主键id */
     private Integer id;

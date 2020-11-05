@@ -2,6 +2,7 @@ package com.merchant.system.mapper;
 
 import java.util.List;
 import com.merchant.system.domain.Contract;
+import com.merchant.system.domain.bo.ContractBO;
 
 /**
  * 合同Mapper接口
@@ -22,18 +23,18 @@ public interface ContractMapper
     /**
      * 查询合同列表
      * 
-     * @param contract 合同
+     * @param contractBO 合同
      * @return 合同集合
      */
-    public List<Contract> selectContractList(Contract contract);
+    public List<Contract> selectContractList(ContractBO contractBO);
 
     /**
      * 新增合同
      * 
-     * @param contract 合同
+     * @param contractBO 合同
      * @return 结果
      */
-    public int insertContract(Contract contract);
+    public int insertContract(ContractBO contractBO);
 
     /**
      * 修改合同

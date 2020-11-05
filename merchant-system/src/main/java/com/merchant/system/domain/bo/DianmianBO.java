@@ -19,87 +19,89 @@ import java.util.Date;
 @Data
 public class DianmianBO {
     /** 店东姓名 */
-    @Excel(name = "店东姓名")
+    @ApiModelProperty(value = "店东姓名", name = "diandongName")
     private String diandongName;
 
     /** 店东电话 */
-    @Excel(name = "店东电话")
+    @ApiModelProperty(value = "店东姓名", name = "diandongPhone")
     private String diandongPhone;
 
     /** 门店名称 */
-    @Excel(name = "门店名称")
+    @ApiModelProperty(value = "门店名称", name = "name")
     private String name;
 
     /** 门店状态 */
-    @Excel(name = "门店状态")
+    @ApiModelProperty(value = "门店状态", name = "status")
     private String status;
 
     /** 所属省 */
-    @Excel(name = "所属省")
+    @ApiModelProperty(value = "所属省", name = "province")
     private String province;
 
     /** 所属市 */
-    @Excel(name = "所属市")
+    @ApiModelProperty(value = "所属市", name = "city")
     private String city;
 
     /** 所属区 */
-    @Excel(name = "所属区")
+    @ApiModelProperty(value = "所属区", name = "district")
     private String district;
 
     /** 经度 */
+    @ApiModelProperty(value = "经度", name = "longitude")
     private String longitude;
 
     /** 纬度 */
+    @ApiModelProperty(value = "纬度", name = "latitude")
     private String latitude;
 
     /** 店面详细地址 */
-    @Excel(name = "店面详细地址")
+    @ApiModelProperty(value = "店面详细地址", name = "address")
     private String address;
 
     /** 验收结果 */
-    @Excel(name = "验收结果")
+    @ApiModelProperty(value = "验收结果", name = "checkResult")
     private String checkResult;
 
     /** 合同编号 */
-    @Excel(name = "合同编号")
+    @ApiModelProperty(value = "合同编号", name = "contractnum")
     private String contractnum;
 
     /** 店面类型（0：单店加盟，1：区域加盟） */
-    @Excel(name = "店面类型", readConverterExp = "0=：单店加盟，1：区域加盟")
+    @ApiModelProperty(value = "店面类型（0：单店加盟，1：区域加盟）", name = "type")
     private String type;
 
     /** 授权区域 */
-    @Excel(name = "授权区域")
+    @ApiModelProperty(value = "授权区域", name = "area")
     private String area;
 
     /** 验收信息 */
-    @Excel(name = "验收信息")
+    @ApiModelProperty(value = "验收信息", name = "checkInfo")
     private String checkInfo;
 
     @ApiModelProperty(value = "最早录入时间", name = "inputDateStart")
     private String inputDateStart;
 
-    @ApiModelProperty(value = "最近录入时间", name = "inputDateEnd")
+    @ApiModelProperty(value = "最晚录入时间", name = "inputDateEnd")
     private String inputDateEnd;
 
     /** 开店日期 */
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "最早开店日期", width = 30, dateFormat = "yyyy-MM-dd")
+    @ApiModelProperty(value = "最早开店时间", name = "openDateStart")
     private String openDateStart;
 
     /** 开店日期 */
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "最晚开店日期", width = 30, dateFormat = "yyyy-MM-dd")
+    @ApiModelProperty(value = "最晚录入时间", name = "openDateEnd")
     private String openDateEnd;
 
     /** 闭店/停业时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "最早闭店/停业时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @ApiModelProperty(value = "最早闭店停业时间", name = "closeDateStart")
     private String closeDateStart;
 
     /** 闭店/停业时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "最晚闭店/停业时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @ApiModelProperty(value = "最晚停业时间", name = "closeDateEnd")
     private String closeDateEnd;
 
 }
