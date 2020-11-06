@@ -94,10 +94,10 @@ public class GenjinServiceImpl implements IGenjinService {
         return genjinMapper.deleteGenjinById(id);
     }
 
-    @Override
-    public boolean updateGenjinImage(String imgPath) {
-        GenjinBO genjinBO = new GenjinBO();
-        genjinBO.setImage(imgPath);
-        return genjinMapper.updateGenjin(genjinBO) > 0;
-    }
+//    @Override
+//    public boolean updateGenjinImage(String imgPath) {
+//        GenjinBO genjinBO = new GenjinBO();
+//        genjinBO.setImage(imgPath);
+//        return genjinMapper.updateGenjin(genjinBO) > 0;
+//    }
 }

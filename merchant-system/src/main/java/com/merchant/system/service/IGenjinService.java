@@ -61,5 +61,5 @@ public interface IGenjinService
      */
     public int deleteGenjinById(Integer id);
 
-    boolean updateGenjinImage(String imgPath);
+//    boolean updateGenjinImage(String imgPath);
 }

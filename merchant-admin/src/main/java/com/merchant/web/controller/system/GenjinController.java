@@ -1,12 +1,19 @@
 package com.merchant.web.controller.system;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.merchant.common.config.MerchantConfig;
+import com.merchant.common.core.domain.entity.SysUser;
 import com.merchant.common.core.domain.model.LoginUser;
 import com.merchant.common.utils.ServletUtils;
 import com.merchant.common.utils.file.FileUploadUtils;
+import com.merchant.framework.web.service.TokenService;
 import com.merchant.system.domain.bo.GenjinBO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -39,6 +46,9 @@ public class GenjinController extends BaseController
 {
     @Autowired
     private IGenjinService genjinService;
+
+    @Autowired
+    private TokenService tokenService;
 
     /**
      * 查询客户跟进列表
@@ -85,20 +95,25 @@ public class GenjinController extends BaseController
     /**
      * 上传跟进图片
      */
+
     @PostMapping("/genjinImg")
-    public AjaxResult uploadGenjinImager(@RequestParam("img") MultipartFile img) throws IOException{
-        if (!img.isEmpty())
-        {
-            String imgPath = FileUploadUtils.upload(MerchantConfig.getDianmianPath(), img);
-            if (StringUtils.isNotBlank(imgPath)) {
+    public AjaxResult uploadGenjinImager(@RequestParam("imgs") List<MultipartFile> imgs) throws IOException{
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+        String phonenumber = loginUser.getUser().getPhonenumber();
+        if (!imgs.isEmpty() && imgs.size() > 0 && imgs != null) {
+            List<String> imgPathList = new ArrayList<>();
+            for (MultipartFile img : imgs) {
+                String imgPath = FileUploadUtils.upload(MerchantConfig.getGenjinPath() + "/" + phonenumber, img);
+                imgPathList.add(imgPath);
+            }
+            if (imgPathList != null && imgPathList.size() > 0 && !imgPathList.isEmpty()) {
                 AjaxResult ajax = AjaxResult.success();
-                ajax.put("imgUrl", imgPath);
+                ajax.put("imgUrl", JSONObject.toJSONString(imgPathList));
                 return ajax;
             }
         }
         return AjaxResult.error("上传图片异常，请联系管理员");
     }
-
     /**
      * 修改客户跟进
      */
