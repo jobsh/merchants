@@ -1,26 +1,7 @@
 package com.merchant.framework.aspectj;
 
-import java.lang.reflect.Method;
-import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.merchant.framework.manager.AsyncManager;
-import com.merchant.framework.manager.factory.AsyncFactory;
-import com.merchant.framework.web.service.TokenService;
-import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.Signature;
-import org.aspectj.lang.annotation.AfterReturning;
-import org.aspectj.lang.annotation.AfterThrowing;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Pointcut;
-import org.aspectj.lang.reflect.MethodSignature;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.HandlerMapping;
 import com.alibaba.fastjson.JSON;
+import com.merchant.common.annotation.ContractLog;
 import com.merchant.common.annotation.Log;
 import com.merchant.common.core.domain.model.LoginUser;
 import com.merchant.common.enums.BusinessStatus;
@@ -29,7 +10,27 @@ import com.merchant.common.utils.ServletUtils;
 import com.merchant.common.utils.StringUtils;
 import com.merchant.common.utils.ip.IpUtils;
 import com.merchant.common.utils.spring.SpringUtils;
+import com.merchant.framework.manager.AsyncManager;
+import com.merchant.framework.manager.factory.AsyncFactory;
+import com.merchant.framework.web.service.TokenService;
 import com.merchant.system.domain.SysOperLog;
+import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.Signature;
+import org.aspectj.lang.annotation.*;
+import org.aspectj.lang.reflect.MethodSignature;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.HandlerMapping;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.util.Map;
 
 /**
  * 操作日志记录处理
@@ -38,13 +39,13 @@ import com.merchant.system.domain.SysOperLog;
  */
 @Aspect
 @Component
-public class LogAspect
+public class ContractLogAspect
 {
-    private static final Logger log = LoggerFactory.getLogger(LogAspect.class);
+    private static final Logger log = LoggerFactory.getLogger(ContractLogAspect.class);
 
     // 配置织入点
-    @Pointcut("@annotation(com.merchant.common.annotation.Log)")
-    public void logPointCut()
+    @Pointcut("@annotation(com.merchant.common.annotation.ContractLog)")
+    public void contractLogPointCut()
     {
     }
 
@@ -53,7 +54,7 @@ public class LogAspect
      *
      * @param joinPoint 切点
      */
-    @AfterReturning(pointcut = "logPointCut()", returning = "jsonResult")
+    @AfterReturning(pointcut = "contractLogPointCut()", returning = "jsonResult")
     public void doAfterReturning(JoinPoint joinPoint, Object jsonResult)
     {
         handleLog(joinPoint, null, jsonResult);
@@ -65,7 +66,7 @@ public class LogAspect
      * @param joinPoint 切点
      * @param e 异常
      */
-    @AfterThrowing(value = "logPointCut()", throwing = "e")
+    @AfterThrowing(value = "contractLogPointCut()", throwing = "e")
     public void doAfterThrowing(JoinPoint joinPoint, Exception e)
     {
         handleLog(joinPoint, e, null);
@@ -216,5 +217,34 @@ public class LogAspect
     public boolean isFilterObject(final Object o)
     {
         return o instanceof MultipartFile || o instanceof HttpServletRequest || o instanceof HttpServletResponse;
+    }
+
+
+    @Before("contractLogPointCut()")
+    public void thirdBindInfoModifyBefore(JoinPoint joinPoint){
+        // 将参数值设置到注解属性上
+        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
+        ContractLog annotation = signature.getMethod().getAnnotation(ContractLog.class);
+        String fieldName;
+        if(StringUtils.isNotEmpty(fieldName = annotation.description())){
+            String[] parameterNames = signature.getParameterNames();
+            for (int i = 0; i < parameterNames.length; i++) {
+                String parameterName = parameterNames[i];
+                if (fieldName.equals(parameterName)) {
+                    InvocationHandler handler = Proxy.getInvocationHandler(annotation);
+                    Map fieldValues = null;
+                    try {
+                        Field hField = handler.getClass().getDeclaredField("memberValues");
+                        hField.setAccessible(true);
+                        fieldValues = (Map) hField.get(handler);
+                        fieldValues.put(fieldName, String.valueOf(joinPoint.getArgs()[i]));
+                    } catch (NoSuchFieldException | IllegalAccessException e) {
+                        if(fieldValues != null){
+                            fieldValues.put(fieldName, "");
+                        }
+                    }
+                }
+            }
+        }
     }
 }

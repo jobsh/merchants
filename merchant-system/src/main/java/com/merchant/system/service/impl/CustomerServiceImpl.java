@@ -62,6 +62,7 @@ public class CustomerServiceImpl implements ICustomerService
     @Override
     public List<Customer> selectCustomerList(@RequestBody CustomerBO customerBO)
     {
+        customerBO.setStatus(CustomerStatus.OK.getCode());
         return customerMapper.selectCustomerList(customerBO);
     }
 

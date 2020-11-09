@@ -17,8 +17,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="guarantee"    column="guarantee"    />
         <result property="fee"    column="fee"    />
         <result property="operation"    column="operation"    />
+        <result property="managerId"    column="manager_id"    />
         <result property="manager"    column="manager"    />
         <result property="signDate"    column="sign_date"    />
+        <result property="signUserId"    column="sign_user_id"    />
         <result property="signUser"    column="sign_user"    />
         <result property="beginDate"    column="begin_date"    />
         <result property="endDate"    column="end_date"    />
@@ -27,7 +29,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectContractVo">
-        select id, num, customer_name, customer_id, customer_phone, type, produce, dianmian_name, dianmian_num, guarantee, fee, operation, manager, sign_date, sign_user, begin_date, end_date, status, remark from biz_contract
+        select id, num, customer_name, customer_id, customer_phone, type, produce, dianmian_name, dianmian_num, guarantee, fee, operation, manager_id, manager, sign_date, sign_user_id,
+        sign_user, begin_date, end_date, status, remark from biz_contract
     </sql>
 
     <select id="selectContractList" parameterType="ContractBO" resultMap="ContractResult">
@@ -48,7 +51,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="endDateStart != null  and endDateStart != ''">and date_format(end_date,'%y%m%d') &gt;= date_format(#{endDateStart},'%y%m%d')</if>
             <if test="endDateEnd != null  and endDateEnd != ''">and date_format(end_date,'%y%m%d') &lt;= date_format(#{endDateEnd},'%y%m%d')</if>
             <if test="status != null  and status != ''"> and status = #{status}</if>
-
+            <if test="keywords != null and keywords != ''">and (
+                instr(customerName, #{keywords}) +
+                instr(customerPhone, #{keywords}) +
+                instr(num, #{keywords})
+                ) > 0</if>
+            <!-- 数据范围过滤 -->
         </where>
     </select>
 
@@ -71,8 +79,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="guarantee != null">guarantee,</if>
             <if test="fee != null">fee,</if>
             <if test="operation != null and operation != ''">operation,</if>
+            <if test="managerId != null">manager_id,</if>
             <if test="manager != null and manager != ''">manager,</if>
             <if test="signDate != null">sign_date,</if>
+            <if test="signUserId != null">sign_user_id,</if>
             <if test="signUser != null and signUser != ''">sign_user,</if>
             <if test="beginDate != null">begin_date,</if>
             <if test="endDate != null and endDate != ''">end_date,</if>
@@ -91,8 +101,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="guarantee != null">#{guarantee},</if>
             <if test="fee != null">#{fee},</if>
             <if test="operation != null and operation != ''">#{operation},</if>
+            <if test="managerId != null">#{managerId},</if>
             <if test="manager != null and manager != ''">#{manager},</if>
             <if test="signDate != null">#{signDate},</if>
+            <if test="signUserId != null">#{signUserId},</if>
             <if test="signUser != null and signUser != ''">#{signUser},</if>
             <if test="beginDate != null">#{beginDate},</if>
             <if test="endDate != null and endDate != ''">#{endDate},</if>
@@ -101,7 +113,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
     </insert>
 
-    <update id="updateContract" parameterType="Contract">
+    <update id="updateContract" parameterType="ContractBO">
         update biz_contract
         <trim prefix="SET" suffixOverrides=",">
             <if test="num != null and num != ''">num = #{num},</if>
@@ -115,8 +127,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="guarantee != null">guarantee = #{guarantee},</if>
             <if test="fee != null">fee = #{fee},</if>
             <if test="operation != null and operation != ''">operation = #{operation},</if>
+            <if test="managerId != null">#{managerId},</if>
             <if test="manager != null and manager != ''">manager = #{manager},</if>
             <if test="signDate != null">sign_date = #{signDate},</if>
+            <if test="signUserId != null">#{signUserId},</if>
             <if test="signUser != null and signUser != ''">sign_user = #{signUser},</if>
             <if test="beginDate != null">begin_date = #{beginDate},</if>
             <if test="endDate != null and endDate != ''">end_date = #{endDate},</if>

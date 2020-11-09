@@ -42,7 +42,7 @@ public interface IContractService
      * @param contract 合同
      * @return 结果
      */
-    public int updateContract(Contract contract);
+    public int updateContract(ContractBO contractBO);
 
     /**
      * 批量删除合同
@@ -60,5 +60,31 @@ public interface IContractService
      */
     public int deleteContractById(Integer id);
 
+    /**
+     * 根据customerId查询合同list
+     * @param customerId
+     * @return
+     */
     List<Contract> selectContractListByCustomerId(Integer customerId);
+
+    /**
+     * 根据合同id解约合同
+     * @param id
+     * @return
+     */
+    int terminate(Integer id);
+
+    /**
+     * 根据合同id续约合同
+     * @param id
+     * @return
+     */
+    int renew(Integer id);
+
+    /**
+     * 转移给手机号为phone的负责人
+     * @param phone
+     * @return
+     */
+    int transfer(Integer managerId);
 }

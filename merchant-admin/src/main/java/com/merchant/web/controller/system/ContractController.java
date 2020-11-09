@@ -2,6 +2,7 @@ package com.merchant.web.controller.system;
 
 import java.util.List;
 
+import com.merchant.common.annotation.ContractLog;
 import com.merchant.system.domain.bo.ContractBO;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +51,7 @@ public class ContractController extends BaseController
     /**
      * 根据客户id查询出客户的合同列表
      */
-    @PostMapping("/list/{customerId}")
+    @GetMapping("/list/{customerId}")
     public TableDataInfo list(@PathVariable("customerId") Integer customerId)
     {
         startPage();
@@ -101,9 +102,9 @@ public class ContractController extends BaseController
     @PreAuthorize("@ss.hasPermi('contract:contractManager:edit')")
     @Log(title = "合同", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody Contract contract)
+    public AjaxResult edit(@RequestBody ContractBO contractBO)
     {
-        return toAjax(contractService.updateContract(contract));
+        return toAjax(contractService.updateContract(contractBO));
     }
 
     /**
@@ -116,4 +117,70 @@ public class ContractController extends BaseController
     {
         return toAjax(contractService.deleteContractByIds(ids));
     }
+
+    /**
+     *
+     */
+    @PreAuthorize("@ss.hasPermi('contract:contractManager:edit')")
+    @Log(title = "合同", businessType = BusinessType.UPDATE)
+    @PostMapping("/abandon/{id}")
+    public AjaxResult abandon(@PathVariable Integer id) {
+
+        // 查询合同
+        if (id == null) {
+            return AjaxResult.error("id错误");
+        }
+
+        return toAjax(contractService.terminate(id));
+    }
+    /**
+     * 合同解约
+     */
+    @PreAuthorize("@ss.hasPermi('contract:contractManager:edit')")
+    @Log(title = "合同", businessType = BusinessType.UPDATE)
+    @PostMapping("/terminate/{id}")
+    public AjaxResult terminate(@PathVariable Integer id) {
+
+        // 查询合同
+        if (id == null) {
+            return AjaxResult.error("id错误");
+        }
+
+        return toAjax(contractService.terminate(id));
+    }
+
+
+    /**
+     * 合同续约
+     */
+    @PreAuthorize("@ss.hasPermi('contract:contractManager:edit')")
+    @Log(title = "合同", businessType = BusinessType.UPDATE)
+    @PostMapping("/renew/{id}")
+    public AjaxResult renew(@PathVariable Integer id) {
+
+        // 查询合同
+        if (id == null) {
+            return AjaxResult.error("id错误");
+        }
+
+        return toAjax(contractService.renew(id));
+    }
+
+    /**
+     * 转移合同
+     */
+    @PreAuthorize("@ss.hasPermi('contract:contractManager:edit')")
+    @Log(title = "合同", businessType = BusinessType.UPDATE)
+    @ContractLog()
+    @PostMapping("/transfer/")
+    public AjaxResult transfer(Integer managerId) {
+
+        // 查询合同
+        if (managerId == null) {
+            return AjaxResult.error("参数错误");
+        }
+
+        return toAjax(contractService.transfer(managerId));
+    }
+
 }

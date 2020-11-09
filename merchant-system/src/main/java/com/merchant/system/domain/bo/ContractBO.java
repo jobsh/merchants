@@ -76,10 +76,14 @@ public class ContractBO extends BaseEntity
     @ApiModelProperty(value = "生效失效状态", name = "status")
     private String status;
 
+    private Integer managerId;
+
     /** 负责人 */
     @Excel(name = "负责人")
     @ApiModelProperty(value = "负责人姓名", name = "manager")
     private String manager;
+
+    private Integer signUserId;
 
     /** 签约人员 */
     @Excel(name = "签约人员")

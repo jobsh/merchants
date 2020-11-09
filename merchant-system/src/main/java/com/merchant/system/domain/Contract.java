@@ -4,6 +4,7 @@ import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.merchant.common.annotation.Excel;
 import com.merchant.common.core.domain.BaseEntity;
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -13,6 +14,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * @author hanke
  * @date 2020-11-03
  */
+@Data
 public class Contract extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
@@ -63,6 +65,8 @@ public class Contract extends BaseEntity
     @Excel(name = "操作")
     private String operation;
 
+    private Integer managerId;
+
     /** 负责人 */
     @Excel(name = "负责人")
     private String manager;
@@ -71,6 +75,8 @@ public class Contract extends BaseEntity
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "签约日期", width = 30, dateFormat = "yyyy-MM-dd")
     private Date signDate;
+
+    private Integer signUserId;
 
     /** 签约人员 */
     @Excel(name = "签约人员")
@@ -94,200 +100,4 @@ public class Contract extends BaseEntity
     /** 生效失效状态 */
     @Excel(name = "生效失效状态")
     private String status;
-
-    public void setId(Integer id) 
-    {
-        this.id = id;
-    }
-
-    public Integer getId() 
-    {
-        return id;
-    }
-    public void setNum(String num) 
-    {
-        this.num = num;
-    }
-
-    public String getNum() 
-    {
-        return num;
-    }
-    public void setCustomerName(String customerName) 
-    {
-        this.customerName = customerName;
-    }
-
-    public String getCustomerName() 
-    {
-        return customerName;
-    }
-    public void setCustomerId(Integer customerId) 
-    {
-        this.customerId = customerId;
-    }
-
-    public Integer getCustomerId() 
-    {
-        return customerId;
-    }
-    public void setCustomerPhone(String customerPhone) 
-    {
-        this.customerPhone = customerPhone;
-    }
-
-    public String getCustomerPhone() 
-    {
-        return customerPhone;
-    }
-    public void setType(String type) 
-    {
-        this.type = type;
-    }
-
-    public String getType() 
-    {
-        return type;
-    }
-    public void setProduce(String produce) 
-    {
-        this.produce = produce;
-    }
-
-    public String getProduce() 
-    {
-        return produce;
-    }
-    public void setDianmianName(String dianmianName) 
-    {
-        this.dianmianName = dianmianName;
-    }
-
-    public String getDianmianName() 
-    {
-        return dianmianName;
-    }
-    public void setDianmianNum(Integer dianmianNum) 
-    {
-        this.dianmianNum = dianmianNum;
-    }
-
-    public Integer getDianmianNum() 
-    {
-        return dianmianNum;
-    }
-    public void setGuarantee(Integer guarantee) 
-    {
-        this.guarantee = guarantee;
-    }
-
-    public Integer getGuarantee() 
-    {
-        return guarantee;
-    }
-    public void setFee(String fee) 
-    {
-        this.fee = fee;
-    }
-
-    public String getFee() 
-    {
-        return fee;
-    }
-    public void setOperation(String operation) 
-    {
-        this.operation = operation;
-    }
-
-    public String getOperation() 
-    {
-        return operation;
-    }
-    public void setManager(String manager) 
-    {
-        this.manager = manager;
-    }
-
-    public String getManager() 
-    {
-        return manager;
-    }
-    public void setSignDate(Date signDate) 
-    {
-        this.signDate = signDate;
-    }
-
-    public Date getSignDate() 
-    {
-        return signDate;
-    }
-    public void setSignUser(String signUser) 
-    {
-        this.signUser = signUser;
-    }
-
-    public String getSignUser() 
-    {
-        return signUser;
-    }
-    public void setBeginDate(Date beginDate) 
-    {
-        this.beginDate = beginDate;
-    }
-
-    public Date getBeginDate() 
-    {
-        return beginDate;
-    }
-    public void setEndDate(Date endDate)
-    {
-        this.endDate = endDate;
-    }
-
-    public Date getEndDate()
-    {
-        return endDate;
-    }
-    public void setStatus(String status) 
-    {
-        this.status = status;
-    }
-
-    public String getStatus() 
-    {
-        return status;
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", getId())
-            .append("num", getNum())
-            .append("customerName", getCustomerName())
-            .append("customerId", getCustomerId())
-            .append("customerPhone", getCustomerPhone())
-            .append("type", getType())
-            .append("produce", getProduce())
-            .append("dianmianName", getDianmianName())
-            .append("dianmianNum", getDianmianNum())
-            .append("guarantee", getGuarantee())
-            .append("fee", getFee())
-            .append("operation", getOperation())
-            .append("manager", getManager())
-            .append("signDate", getSignDate())
-            .append("signUser", getSignUser())
-            .append("beginDate", getBeginDate())
-            .append("endDate", getEndDate())
-            .append("status", getStatus())
-            .append("remark", getRemark())
-            .toString();
-    }
-
-    public Date getCheckDate() {
-        return checkDate;
-    }
-
-    public void setCheckDate(Date checkDate) {
-        this.checkDate = checkDate;
-    }
 }

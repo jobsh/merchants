@@ -39,10 +39,10 @@ public interface ContractMapper
     /**
      * 修改合同
      * 
-     * @param contract 合同
+     * @param contractBO 合同
      * @return 结果
      */
-    public int updateContract(Contract contract);
+    public int updateContract(ContractBO contractBO);
 
     /**
      * 删除合同

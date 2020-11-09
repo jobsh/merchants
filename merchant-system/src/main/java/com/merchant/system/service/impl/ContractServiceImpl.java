@@ -2,9 +2,12 @@ package com.merchant.system.service.impl;
 
 import java.util.List;
 
+import com.merchant.common.core.domain.entity.SysUser;
 import com.merchant.common.utils.DateUtils;
 import com.merchant.system.domain.bo.ContractBO;
+import com.merchant.system.service.ISysUserService;
 import org.n3r.idworker.Sid;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.merchant.system.mapper.ContractMapper;
@@ -22,6 +25,10 @@ public class ContractServiceImpl implements IContractService
 {
     @Autowired
     private ContractMapper contractMapper;
+
+    @Autowired
+    private ISysUserService sysUserService;
+
 
     @Autowired
     private Sid sid;
@@ -67,13 +74,13 @@ public class ContractServiceImpl implements IContractService
     /**
      * 修改合同
      * 
-     * @param contract 合同
+     * @param contractBO 合同
      * @return 结果
      */
     @Override
-    public int updateContract(Contract contract)
+    public int updateContract(ContractBO contractBO)
     {
-        return contractMapper.updateContract(contract);
+        return contractMapper.updateContract(contractBO);
     }
 
     /**
@@ -105,5 +112,60 @@ public class ContractServiceImpl implements IContractService
         ContractBO contractBO = new ContractBO();
         contractBO.setCustomerId(customerId);
         return contractMapper.selectContractList(contractBO);
+    }
+
+    @Override
+    public int terminate(Integer id) {
+        Contract contract = contractMapper.selectContractById(id);
+        ContractBO contractBO = new ContractBO();
+        if (contract.getEndDate().after(DateUtils.getNowDate())) {
+            contractBO.setStatus("到期解约");
+        } else {
+            contractBO.setStatus("未到期解约");
+        }
+
+        return contractMapper.updateContract(contractBO);
+    }
+
+    @Override
+    public int renew(Integer id) {
+
+        Contract contract = contractMapper.selectContractById(id);
+        ContractBO contractBO = new ContractBO();
+        /**
+         * if (旧合同到期) {
+         * 	旧合同status = '到期续约';
+         *     新增新合同；
+         *     新合同status = '有效执行中';
+         *     新合同类型为 '续签'
+         * } else if(旧合同未到期) {
+         *     旧合同status = '到期续约';
+         *     新增新合同；
+         *     新合同status = '有效执行中';
+         *     新合同类型为 '续签'
+         * }
+         */
+        BeanUtils.copyProperties(contract,contractBO);
+
+        if (contract.getEndDate().after(DateUtils.getNowDate())) {
+            contractBO.setStatus("到期解约");
+        } else {
+            contractBO.setStatus("未到期解约");
+        }
+
+        return contractMapper.updateContract(contractBO);
+    }
+
+    @Override
+    public int transfer(Integer managerId) {
+        // 根据phone查询出负责人
+        SysUser sysUser = sysUserService.selectUserById(managerId.longValue());
+        // 判断系统中是否有此负责人
+        ContractBO contractBO = new ContractBO();
+        contractBO.setManagerId(contractBO.getId());
+        contractBO.setManager(sysUser.getUserName());
+        contractBO.setSignUserId(contractBO.getId());
+        contractBO.setSignUser(sysUser.getUserName());
+        return contractMapper.updateContract(contractBO);
     }
 }
