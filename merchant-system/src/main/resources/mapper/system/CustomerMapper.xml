@@ -161,6 +161,7 @@
             <if test="experience != null and experience != ''">experience = #{experience},</if>
             <if test="remark != null and remark != ''">remark = #{remark},</if>
             <if test="status != null and status != ''">status = #{status},</if>
+            <if test="genjinDate != null and genjinDate != ''">genjin_date = #{genjinDate},</if>
             update_date = now()
         </trim>
         where id = #{id}

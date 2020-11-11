@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.util.List;
 
 import com.merchant.common.config.MerchantConfig;
+import com.merchant.common.utils.DateUtils;
 import com.merchant.common.utils.file.FileUploadUtils;
+import com.merchant.system.domain.Customer;
 import com.merchant.system.domain.bo.GenjinBO;
 import com.merchant.system.service.ICustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +59,11 @@ public class GenjinServiceImpl implements IGenjinService {
     @Override
     public int insertGenjin(GenjinBO genjinBO) throws IOException {
         // 更新customer最新跟进时间
-        customerService.updateGenjinDate(genjinBO.getCustomerId());
+        Customer customer = new Customer();
+        customer.setId(genjinBO.getCustomerId());
+        customer.setUpdateDate(DateUtils.getNowDate());
+        genjinBO.setGenjinDate(DateUtils.getNowDate());
+        customerService.updateCustomer(customer);
         return genjinMapper.insertGenjin(genjinBO);
     }
 
