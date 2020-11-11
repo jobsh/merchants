@@ -25,6 +25,10 @@ public class ContractBO extends BaseEntity
     @ApiModelProperty(value = "合同id", name = "id")
     private Integer id;
 
+    private Integer pid;
+
+    private String rootNum;
+
     /** 合同编号 */
     @ApiModelProperty(value = "合同编号", name = "num")
     private String num;
@@ -58,6 +62,24 @@ public class ContractBO extends BaseEntity
     @Excel(name = "店面数量")
     @ApiModelProperty(value = "店面数量，单店加盟默认为1", name = "dianmianNum")
     private Integer dianmianNum;
+
+    /** 店面所在省份 */
+    private String dianmianProvince;
+
+    /** 店面所在城市 */
+    private String dianmianCity;
+
+    /** 店面所在区 */
+    private String dianmianDistrict;
+
+    /** 店面详细地址 */
+    private String dianmianAddress;
+
+    /** 店面经度 */
+    private String dianmianLongitude;
+
+    /** 店面纬度 */
+    private String dianmianLatitude;
 
     /** 保证金 */
     @ApiModelProperty(value = "保证金,单位分显示时需要转化为元", name = "guarantee")

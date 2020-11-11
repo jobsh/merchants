@@ -20,6 +20,8 @@ public interface ContractMapper
      */
     public Contract selectContractById(Integer id);
 
+    List<Contract> selectContractByRootNum(String rootNum);
+
     /**
      * 查询合同列表
      * 

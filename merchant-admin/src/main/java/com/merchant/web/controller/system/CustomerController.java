@@ -114,7 +114,7 @@ public class CustomerController extends BaseController {
             @ApiParam(name = "id", value = "客户id", required = true)
             @PathVariable("id") Integer id) {
         System.out.println("id" + id);
-        return AjaxResult.success(customerService.selectCustomerById(id));
+        return AjaxResult.success(customerService.selectXiansuoById(id));
     }
 
     /**

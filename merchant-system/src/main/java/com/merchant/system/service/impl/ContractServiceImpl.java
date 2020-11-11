@@ -45,6 +45,11 @@ public class ContractServiceImpl implements IContractService
         return contractMapper.selectContractById(id);
     }
 
+    @Override
+    public List<Contract> selectContractByRootNum(String rootNum) {
+        return contractMapper.selectContractByRootNum(rootNum);
+    }
+
     /**
      * 查询合同列表
      * 
@@ -67,7 +72,13 @@ public class ContractServiceImpl implements IContractService
     public int insertContract(ContractBO contractBO)
     {
         String contractNum = sid.nextShort();
-        contractBO.setNum(contractNum);
+        if (contractBO.getNum() == null) {
+            contractBO.setNum(contractNum);
+        }
+        // 新签合同rootNum设置为本合同编号，pid为0
+        contractBO.setRootNum(contractBO.getNum());
+        contractBO.setPid(0);
+
         return contractMapper.insertContract(contractBO);
     }
 

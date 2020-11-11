@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.merchant.system.mapper.ContractFeeMapper">
+    
+    <resultMap type="ContractFee" id="ContractFeeResult">
+        <result property="id"    column="id"    />
+        <result property="num"    column="num"    />
+        <result property="constractNum"    column="constract_num"    />
+        <result property="type"    column="type"    />
+        <result property="payMethod"    column="pay_method"    />
+        <result property="payer"    column="payer"    />
+        <result property="reciever"    column="reciever"    />
+        <result property="checkStatus"    column="check_status"    />
+        <result property="shoukuanDate"    column="shoukuan_date"    />
+        <result property="updateDate"    column="update_date"    />
+    </resultMap>
+
+    <sql id="selectContractFeeVo">
+        select id, num, constract_num, type, pay_method, payer, reciever, check_status, shoukuan_date, update_date from biz_contract_fee
+    </sql>
+
+    <select id="selectContractFeeList" parameterType="ContractFee" resultMap="ContractFeeResult">
+        <include refid="selectContractFeeVo"/>
+        <where>  
+            <if test="num != null  and num != ''"> and num = #{num}</if>
+            <if test="constractNum != null  and constractNum != ''"> and constract_num = #{constractNum}</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="payMethod != null  and payMethod != ''"> and pay_method = #{payMethod}</if>
+            <if test="payer != null  and payer != ''"> and payer = #{payer}</if>
+            <if test="reciever != null  and reciever != ''"> and reciever = #{reciever}</if>
+            <if test="checkStatus != null  and checkStatus != ''"> and check_status = #{checkStatus}</if>
+            <if test="shoukuanDate != null "> and shoukuan_date = #{shoukuanDate}</if>
+        </where>
+    </select>
+    
+    <select id="selectContractFeeById" parameterType="Long" resultMap="ContractFeeResult">
+        <include refid="selectContractFeeVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertContractFee" parameterType="ContractFee" useGeneratedKeys="true" keyProperty="id">
+        insert into biz_contract_fee
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="num != null and num != ''">num,</if>
+            <if test="constractNum != null and constractNum != ''">constract_num,</if>
+            <if test="type != null and type != ''">type,</if>
+            <if test="payMethod != null and payMethod != ''">pay_method,</if>
+            <if test="payer != null and payer != ''">payer,</if>
+            <if test="reciever != null and reciever != ''">reciever,</if>
+            <if test="checkStatus != null and checkStatus != ''">check_status,</if>
+            <if test="shoukuanDate != null">shoukuan_date,</if>
+            <if test="updateDate != null">update_date,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="num != null and num != ''">#{num},</if>
+            <if test="constractNum != null and constractNum != ''">#{constractNum},</if>
+            <if test="type != null and type != ''">#{type},</if>
+            <if test="payMethod != null and payMethod != ''">#{payMethod},</if>
+            <if test="payer != null and payer != ''">#{payer},</if>
+            <if test="reciever != null and reciever != ''">#{reciever},</if>
+            <if test="checkStatus != null and checkStatus != ''">#{checkStatus},</if>
+            <if test="shoukuanDate != null">#{shoukuanDate},</if>
+            <if test="updateDate != null">#{updateDate},</if>
+         </trim>
+    </insert>
+
+    <update id="updateContractFee" parameterType="ContractFee">
+        update biz_contract_fee
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="num != null and num != ''">num = #{num},</if>
+            <if test="constractNum != null and constractNum != ''">constract_num = #{constractNum},</if>
+            <if test="type != null and type != ''">type = #{type},</if>
+            <if test="payMethod != null and payMethod != ''">pay_method = #{payMethod},</if>
+            <if test="payer != null and payer != ''">payer = #{payer},</if>
+            <if test="reciever != null and reciever != ''">reciever = #{reciever},</if>
+            <if test="checkStatus != null and checkStatus != ''">check_status = #{checkStatus},</if>
+            <if test="shoukuanDate != null">shoukuan_date = #{shoukuanDate},</if>
+            <if test="updateDate != null">update_date = #{updateDate},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteContractFeeById" parameterType="Long">
+        delete from biz_contract_fee where id = #{id}
+    </delete>
+
+    <delete id="deleteContractFeeByIds" parameterType="String">
+        delete from biz_contract_fee where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

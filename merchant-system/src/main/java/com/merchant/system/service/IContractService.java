@@ -21,6 +21,13 @@ public interface IContractService
     public Contract selectContractById(Integer id);
 
     /**
+     * 根据rootId查询关联合同
+     * @param rootNum
+     * @return
+     */
+    List<Contract> selectContractByRootNum(String rootNum);
+
+    /**
      * 查询合同列表
      * 
      * @param contractBO 合同
@@ -39,7 +46,7 @@ public interface IContractService
     /**
      * 修改合同
      * 
-     * @param contract 合同
+     * @param contractBO 合同
      * @return 结果
      */
     public int updateContract(ContractBO contractBO);
@@ -83,7 +90,7 @@ public interface IContractService
 
     /**
      * 转移给手机号为phone的负责人
-     * @param phone
+     * @param managerId
      * @return
      */
     int transfer(Integer managerId);

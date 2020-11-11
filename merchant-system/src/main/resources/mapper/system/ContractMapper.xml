@@ -6,6 +6,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <resultMap type="Contract" id="ContractResult">
         <result property="id"    column="id"    />
+        <result property="pid"    column="pid"    />
+        <result property="rootNum"    column="root_num"    />
         <result property="num"    column="num"    />
         <result property="customerName"    column="customer_name"    />
         <result property="customerId"    column="customer_id"    />
@@ -14,6 +16,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="produce"    column="produce"    />
         <result property="dianmianName"    column="dianmian_name"    />
         <result property="dianmianNum"    column="dianmian_num"    />
+        <result property="dianmianProvince"    column="dianmian_province"    />
+        <result property="dianmianCity"    column="dianmian_city"    />
+        <result property="dianmianDistrict"    column="dianmian_district"    />
+        <result property="dianmianAddress"    column="dianmian_address"    />
+        <result property="dianmianLongitude"    column="dianmian_longitude"    />
+        <result property="dianmianLatitude"    column="dianmian_latitude"    />
         <result property="guarantee"    column="guarantee"    />
         <result property="fee"    column="fee"    />
         <result property="operation"    column="operation"    />
@@ -29,7 +37,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectContractVo">
-        select id, num, customer_name, customer_id, customer_phone, type, produce, dianmian_name, dianmian_num, guarantee, fee, operation, manager_id, manager, sign_date, sign_user_id,
+        select id, pid, root_num, num, customer_name, customer_id, customer_phone, type, produce,
+        dianmian_name, dianmian_num, dianmian_province, dianmian_city, dianmian_district, dianmian_address,dianmian_longitude,dianmian_latitude,
+        guarantee, fee, operation, manager_id, manager, sign_date, sign_user_id,
         sign_user, begin_date, end_date, status, remark from biz_contract
     </sql>
 
@@ -64,20 +74,32 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectContractVo"/>
         where id = #{id}
     </select>
+
+    <select id="selectContractByRootNum" parameterType="String" resultMap="ContractResult">
+        <include refid="selectContractVo"/>
+        where root_num = #{rootNum}
+    </select>
         
     <insert id="insertContract" parameterType="ContractBO" useGeneratedKeys="true" keyProperty="id">
         insert into biz_contract
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="num != null and num != ''">num,</if>
+            <if test="root_num != null and root_num != ''">root_num,</if>
             <if test="customerName != null and customerName != ''">customer_name,</if>
             <if test="customerId != null">customer_id,</if>
             <if test="customerPhone != null and customerPhone != ''">customer_phone,</if>
             <if test="type != null and type != ''">type,</if>
             <if test="produce != null and produce != ''">produce,</if>
             <if test="dianmianName != null and dianmianName != ''">dianmian_name,</if>
-            <if test="dianmianNum != null">dianmian_num,</if>
+            <if test="dianmianNum != null and dianmianNum != ''">dianmian_num,</if>
+            <if test="dianmianProvince != null and dianmianProvince != ''">dianmian_province,</if>
+            <if test="dianmianCity != null and dianmianCity != ''">dianmian_city,</if>
+            <if test="dianmianDistrict != null and dianmianDistrict != ''">dianmian_district,</if>
+            <if test="dianmianAddress != null and dianmianAddress != ''">dianmian_address,</if>
+            <if test="dianmianLongitude != null and dianmianLongitude != ''">dianmian_longitude,</if>
+            <if test="dianmianLatitude != null and dianmianLatitude != ''">dianmian_latitude,</if>
             <if test="guarantee != null">guarantee,</if>
-            <if test="fee != null">fee,</if>
+            <if test="fee != null and fee != ''">fee,</if>
             <if test="operation != null and operation != ''">operation,</if>
             <if test="managerId != null">manager_id,</if>
             <if test="manager != null and manager != ''">manager,</if>
@@ -90,6 +112,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="remark != null and remark != ''">remark,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="rootNum != null and rootNum != ''">#{rootNum},</if>
             <if test="num != null and num != ''">#{num},</if>
             <if test="customerName != null and customerName != ''">#{customerName},</if>
             <if test="customerId != null">#{customerId},</if>
@@ -97,7 +120,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="type != null and type != ''">#{type},</if>
             <if test="produce != null and produce != ''">#{produce},</if>
             <if test="dianmianName != null and dianmianName != ''">#{dianmianName},</if>
-            <if test="dianmianNum != null">#{dianmianNum},</if>
+            <if test="dianmianNum != null and dianmianName != ''">#{dianmianNum},</if>
+            <if test="dianmianProvince != null and dianmianProvince != ''">#{dianmianProvince},</if>
+            <if test="dianmianCity != null and dianmianCity != ''">#{dianmianCity},</if>
+            <if test="dianmianDistrict != null and dianmianDistrict != ''">#{dianmianDistrict},</if>
+            <if test="dianmianAddress != null and dianmianAddress != ''">#{dianmianAddress},</if>
+            <if test="dianmianLongitude != null and dianmianLongitude != ''">#{dianmianLongitude},</if>
+            <if test="dianmianLatitude != null and dianmianLatitude != ''">#{dianmianLatitude},</if>
             <if test="guarantee != null">#{guarantee},</if>
             <if test="fee != null">#{fee},</if>
             <if test="operation != null and operation != ''">#{operation},</if>
@@ -124,6 +153,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="produce != null and produce != ''">produce = #{produce},</if>
             <if test="dianmianName != null and dianmianName != ''">dianmian_name = #{dianmianName},</if>
             <if test="dianmianNum != null">dianmian_num = #{dianmianNum},</if>
+            <if test="dianmianProvince != null and dianmianProvince != ''">dianmian_province = #{dianmianProvince},</if>
+            <if test="dianmianCity != null and dianmianCity != ''">dianmian_city = #{dianmianCity},</if>
+            <if test="dianmianDistrict != null and dianmianDistrict != ''">dianmian_district = #{dianmianDistrict},</if>
+            <if test="dianmianAddress != null and dianmianAddress != ''">dianmian_address = #{dianmianAddress},</if>
+            <if test="dianmianLongitude != null and dianmianLongitude != ''">dianmian_longitude = #{dianmianLongitude},</if>
+            <if test="dianmianLatitude != null and dianmianLatitude != ''">dianmian_latitude = #{dianmianLatitude},</if>
             <if test="guarantee != null">guarantee = #{guarantee},</if>
             <if test="fee != null">fee = #{fee},</if>
             <if test="operation != null and operation != ''">operation = #{operation},</if>

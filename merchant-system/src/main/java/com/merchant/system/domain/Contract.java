@@ -22,6 +22,10 @@ public class Contract extends BaseEntity
     /** 合同表主键id */
     private Integer id;
 
+    private Integer pid;
+
+    private String rootNum;
+
     /** 合同编号 */
     @Excel(name = "合同编号")
     private String num;
@@ -52,6 +56,24 @@ public class Contract extends BaseEntity
     /** 店面数量 */
     @Excel(name = "店面数量")
     private Integer dianmianNum;
+
+    /** 店面所在省份 */
+    private String dianmianProvince;
+
+    /** 店面所在城市 */
+    private String dianmianCity;
+
+    /** 店面所在区 */
+    private String dianmianDistrict;
+
+    /** 店面详细地址 */
+    private String dianmianAddress;
+
+    /** 店面经度 */
+    private String dianmianLongitude;
+
+    /** 店面纬度 */
+    private String dianmianLatitude;
 
     /** 保证金 */
     @Excel(name = "保证金")
