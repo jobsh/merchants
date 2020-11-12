@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.merchant.common.annotation.ContractLog;
 import com.merchant.system.domain.bo.ContractBO;
-import io.swagger.models.auth.In;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -60,6 +59,16 @@ public class ContractController extends BaseController
         return getDataTable(list);
     }
 
+    /**
+     * 查询关联合同
+     */
+    @GetMapping("/relatedList/{rootNum}")
+    public TableDataInfo relatedList(@PathVariable("rootNum") String rootNum)
+    {
+        startPage();
+        List<Contract> list = contractService.selectContractByRootNum(rootNum);
+        return getDataTable(list);
+    }
 
     /**
      * 导出合同列表
@@ -119,21 +128,7 @@ public class ContractController extends BaseController
         return toAjax(contractService.deleteContractByIds(ids));
     }
 
-    /**
-     *
-     */
-    @PreAuthorize("@ss.hasPermi('contract:contractManager:edit')")
-    @Log(title = "合同", businessType = BusinessType.UPDATE)
-    @PostMapping("/abandon/{id}")
-    public AjaxResult abandon(@PathVariable Integer id) {
 
-        // 查询合同
-        if (id == null) {
-            return AjaxResult.error("id错误");
-        }
-
-        return toAjax(contractService.terminate(id));
-    }
     /**
      * 合同解约
      */
@@ -198,4 +193,22 @@ public class ContractController extends BaseController
         return toAjax(contractService.check(id, signDate));
     }
 
+    /**
+     * 反审核
+     * @param id 合同id
+     * @return
+     */
+    @PreAuthorize("@ss.hasPermi('contract:contractManager:edit')")
+    @Log(title = "合同", businessType = BusinessType.UPDATE)
+    @ContractLog()
+    @PostMapping("/uncheck/")
+    public AjaxResult uncheck(Integer id) {
+
+        // 查询合同
+        if (id == null) {
+            return AjaxResult.error("参数错误");
+        }
+
+        return toAjax(contractService.uncheck(id));
+    }
 }

@@ -77,6 +77,8 @@ public class ContractServiceImpl implements IContractService
         if (contractBO.getNum() == null) {
             contractBO.setNum(sid.nextShort());
         }
+        // 新签合同设置pid为0
+        contractBO.setPid(0);
         // 新签合同rootNum设置为本合同编号，pid为0
         contractBO.setRootNum(contractBO.getNum());
         // 设置合同默认状态为有效执行中
@@ -85,7 +87,8 @@ public class ContractServiceImpl implements IContractService
         }
         // type为新签合同
         contractBO.setType(ContractStatus.SIGN_NEW.getCode());
-        contractBO.setPid(0);
+        // 审核状态为未审核
+        contractBO.setCheckStatus(ContractStatus.UNCHECK.getCode());
 
         return contractMapper.insertContract(contractBO);
     }
@@ -193,20 +196,25 @@ public class ContractServiceImpl implements IContractService
     public int check(Integer id, String signDate) {
         ContractBO contractBO = new ContractBO();
         contractBO.setId(id);
-        contractBO.setSignDate(signDate);
+        if (contractBO.getSignDate() == null) {
+            contractBO.setSignDate(signDate);
+        }
+        if (contractBO.getCheckDate() == null) {
+            contractBO.setCheckDate(signDate);
+        }
         // 设置状态为已审核
         contractBO.setCheckStatus(ContractStatus.CHECKED.getCode());
-        contractBO.setCheckDate(DateUtils.dateTimeNow());
         return contractMapper.updateContract(contractBO);
     }
 
     @Override
-    public int check(Integer id) {
+    public int uncheck(Integer id) {
         ContractBO contractBO = new ContractBO();
         contractBO.setId(id);
         // 设置状态为未审核
         contractBO.setCheckStatus(ContractStatus.UNCHECK.getCode());
         contractBO.setCheckDate(null);
         return contractMapper.updateContract(contractBO);
+
     }
 }

@@ -110,5 +110,5 @@ public interface IContractService
      * @param id
      * @return
      */
-    int check(Integer id);
+    int uncheck(Integer id);
 }

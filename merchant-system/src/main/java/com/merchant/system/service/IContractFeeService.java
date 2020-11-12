@@ -58,4 +58,11 @@ public interface IContractFeeService
      * @return 结果
      */
     public int deleteContractFeeById(Long id);
+
+    /**
+     * 根据合同编号查询合同费用信息
+     * @param contractNum
+     * @return
+     */
+    int getFeeByContractNum(String contractNum);
 }

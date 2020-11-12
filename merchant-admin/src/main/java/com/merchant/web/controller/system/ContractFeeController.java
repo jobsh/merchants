@@ -1,6 +1,8 @@
 package com.merchant.web.controller.system;
 
 import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -99,5 +101,18 @@ public class ContractFeeController extends BaseController
     public AjaxResult remove(@PathVariable Long[] ids)
     {
         return toAjax(contractFeeService.deleteContractFeeByIds(ids));
+    }
+
+    /**
+     * 根据合同contractNum查询费用
+     */
+    @PreAuthorize("@ss.hasPermi('fee:feeManager:list')")
+    @GetMapping(value = "/getFeeByContractNum/{contractNum}")
+    public AjaxResult getFeeByContractNum(@PathVariable String contractNum)
+    {
+        if (StringUtils.isBlank(contractNum)) {
+            return AjaxResult.error("参数有误");
+        }
+        return toAjax(contractFeeService.getFeeByContractNum(contractNum));
     }
 }

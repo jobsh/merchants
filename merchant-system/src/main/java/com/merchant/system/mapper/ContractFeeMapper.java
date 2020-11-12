@@ -58,4 +58,6 @@ public interface ContractFeeMapper
      * @return 结果
      */
     public int deleteContractFeeByIds(Long[] ids);
+
+    int selectContractFeeByContractNum(String contractNum);
 }

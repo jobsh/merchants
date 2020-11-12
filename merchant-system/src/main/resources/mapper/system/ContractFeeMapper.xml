@@ -39,6 +39,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectContractFeeVo"/>
         where id = #{id}
     </select>
+
+    <select id="selectContractFeeByContractNum" parameterType="String" resultMap="ContractFeeResult">
+        <include refid="selectContractFeeVo"/>
+        where contract_num = #{contractNum}
+    </select>
+
+
         
     <insert id="insertContractFee" parameterType="ContractFee" useGeneratedKeys="true" keyProperty="id">
         insert into biz_contract_fee
