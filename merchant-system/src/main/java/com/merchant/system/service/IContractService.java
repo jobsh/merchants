@@ -3,6 +3,7 @@ package com.merchant.system.service;
 import java.util.List;
 import com.merchant.system.domain.Contract;
 import com.merchant.system.domain.bo.ContractBO;
+import io.swagger.models.auth.In;
 
 /**
  * 合同Service接口
@@ -82,11 +83,11 @@ public interface IContractService
     int terminate(Integer id);
 
     /**
-     * 根据合同id续约合同
-     * @param id
+     * 续签合同
+     * @param contractBO
      * @return
      */
-    int renew(Integer id);
+    int renew(Integer id, ContractBO contractBO);
 
     /**
      * 转移给手机号为phone的负责人
@@ -94,4 +95,20 @@ public interface IContractService
      * @return
      */
     int transfer(Integer managerId);
+
+    /**
+     * 审核合同
+     * @param id
+     * @param signDate
+     * @return
+     */
+    int check(Integer id, String signDate);
+
+
+    /**
+     * 反审核合同
+     * @param id
+     * @return
+     */
+    int check(Integer id);
 }

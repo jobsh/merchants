@@ -98,6 +98,9 @@ public class ContractBO extends BaseEntity
     @ApiModelProperty(value = "生效失效状态", name = "status")
     private String status;
 
+    /** 审核状态（0:未审核  1:已审核） */
+    private String checkStatus;
+
     private Integer managerId;
 
     /** 负责人 */

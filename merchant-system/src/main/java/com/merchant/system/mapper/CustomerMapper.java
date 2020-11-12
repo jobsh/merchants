@@ -63,10 +63,10 @@ public interface CustomerMapper
     /**
      * 修改我的客户
      * 
-     * @param customer 我的客户
+     * @param customerBO 我的客户
      * @return 结果
      */
-    public int updateCustomer(Customer customer);
+    public int updateCustomer(CustomerBO customerBO);
 
     /**
      * 批量修改客户信息

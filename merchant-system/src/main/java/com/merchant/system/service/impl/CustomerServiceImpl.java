@@ -3,6 +3,7 @@ package com.merchant.system.service.impl;
 import com.merchant.common.core.domain.entity.SysUser;
 import com.merchant.common.enums.CustomerStatus;
 import com.merchant.common.exception.CustomException;
+import com.merchant.common.utils.DateUtils;
 import com.merchant.common.utils.StringUtils;
 import com.merchant.system.domain.Customer;
 import com.merchant.system.domain.bo.CustomerBO;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.Date;
 import java.util.List;
 /**
  * 我的客户Service业务层处理
@@ -97,13 +99,13 @@ public class CustomerServiceImpl implements ICustomerService
     /**
      * 修改我的客户
      * 
-     * @param customer 我的客户
+     * @param customerBO 我的客户
      * @return 结果
      */
     @Override
-    public int updateCustomer(Customer customer)
+    public int updateCustomer(CustomerBO customerBO)
     {
-        return customerMapper.updateCustomer(customer);
+        return customerMapper.updateCustomer(customerBO);
     }
 
     @Override
@@ -211,7 +213,7 @@ public class CustomerServiceImpl implements ICustomerService
                 else if (isUpdateSupport)
                 {
                     customer.setUpdateBy(operName);
-                    this.updateCustomer(customer);
+                    this.updateCustomer((CustomerBO)customer);
                     successNum++;
                     successMsg.append("<br/>" + successNum + "、账号 " + customer.getName() + " 更新成功");
                 }

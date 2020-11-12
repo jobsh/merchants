@@ -3,6 +3,7 @@ package com.merchant.system.service.impl;
 import java.util.List;
 
 import com.merchant.common.core.domain.entity.SysUser;
+import com.merchant.common.enums.ContractStatus;
 import com.merchant.common.utils.DateUtils;
 import com.merchant.system.domain.bo.ContractBO;
 import com.merchant.system.service.ISysUserService;
@@ -13,6 +14,8 @@ import org.springframework.stereotype.Service;
 import com.merchant.system.mapper.ContractMapper;
 import com.merchant.system.domain.Contract;
 import com.merchant.system.service.IContractService;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 合同Service业务层处理
@@ -71,12 +74,17 @@ public class ContractServiceImpl implements IContractService
     @Override
     public int insertContract(ContractBO contractBO)
     {
-        String contractNum = sid.nextShort();
         if (contractBO.getNum() == null) {
-            contractBO.setNum(contractNum);
+            contractBO.setNum(sid.nextShort());
         }
         // 新签合同rootNum设置为本合同编号，pid为0
         contractBO.setRootNum(contractBO.getNum());
+        // 设置合同默认状态为有效执行中
+        if (contractBO.getStatus() == null) {
+            contractBO.setStatus(ContractStatus.EFFECTIVE_EXECUTING.getCode());
+        }
+        // type为新签合同
+        contractBO.setType(ContractStatus.SIGN_NEW.getCode());
         contractBO.setPid(0);
 
         return contractMapper.insertContract(contractBO);
@@ -139,44 +147,66 @@ public class ContractServiceImpl implements IContractService
     }
 
     @Override
-    public int renew(Integer id) {
+    @Transactional(propagation = Propagation.REQUIRED)
+    public int renew(Integer id, ContractBO contractBO) {
 
+        // 查询出要续签的合同
         Contract contract = contractMapper.selectContractById(id);
-        ContractBO contractBO = new ContractBO();
-        /**
-         * if (旧合同到期) {
-         * 	旧合同status = '到期续约';
-         *     新增新合同；
-         *     新合同status = '有效执行中';
-         *     新合同类型为 '续签'
-         * } else if(旧合同未到期) {
-         *     旧合同status = '到期续约';
-         *     新增新合同；
-         *     新合同status = '有效执行中';
-         *     新合同类型为 '续签'
-         * }
-         */
-        BeanUtils.copyProperties(contract,contractBO);
+        ContractBO oldContract = new ContractBO();
 
+        BeanUtils.copyProperties(contract,oldContract);
         if (contract.getEndDate().after(DateUtils.getNowDate())) {
-            contractBO.setStatus("到期解约");
+            // 设置旧合同为到期解约
+            oldContract.setStatus(ContractStatus.EXPIRED_TERMINATION.getCode());
         } else {
-            contractBO.setStatus("未到期解约");
+            oldContract.setStatus("未到期解约");
         }
+        // 更新旧合同
+        contractMapper.updateContract(oldContract);
 
-        return contractMapper.updateContract(contractBO);
+        // 签发新合同
+        contractBO.setRootNum(contract.getRootNum());
+        // 设置新合同pid
+        contractBO.setPid(contract.getId());
+        // 设置新合同类型为续签
+        contractBO.setType(ContractStatus.SIGN_RENEW.getCode());
+        // 设置新合同状态为有效执行中
+        contractBO.setStatus(ContractStatus.EFFECTIVE_EXECUTING.getCode());
+        // 设置新合同审核状态为未审核
+        contractBO.setCheckStatus(ContractStatus.UNCHECK.getCode());
+        return contractMapper.insertContract(contractBO);
     }
 
     @Override
     public int transfer(Integer managerId) {
-        // 根据phone查询出负责人
+        // 根据phone查询出负责人 判断系统中是否有此负责人
         SysUser sysUser = sysUserService.selectUserById(managerId.longValue());
-        // 判断系统中是否有此负责人
         ContractBO contractBO = new ContractBO();
         contractBO.setManagerId(contractBO.getId());
         contractBO.setManager(sysUser.getUserName());
         contractBO.setSignUserId(contractBO.getId());
         contractBO.setSignUser(sysUser.getUserName());
+        return contractMapper.updateContract(contractBO);
+    }
+
+    @Override
+    public int check(Integer id, String signDate) {
+        ContractBO contractBO = new ContractBO();
+        contractBO.setId(id);
+        contractBO.setSignDate(signDate);
+        // 设置状态为已审核
+        contractBO.setCheckStatus(ContractStatus.CHECKED.getCode());
+        contractBO.setCheckDate(DateUtils.dateTimeNow());
+        return contractMapper.updateContract(contractBO);
+    }
+
+    @Override
+    public int check(Integer id) {
+        ContractBO contractBO = new ContractBO();
+        contractBO.setId(id);
+        // 设置状态为未审核
+        contractBO.setCheckStatus(ContractStatus.UNCHECK.getCode());
+        contractBO.setCheckDate(null);
         return contractMapper.updateContract(contractBO);
     }
 }

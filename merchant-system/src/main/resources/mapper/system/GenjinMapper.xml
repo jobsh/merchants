@@ -43,7 +43,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="method != null and method != ''">method,</if>
             <if test="status != null and status != ''">status,</if>
             <if test="image != null and image != ''">image,</if>
-            <if test="genjin_date != null and genjin_date != ''">genjin_date,</if>
+            <if test="genjinDate != null and genjinDate != ''">genjin_date,</if>
             update_date,
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -55,7 +55,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="status != null and status != ''">#{status},</if>
             <if test="image != null and image != ''">#{image},</if>
             <if test="genjinDate != null and genjinDate != ''">#{genjinDate},</if>
-            now(),now()
+            now()
          </trim>
     </insert>
 

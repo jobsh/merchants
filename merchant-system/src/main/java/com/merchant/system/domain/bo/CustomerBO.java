@@ -2,6 +2,7 @@ package com.merchant.system.domain.bo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.merchant.common.annotation.Excel;
+import com.merchant.common.core.domain.BaseEntity;
 import com.merchant.system.domain.Customer;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -102,16 +103,16 @@ public class CustomerBO extends Customer {
     @ApiModelProperty(value = "客户状态", name = "status")
     private String status;
 
-    /** 最新跟进时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date genjinDate;
-    /** 创建时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @Excel(name = "创建时间", width = 30, dateFormat = "yyyy-MM-dd")
-    private Date inputDate;
-
-    /** 更新时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date updateDate;
+//    /** 最新跟进时间 */
+//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+//    private String genjinDate;
+//    /** 创建时间 */
+//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+//    @Excel(name = "创建时间", width = 30, dateFormat = "yyyy-MM-dd")
+//    private String inputDate;
+//
+//    /** 更新时间 */
+//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+//    private String updateDate;
 
 }

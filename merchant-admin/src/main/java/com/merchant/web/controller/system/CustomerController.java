@@ -1,9 +1,11 @@
 package com.merchant.web.controller.system;
 
+import java.util.Date;
 import java.util.List;
 
 import com.merchant.common.constant.HttpStatus;
 import com.merchant.common.core.domain.model.LoginUser;
+import com.merchant.common.utils.DateUtils;
 import com.merchant.common.utils.ServletUtils;
 import com.merchant.framework.web.service.TokenService;
 import com.merchant.system.domain.bo.CustomerBO;
@@ -141,8 +143,10 @@ public class CustomerController extends BaseController {
     @PreAuthorize("@ss.hasPermi('system:customer:edit')")
     @Log(title = "我的客户", businessType = BusinessType.UPDATE)
     @PutMapping("/customer")
-    public AjaxResult edit(@RequestBody Customer customer) {
-        return toAjax(customerService.updateCustomer(customer));
+    public AjaxResult edit(@RequestBody CustomerBO customerBO) {
+        Date genjinDate = DateUtils.parseDate(customerBO.getGenjinDate());
+        customerBO.setGenjinDate(genjinDate);
+        return toAjax(customerService.updateCustomer(customerBO));
     }
 
     /**
@@ -152,7 +156,7 @@ public class CustomerController extends BaseController {
     @PreAuthorize("@ss.hasPermi('system:customer:edit')")
     @Log(title = "我的客户", businessType = BusinessType.UPDATE)
     @PutMapping("/customers")
-    public AjaxResult edit(@RequestBody CustomerBO customerBO) {
+    public AjaxResult editCustomers(@RequestBody CustomerBO customerBO) {
         return toAjax(customerService.updateCustomerByIds(customerBO));
     }
 

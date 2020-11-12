@@ -122,4 +122,8 @@ public class Contract extends BaseEntity
     /** 生效失效状态 */
     @Excel(name = "生效失效状态")
     private String status;
+
+    /** 审核状态（0:未审核  1:已审核） */
+    @Excel(name = "生效失效状态")
+    private String checkStatus;
 }

@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.merchant.common.annotation.ContractLog;
 import com.merchant.system.domain.bo.ContractBO;
+import io.swagger.models.auth.In;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -156,14 +157,8 @@ public class ContractController extends BaseController
     @PreAuthorize("@ss.hasPermi('contract:contractManager:edit')")
     @Log(title = "合同", businessType = BusinessType.UPDATE)
     @PostMapping("/renew/{id}")
-    public AjaxResult renew(@PathVariable Integer id) {
-
-        // 查询合同
-        if (id == null) {
-            return AjaxResult.error("id错误");
-        }
-
-        return toAjax(contractService.renew(id));
+    public AjaxResult renew(@PathVariable Integer id, @RequestBody ContractBO contractBO) {
+        return toAjax(contractService.renew(id, contractBO));
     }
 
     /**
@@ -181,6 +176,26 @@ public class ContractController extends BaseController
         }
 
         return toAjax(contractService.transfer(managerId));
+    }
+
+    /**
+     * 审核合同，修改审核状态和签约日期
+     * @param id 合同id
+     * @param signDate 签约日期
+     * @return
+     */
+    @PreAuthorize("@ss.hasPermi('contract:contractManager:edit')")
+    @Log(title = "合同", businessType = BusinessType.UPDATE)
+    @ContractLog()
+    @PostMapping("/check/")
+    public AjaxResult check(Integer id,String signDate) {
+
+        // 查询合同
+        if (id == null) {
+            return AjaxResult.error("参数错误");
+        }
+
+        return toAjax(contractService.check(id, signDate));
     }
 
 }

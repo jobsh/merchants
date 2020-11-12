@@ -48,9 +48,9 @@ public class GenjinBO {
 
     /** 跟进时间,即录入时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date genjinDate;
+    private String genjinDate;
 
     /** 更新时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date updateDate;
+    private String updateDate;
 }
