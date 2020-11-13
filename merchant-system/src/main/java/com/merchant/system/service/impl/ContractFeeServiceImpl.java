@@ -3,6 +3,7 @@ package com.merchant.system.service.impl;
 import java.util.List;
 
 import com.merchant.system.domain.bo.ContractFeeBO;
+import com.merchant.system.domain.vo.ContractFeeVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.merchant.system.mapper.ContractFeeMapper;
@@ -94,9 +95,9 @@ public class ContractFeeServiceImpl implements IContractFeeService
     }
 
     @Override
-    public int getFeeByContractNum(String contractNum) {
+    public List<ContractFeeVO> getFeeByContractNum(String contractNum) {
         ContractFee contractFee = new ContractFee();
-        contractFee.setConstractNum(contractNum);
+        contractFee.setContractNum(contractNum);
         return contractFeeMapper.selectContractFeeByContractNum(contractNum);
     }
 }

@@ -2,6 +2,7 @@ package com.merchant.system.mapper;
 
 import java.util.List;
 import com.merchant.system.domain.ContractFee;
+import com.merchant.system.domain.vo.ContractFeeVO;
 
 /**
  * 费用管理Mapper接口
@@ -59,5 +60,5 @@ public interface ContractFeeMapper
      */
     public int deleteContractFeeByIds(Long[] ids);
 
-    int selectContractFeeByContractNum(String contractNum);
+    List<ContractFeeVO> selectContractFeeByContractNum(String contractNum);
 }

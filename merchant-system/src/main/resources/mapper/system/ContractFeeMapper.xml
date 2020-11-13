@@ -4,28 +4,42 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.merchant.system.mapper.ContractFeeMapper">
     
-    <resultMap type="ContractFee" id="ContractFeeResult">
+    <resultMap type="ContractFeeVO" id="ContractFeeResult">
         <result property="id"    column="id"    />
         <result property="num"    column="num"    />
-        <result property="constractNum"    column="constract_num"    />
+        <result property="contractNum"    column="contract_num"    />
         <result property="type"    column="type"    />
+        <result property="amount"    column="amount"    />
         <result property="payMethod"    column="pay_method"    />
         <result property="payer"    column="payer"    />
         <result property="reciever"    column="reciever"    />
         <result property="checkStatus"    column="check_status"    />
         <result property="shoukuanDate"    column="shoukuan_date"    />
         <result property="updateDate"    column="update_date"    />
+        <result property="customerName"    column="customer_name"    />
+        <result property="customerId"    column="customer_id"    />
+        <result property="produce"    column="produce"    />
+        <result property="dianmianName"    column="dianmian_name"    />
+        <result property="dianmianNum"    column="dianmian_num"    />
+        <result property="manager"    column="manager"    />
     </resultMap>
 
     <sql id="selectContractFeeVo">
-        select id, num, constract_num, type, pay_method, payer, reciever, check_status, shoukuan_date, update_date from biz_contract_fee
+        select
+            biz_contract_fee.id, biz_contract_fee.num, biz_contract_fee.contract_num, biz_contract_fee.type, biz_contract_fee.amount,biz_contract_fee.pay_method, biz_contract_fee.payer,
+            biz_contract_fee.reciever, biz_contract_fee.check_status, biz_contract_fee.shoukuan_date, biz_contract_fee.update_date, biz_contract.customer_name, biz_contract.customer_id, biz_contract.produce, biz_contract.dianmian_name, biz_contract.dianmian_num, biz_contract.manager
+        from biz_contract_fee
+        left join
+            biz_contract
+        on
+        biz_contract_fee.contract_num = biz_contract.num
     </sql>
 
     <select id="selectContractFeeList" parameterType="ContractFee" resultMap="ContractFeeResult">
-        <include refid="selectContractFeeVo"/>
+        <include refid="selectContractFeeVo"></include>
         <where>  
             <if test="num != null  and num != ''"> and num = #{num}</if>
-            <if test="constractNum != null  and constractNum != ''"> and constract_num = #{constractNum}</if>
+            <if test="contractNum != null  and contractNum != ''"> and contract_num = #{contractNum}</if>
             <if test="type != null  and type != ''"> and type = #{type}</if>
             <if test="payMethod != null  and payMethod != ''"> and pay_method = #{payMethod}</if>
             <if test="payer != null  and payer != ''"> and payer = #{payer}</if>
@@ -44,15 +58,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectContractFeeVo"/>
         where contract_num = #{contractNum}
     </select>
-
-
         
     <insert id="insertContractFee" parameterType="ContractFee" useGeneratedKeys="true" keyProperty="id">
         insert into biz_contract_fee
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="num != null and num != ''">num,</if>
-            <if test="constractNum != null and constractNum != ''">constract_num,</if>
+            <if test="contractNum != null and contractNum != ''">contract_num,</if>
             <if test="type != null and type != ''">type,</if>
+            <if test="amount != null and amount != ''">amount,</if>
             <if test="payMethod != null and payMethod != ''">pay_method,</if>
             <if test="payer != null and payer != ''">payer,</if>
             <if test="reciever != null and reciever != ''">reciever,</if>
@@ -62,8 +75,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="num != null and num != ''">#{num},</if>
-            <if test="constractNum != null and constractNum != ''">#{constractNum},</if>
+            <if test="contractNum != null and contractNum != ''">#{contractNum},</if>
             <if test="type != null and type != ''">#{type},</if>
+            <if test="amount != null and amount != ''">#{amount},</if>
             <if test="payMethod != null and payMethod != ''">#{payMethod},</if>
             <if test="payer != null and payer != ''">#{payer},</if>
             <if test="reciever != null and reciever != ''">#{reciever},</if>
@@ -77,8 +91,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         update biz_contract_fee
         <trim prefix="SET" suffixOverrides=",">
             <if test="num != null and num != ''">num = #{num},</if>
-            <if test="constractNum != null and constractNum != ''">constract_num = #{constractNum},</if>
+            <if test="contractNum != null and contractNum != ''">contract_num = #{contractNum},</if>
             <if test="type != null and type != ''">type = #{type},</if>
+            <if test="amount != null and amount != ''">amount = #{amount},</if>
             <if test="payMethod != null and payMethod != ''">pay_method = #{payMethod},</if>
             <if test="payer != null and payer != ''">payer = #{payer},</if>
             <if test="reciever != null and reciever != ''">reciever = #{reciever},</if>

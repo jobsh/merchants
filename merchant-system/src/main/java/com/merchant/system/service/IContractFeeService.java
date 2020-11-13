@@ -2,6 +2,7 @@ package com.merchant.system.service;
 
 import java.util.List;
 import com.merchant.system.domain.ContractFee;
+import com.merchant.system.domain.vo.ContractFeeVO;
 
 /**
  * 费用管理Service接口
@@ -64,5 +65,5 @@ public interface IContractFeeService
      * @param contractNum
      * @return
      */
-    int getFeeByContractNum(String contractNum);
+    List<ContractFeeVO> getFeeByContractNum(String contractNum);
 }

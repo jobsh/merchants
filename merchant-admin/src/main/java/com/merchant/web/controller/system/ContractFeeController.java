@@ -113,6 +113,6 @@ public class ContractFeeController extends BaseController
         if (StringUtils.isBlank(contractNum)) {
             return AjaxResult.error("参数有误");
         }
-        return toAjax(contractFeeService.getFeeByContractNum(contractNum));
+        return AjaxResult.success(contractFeeService.getFeeByContractNum(contractNum));
     }
 }
