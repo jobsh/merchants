@@ -181,10 +181,12 @@ public class ContractServiceImpl implements IContractService
     }
 
     @Override
-    public int transfer(Integer managerId) {
+    public int transfer(Integer id, Integer managerId) {
         // 根据phone查询出负责人 判断系统中是否有此负责人
         SysUser sysUser = sysUserService.selectUserById(managerId.longValue());
+        Contract contract = contractMapper.selectContractById(id);
         ContractBO contractBO = new ContractBO();
+        BeanUtils.copyProperties(contract, contractBO);
         contractBO.setManagerId(contractBO.getId());
         contractBO.setManager(sysUser.getUserName());
         contractBO.setSignUserId(contractBO.getId());

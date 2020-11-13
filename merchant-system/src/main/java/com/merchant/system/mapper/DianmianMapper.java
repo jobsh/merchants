@@ -2,6 +2,7 @@ package com.merchant.system.mapper;
 
 import java.util.List;
 import com.merchant.system.domain.Dianmian;
+import com.merchant.system.domain.bo.DianmianBO;
 import com.merchant.system.domain.vo.DianmianVO;
 
 /**
@@ -59,4 +60,6 @@ public interface DianmianMapper
      * @return 结果
      */
     public int deleteDianmianByIds(Integer[] ids);
+
+    List<DianmianVO> selectDianmianByContractNum(String contractNum);
 }

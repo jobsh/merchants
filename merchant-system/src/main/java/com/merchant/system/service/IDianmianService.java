@@ -59,4 +59,6 @@ public interface IDianmianService
      * @return 结果
      */
     public int deleteDianmianById(Integer id);
+
+    List<DianmianVO> selectDianmianByContractNum(String contractNum);
 }

@@ -2,6 +2,7 @@ package com.merchant.system.service.impl;
 
 import java.util.List;
 
+import com.merchant.system.domain.bo.DianmianBO;
 import com.merchant.system.domain.vo.DianmianVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -91,5 +92,12 @@ public class DianmianServiceImpl implements IDianmianService
     public int deleteDianmianById(Integer id)
     {
         return dianmianMapper.deleteDianmianById(id);
+    }
+
+    @Override
+    public List<DianmianVO> selectDianmianByContractNum(String contractNum) {
+        DianmianBO dianmianBO = new DianmianBO();
+        dianmianBO.setContractNum(contractNum);
+        return dianmianMapper.selectDianmianByContractNum(contractNum);
     }
 }

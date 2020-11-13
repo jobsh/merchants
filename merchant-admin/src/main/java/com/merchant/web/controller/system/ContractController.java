@@ -3,17 +3,15 @@ package com.merchant.web.controller.system;
 import java.util.List;
 
 import com.merchant.common.annotation.ContractLog;
+import com.merchant.common.utils.DateUtils;
+import com.merchant.common.utils.StringUtils;
 import com.merchant.system.domain.bo.ContractBO;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.merchant.common.annotation.Log;
 import com.merchant.common.core.controller.BaseController;
 import com.merchant.common.core.domain.AjaxResult;
@@ -29,6 +27,7 @@ import com.merchant.common.core.page.TableDataInfo;
  * @author hanke
  * @date 2020-11-03
  */
+@Api(value = "合同相关相关的api接口", tags = {"合同相关相关的api接口"})
 @RestController
 @RequestMapping("/contract/contractManager")
 public class ContractController extends BaseController
@@ -109,6 +108,8 @@ public class ContractController extends BaseController
     /**
      * 修改合同
      */
+
+    @ApiOperation(value = "修改合同", notes = "修改合同", httpMethod = "PUT")
     @PreAuthorize("@ss.hasPermi('contract:contractManager:edit')")
     @Log(title = "合同", businessType = BusinessType.UPDATE)
     @PutMapping
@@ -120,10 +121,13 @@ public class ContractController extends BaseController
     /**
      * 删除合同
      */
+    @ApiOperation(value = "删除合同", notes = "删除合同", httpMethod = "DELETE")
     @PreAuthorize("@ss.hasPermi('contract:contractManager:remove')")
     @Log(title = "合同", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Integer[] ids)
+    public AjaxResult remove(
+            @ApiParam(name = "ids", value = "合同ids", required = true)
+            @PathVariable Integer[] ids)
     {
         return toAjax(contractService.deleteContractByIds(ids));
     }
@@ -132,12 +136,14 @@ public class ContractController extends BaseController
     /**
      * 合同解约
      */
+    @ApiOperation(value = "合同解约", notes = "合同解约", httpMethod = "POST")
     @PreAuthorize("@ss.hasPermi('contract:contractManager:edit')")
     @Log(title = "合同", businessType = BusinessType.UPDATE)
     @PostMapping("/terminate/{id}")
-    public AjaxResult terminate(@PathVariable Integer id) {
+    public AjaxResult terminate(
+            @ApiParam(name = "id", value = "合同id", required = true)
+            @PathVariable Integer id) {
 
-        // 查询合同
         if (id == null) {
             return AjaxResult.error("id错误");
         }
@@ -149,28 +155,36 @@ public class ContractController extends BaseController
     /**
      * 合同续约
      */
+    @ApiOperation(value = "合同续约", notes = "合同续约", httpMethod = "POST")
     @PreAuthorize("@ss.hasPermi('contract:contractManager:edit')")
     @Log(title = "合同", businessType = BusinessType.UPDATE)
     @PostMapping("/renew/{id}")
-    public AjaxResult renew(@PathVariable Integer id, @RequestBody ContractBO contractBO) {
+    public AjaxResult renew(
+            @ApiParam(name = "id", value = "合同id", required = true)
+            @PathVariable Integer id, @RequestBody ContractBO contractBO) {
         return toAjax(contractService.renew(id, contractBO));
     }
 
     /**
      * 转移合同
      */
+    @ApiOperation(value = "转移合同", notes = "转移合同", httpMethod = "GET")
     @PreAuthorize("@ss.hasPermi('contract:contractManager:edit')")
     @Log(title = "合同", businessType = BusinessType.UPDATE)
     @ContractLog()
-    @PostMapping("/transfer/")
-    public AjaxResult transfer(Integer managerId) {
+    @GetMapping("/transfer/")
+    public AjaxResult transfer(
+            @ApiParam(name = "id", value = "合同id", required = true)
+            @RequestParam Integer id,
+            @ApiParam(name = "managerId", value = "负责人id", required = true)
+            @RequestParam Integer managerId) {
 
         // 查询合同
         if (managerId == null) {
             return AjaxResult.error("参数错误");
         }
 
-        return toAjax(contractService.transfer(managerId));
+        return toAjax(contractService.transfer(id, managerId));
     }
 
     /**
@@ -179,15 +193,21 @@ public class ContractController extends BaseController
      * @param signDate 签约日期
      * @return
      */
+    @ApiOperation(value = "审核合同", notes = "审核合同", httpMethod = "POST")
     @PreAuthorize("@ss.hasPermi('contract:contractManager:edit')")
     @Log(title = "合同", businessType = BusinessType.UPDATE)
     @ContractLog()
     @PostMapping("/check/")
-    public AjaxResult check(Integer id,String signDate) {
+    public AjaxResult check(
+            @ApiParam(name = "id", value = "合同id", required = true) @RequestParam Integer id,
+            @ApiParam(name = "signDate", value = "签约日期", required = true) @RequestParam String signDate) {
 
         // 查询合同
         if (id == null) {
             return AjaxResult.error("参数错误");
+        }
+        if (StringUtils.isBlank(signDate)) {
+            signDate = DateUtils.dateTimeNow();
         }
 
         return toAjax(contractService.check(id, signDate));
@@ -198,11 +218,12 @@ public class ContractController extends BaseController
      * @param id 合同id
      * @return
      */
+    @ApiOperation(value = "反审核", notes = "反审核", httpMethod = "GET")
     @PreAuthorize("@ss.hasPermi('contract:contractManager:edit')")
     @Log(title = "合同", businessType = BusinessType.UPDATE)
     @ContractLog()
-    @PostMapping("/uncheck/")
-    public AjaxResult uncheck(Integer id) {
+    @GetMapping("/uncheck/{id}")
+    public AjaxResult uncheck(@ApiParam(name = "id", value = "合同id", required = true) @PathVariable("id") Integer id) {
 
         // 查询合同
         if (id == null) {

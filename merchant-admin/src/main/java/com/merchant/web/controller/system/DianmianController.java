@@ -3,6 +3,7 @@ package com.merchant.web.controller.system;
 import java.util.List;
 
 import com.merchant.system.domain.vo.DianmianVO;
+import io.swagger.annotations.Api;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,6 +29,7 @@ import com.merchant.common.core.page.TableDataInfo;
  * @author hanke
  * @date 2020-11-02
  */
+@Api(value = "店面相关的api接口", tags = {"店面相关的api接口"})
 @RestController
 @RequestMapping("/dianmian/dianmianManager")
 public class DianmianController extends BaseController
@@ -47,6 +49,18 @@ public class DianmianController extends BaseController
         return getDataTable(list);
     }
 
+
+    /**
+     * 查询店面管理列表
+     */
+    @PreAuthorize("@ss.hasPermi('dianmian:dianmianManager:list')")
+    @GetMapping("/listOfContractNum/{ContractNum}")
+    public TableDataInfo listByContractNum(@PathVariable String ContractNum)
+    {
+        startPage();
+        List<DianmianVO> list = dianmianService.selectDianmianByContractNum(ContractNum);
+        return getDataTable(list);
+    }
     /**
      * 导出店面管理列表
      */

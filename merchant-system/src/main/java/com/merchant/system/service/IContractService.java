@@ -94,7 +94,7 @@ public interface IContractService
      * @param managerId
      * @return
      */
-    int transfer(Integer managerId);
+    int transfer(Integer id, Integer managerId);
 
     /**
      * 审核合同

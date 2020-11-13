@@ -56,7 +56,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectDianmianVo">
-        select d.id, d.diandong_id, d.diandong_name, d.diandong_phone, d.sys_user_id, d.company_id, d.name, d.status, d.province, d.city, d.district, d.longitude, d.latitude, d.address, d.check_result, d.open_date, d.contractNum, d.type, d.area, d.close_date, d.close_days, d.close_reason, d.check_info, d.remark,
+        select d.id, d.diandong_id, d.diandong_name, d.diandong_phone, d.sys_user_id, d.company_id, d.name, d.status, d.province, d.city, d.district, d.longitude, d.latitude, d.address, d.check_result, d.open_date, d.contract_num, d.type, d.area, d.close_date, d.close_days, d.close_reason, d.check_info, d.remark,
         c.*
         from
             biz_dianmian d
@@ -81,7 +81,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="address != null  and address != ''"> and address = #{address}</if>
             <if test="checkResult != null  and checkResult != ''"> and check_result = #{checkResult}</if>
             <if test="openDate != null "> and open_date = #{openDate}</if>
-            <if test="contractnum != null  and contractnum != ''"> and contractNum = #{contractnum}</if>
+            <if test="contractNum != null  and contractNum != ''"> and contract_num = #{contractNum}</if>
             <if test="type != null  and type != ''"> and type = #{type}</if>
             <if test="area != null  and area != ''"> and area = #{area}</if>
         </where>
@@ -91,7 +91,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectDianmianVo"/>
         where d.id = #{id}
     </select>
-        
+    <select id="selectDianmianByContractNum" parameterType="String" resultMap="DianmianResult">
+        <include refid="selectDianmianVo"/>
+        where d.contract_num = #{contractNum}
+    </select>
+
     <insert id="insertDianmian" parameterType="Dianmian" useGeneratedKeys="true" keyProperty="id">
         insert into biz_dianmian
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -110,7 +114,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="address != null and address != ''">address,</if>
             <if test="checkResult != null and checkResult != ''">check_result,</if>
             <if test="openDate != null">open_date,</if>
-            <if test="contractnum != null and contractnum != ''">contractNum,</if>
+            <if test="contractNum != null and contractNum != ''">contractNum,</if>
             <if test="type != null and type != ''">type,</if>
             <if test="area != null and area != ''">area,</if>
             <if test="closeDate != null">close_date,</if>
@@ -135,7 +139,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="address != null and address != ''">#{address},</if>
             <if test="checkResult != null and checkResult != ''">#{checkResult},</if>
             <if test="openDate != null">#{openDate},</if>
-            <if test="contractnum != null and contractnum != ''">#{contractnum},</if>
+            <if test="contractNum != null and contractNum != ''">#{contractNum},</if>
             <if test="type != null and type != ''">#{type},</if>
             <if test="area != null and area != ''">#{area},</if>
             <if test="closeDate != null">#{closeDate},</if>
@@ -164,7 +168,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="address != null and address != ''">address = #{address},</if>
             <if test="checkResult != null and checkResult != ''">check_result = #{checkResult},</if>
             <if test="openDate != null">open_date = #{openDate},</if>
-            <if test="contractnum != null and contractnum != ''">contractNum = #{contractnum},</if>
+            <if test="contractNum != null and contractNum != ''">contract_num = #{contractNum},</if>
             <if test="type != null and type != ''">type = #{type},</if>
             <if test="area != null and area != ''">area = #{area},</if>
             <if test="closeDate != null">close_date = #{closeDate},</if>

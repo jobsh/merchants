@@ -64,7 +64,7 @@ public class DianmianBO {
 
     /** 合同编号 */
     @ApiModelProperty(value = "合同编号", name = "contractnum")
-    private String contractnum;
+    private String contractNum;
 
     /** 店面类型（0：单店加盟，1：区域加盟） */
     @ApiModelProperty(value = "店面类型（0：单店加盟，1：区域加盟）", name = "type")
