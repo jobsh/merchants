@@ -12,7 +12,7 @@ import java.util.List;
 
 /**
  * @Classname GenjinBO
- * @Description TODO
+ * @Description GenjinBO
  * @Date 2020/10/29 14:58
  * @Created by hanke
  */
