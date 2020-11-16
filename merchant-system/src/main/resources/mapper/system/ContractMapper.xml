@@ -80,12 +80,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectContractVo"/>
         where root_num = #{rootNum}
     </select>
-        
+
+    <select id="selectContractByNum" parameterType="String" resultMap="ContractResult">
+        <include refid="selectContractVo"/>
+        where num = #{num}
+    </select>
+
+    <select id="countContractByNum" parameterType="String" resultMap="ContractResult">
+        <include refid="selectContractVo"/>
+        where num = #{num}
+    </select>
+
     <insert id="insertContract" parameterType="ContractBO" useGeneratedKeys="true" keyProperty="id">
         insert into biz_contract
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="num != null and num != ''">num,</if>
-            <if test="root_num != null and root_num != ''">root_num,</if>
+            <if test="rootNum != null and rootNum != ''">root_num,</if>
             <if test="customerName != null and customerName != ''">customer_name,</if>
             <if test="customerId != null">customer_id,</if>
             <if test="customerPhone != null and customerPhone != ''">customer_phone,</if>
@@ -114,8 +124,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="remark != null and remark != ''">remark,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="rootNum != null and rootNum != ''">#{rootNum},</if>
             <if test="num != null and num != ''">#{num},</if>
+            <if test="rootNum != null and rootNum != ''">#{rootNum},</if>
             <if test="customerName != null and customerName != ''">#{customerName},</if>
             <if test="customerId != null">#{customerId},</if>
             <if test="customerPhone != null and customerPhone != ''">#{customerPhone},</if>
@@ -149,6 +159,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         update biz_contract
         <trim prefix="SET" suffixOverrides=",">
             <if test="num != null and num != ''">num = #{num},</if>
+            <if test="rootNum != null and rootNum != ''">root_num = #{rootNum},</if>
             <if test="customerName != null and customerName != ''">customer_name = #{customerName},</if>
             <if test="customerId != null">customer_id = #{customerId},</if>
             <if test="customerPhone != null and customerPhone != ''">customer_phone = #{customerPhone},</if>
@@ -165,7 +176,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="guarantee != null">guarantee = #{guarantee},</if>
             <if test="fee != null">fee = #{fee},</if>
             <if test="operation != null and operation != ''">operation = #{operation},</if>
-            <if test="managerId != null">#{managerId},</if>
+            <if test="managerId != null">manager_id = #{managerId},</if>
             <if test="manager != null and manager != ''">manager = #{manager},</if>
             <if test="signDate != null">sign_date = #{signDate},</if>
             <if test="signUserId != null">#{signUserId},</if>

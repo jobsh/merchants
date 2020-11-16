@@ -61,4 +61,18 @@ public interface ContractMapper
      * @return 结果
      */
     public int deleteContractByIds(Integer[] ids);
+
+    /**
+     * 根据合同编号查询合同
+     * @param num
+     * @return
+     */
+    Contract selectContractByNum(String num);
+
+    /**
+     * 根据合同编号查询有没有重复编号合同
+     * @param num
+     * @return
+     */
+    int countContractByNum(String num);
 }

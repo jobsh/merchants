@@ -4,8 +4,10 @@ import java.util.List;
 
 import com.merchant.common.core.domain.entity.SysUser;
 import com.merchant.common.enums.ContractStatus;
+import com.merchant.common.exception.BaseException;
 import com.merchant.common.utils.DateUtils;
 import com.merchant.system.domain.bo.ContractBO;
+import com.merchant.system.service.IContractLogService;
 import com.merchant.system.service.ISysUserService;
 import org.n3r.idworker.Sid;
 import org.springframework.beans.BeanUtils;
@@ -32,6 +34,8 @@ public class ContractServiceImpl implements IContractService
     @Autowired
     private ISysUserService sysUserService;
 
+    @Autowired
+    private IContractLogService contractLogService;
 
     @Autowired
     private Sid sid;
@@ -77,6 +81,10 @@ public class ContractServiceImpl implements IContractService
         if (contractBO.getNum() == null) {
             contractBO.setNum(sid.nextShort());
         }
+        int res = contractMapper.countContractByNum(contractBO.getNum());
+        if (res > 0) {
+            throw new BaseException("已存在该合同编号");
+        }
         // 新签合同设置pid为0
         contractBO.setPid(0);
         // 新签合同rootNum设置为本合同编号，pid为0
@@ -89,8 +97,13 @@ public class ContractServiceImpl implements IContractService
         contractBO.setType(ContractStatus.SIGN_NEW.getCode());
         // 审核状态为未审核
         contractBO.setCheckStatus(ContractStatus.UNCHECK.getCode());
-
-        return contractMapper.insertContract(contractBO);
+        int result = contractMapper.insertContract(contractBO);
+        if (result > 0) {
+            // 添加合同日志信息
+            // todo
+//            contractLogService.
+        }
+        return result;
     }
 
     /**
@@ -162,7 +175,8 @@ public class ContractServiceImpl implements IContractService
             // 设置旧合同为到期解约
             oldContract.setStatus(ContractStatus.EXPIRED_TERMINATION.getCode());
         } else {
-            oldContract.setStatus("未到期解约");
+            // 设为未到期解约
+            oldContract.setStatus(ContractStatus.UNEXPIRED_TERMINATION.getCode());
         }
         // 更新旧合同
         contractMapper.updateContract(oldContract);
@@ -177,6 +191,8 @@ public class ContractServiceImpl implements IContractService
         contractBO.setStatus(ContractStatus.EFFECTIVE_EXECUTING.getCode());
         // 设置新合同审核状态为未审核
         contractBO.setCheckStatus(ContractStatus.UNCHECK.getCode());
+        // 根据新合同编号查询是否存在该合同
+
         return contractMapper.insertContract(contractBO);
     }
 

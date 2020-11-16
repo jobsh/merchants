@@ -74,6 +74,8 @@ public class ContractLogAspect
 
     protected void handleLog(final JoinPoint joinPoint, final Exception e, Object jsonResult)
     {
+
+
         try
         {
             // 获得注解
@@ -219,7 +221,10 @@ public class ContractLogAspect
         return o instanceof MultipartFile || o instanceof HttpServletRequest || o instanceof HttpServletResponse;
     }
 
-
+    /**
+     * 将参数值设置到注解属性上
+     * @param joinPoint
+     */
     @Before("contractLogPointCut()")
     public void thirdBindInfoModifyBefore(JoinPoint joinPoint){
         // 将参数值设置到注解属性上

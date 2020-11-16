@@ -2,7 +2,6 @@ package com.merchant.web.controller.system;
 
 import java.util.List;
 
-import com.merchant.common.annotation.ContractLog;
 import com.merchant.common.utils.DateUtils;
 import com.merchant.common.utils.StringUtils;
 import com.merchant.system.domain.bo.ContractBO;
@@ -161,18 +160,18 @@ public class ContractController extends BaseController
     @PostMapping("/renew/{id}")
     public AjaxResult renew(
             @ApiParam(name = "id", value = "合同id", required = true)
-            @PathVariable Integer id, @RequestBody ContractBO contractBO) {
+            @PathVariable Integer id,
+            @RequestBody ContractBO contractBO) {
         return toAjax(contractService.renew(id, contractBO));
     }
 
     /**
      * 转移合同
      */
-    @ApiOperation(value = "转移合同", notes = "转移合同", httpMethod = "GET")
+    @ApiOperation(value = "转移合同", notes = "转移合同", httpMethod = "POST")
     @PreAuthorize("@ss.hasPermi('contract:contractManager:edit')")
     @Log(title = "合同", businessType = BusinessType.UPDATE)
-    @ContractLog()
-    @GetMapping("/transfer/")
+    @PostMapping("/transfer/")
     public AjaxResult transfer(
             @ApiParam(name = "id", value = "合同id", required = true)
             @RequestParam Integer id,
@@ -185,6 +184,7 @@ public class ContractController extends BaseController
         }
 
         return toAjax(contractService.transfer(id, managerId));
+
     }
 
     /**
@@ -196,7 +196,6 @@ public class ContractController extends BaseController
     @ApiOperation(value = "审核合同", notes = "审核合同", httpMethod = "POST")
     @PreAuthorize("@ss.hasPermi('contract:contractManager:edit')")
     @Log(title = "合同", businessType = BusinessType.UPDATE)
-    @ContractLog()
     @PostMapping("/check/")
     public AjaxResult check(
             @ApiParam(name = "id", value = "合同id", required = true) @RequestParam Integer id,
@@ -205,9 +204,6 @@ public class ContractController extends BaseController
         // 查询合同
         if (id == null) {
             return AjaxResult.error("参数错误");
-        }
-        if (StringUtils.isBlank(signDate)) {
-            signDate = DateUtils.dateTimeNow();
         }
 
         return toAjax(contractService.check(id, signDate));
@@ -221,7 +217,6 @@ public class ContractController extends BaseController
     @ApiOperation(value = "反审核", notes = "反审核", httpMethod = "GET")
     @PreAuthorize("@ss.hasPermi('contract:contractManager:edit')")
     @Log(title = "合同", businessType = BusinessType.UPDATE)
-    @ContractLog()
     @GetMapping("/uncheck/{id}")
     public AjaxResult uncheck(@ApiParam(name = "id", value = "合同id", required = true) @PathVariable("id") Integer id) {
 
