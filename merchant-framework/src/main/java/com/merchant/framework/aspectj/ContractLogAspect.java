@@ -77,7 +77,7 @@ public class ContractLogAspect
         try
         {
             // 获得注解
-            Log controllerLog = getAnnotationLog(joinPoint);
+            ContractLog controllerLog = getAnnotationLog(joinPoint);
             if (controllerLog == null)
             {
                 return;
@@ -133,7 +133,7 @@ public class ContractLogAspect
      * @param operLog 操作日志
      * @throws Exception
      */
-    public void getControllerMethodDescription(JoinPoint joinPoint, Log log, ContractOperLog operLog) throws Exception
+    public void getControllerMethodDescription(JoinPoint joinPoint, ContractLog log, ContractOperLog operLog) throws Exception
     {
         // 设置action动作
         operLog.setBusinessType(log.businessType().ordinal());
@@ -175,7 +175,7 @@ public class ContractLogAspect
     /**
      * 是否存在注解，如果存在就获取
      */
-    private Log getAnnotationLog(JoinPoint joinPoint) throws Exception
+    private ContractLog getAnnotationLog(JoinPoint joinPoint) throws Exception
     {
         Signature signature = joinPoint.getSignature();
         MethodSignature methodSignature = (MethodSignature) signature;
@@ -183,7 +183,7 @@ public class ContractLogAspect
 
         if (method != null)
         {
-            return method.getAnnotation(Log.class);
+            return method.getAnnotation(ContractLog.class);
         }
         return null;
     }

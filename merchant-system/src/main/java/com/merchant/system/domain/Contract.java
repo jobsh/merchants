@@ -128,11 +128,19 @@ public class Contract extends BaseEntity
     @Excel(name = "合同结束日期")
     private Date endDate;
 
+    /** 合同解约日期 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "解约日期")
+    private Date terminateDate;
+
     /** 生效失效状态 */
     @Excel(name = "生效失效状态")
     private String status;
 
     /** 审核状态（0:未审核  1:已审核） */
-    @Excel(name = "生效失效状态")
+    @Excel(name = "审核状态")
     private String checkStatus;
+
+    /** 合同附件 */
+    private String file;
 }

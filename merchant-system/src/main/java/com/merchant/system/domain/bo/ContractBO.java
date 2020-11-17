@@ -25,8 +25,10 @@ public class ContractBO extends BaseEntity
     @ApiModelProperty(value = "合同id", name = "id")
     private Integer id;
 
+    /** 上级合同id */
     private Integer pid;
 
+    @ApiModelProperty(value = "关联合同编号", name = "rootNum")
     private String rootNum;
 
     /** 合同编号 */
@@ -138,6 +140,15 @@ public class ContractBO extends BaseEntity
     @JsonFormat(pattern = "yyyy-MM-dd")
     @ApiModelProperty(value = "合同结束日期", name = "endDate")
     private String endDate;
+
+    /** 合同附件 */
+    @ApiModelProperty(value = "合同附件", name = "file")
+    private String file;
+
+    /** 合同解约日期 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @ApiModelProperty(value = "合同解约日期", name = "terminateDate")
+    private String terminateDate;
 
     /** 签约日期 */
     @ApiModelProperty(value = "最早签约日期", name = "signDateStart")

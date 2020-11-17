@@ -3,7 +3,6 @@ package com.merchant.system.service;
 import java.util.List;
 import com.merchant.system.domain.Contract;
 import com.merchant.system.domain.bo.ContractBO;
-import io.swagger.models.auth.In;
 
 /**
  * 合同Service接口
@@ -77,10 +76,10 @@ public interface IContractService
 
     /**
      * 根据合同id解约合同
-     * @param id
+     * @param contractBO
      * @return
      */
-    int terminate(Integer id);
+    int terminate(ContractBO contractBO);
 
     /**
      * 续签合同
@@ -94,7 +93,7 @@ public interface IContractService
      * @param managerId
      * @return
      */
-    int transfer(Integer id, Integer managerId);
+    int transfer(Integer id, Integer managerId) throws IllegalAccessException;
 
     /**
      * 审核合同
@@ -102,7 +101,7 @@ public interface IContractService
      * @param signDate
      * @return
      */
-    int check(Integer id, String signDate);
+    int check(Integer id, String signDate) throws IllegalAccessException;
 
 
     /**
@@ -111,4 +110,11 @@ public interface IContractService
      * @return
      */
     int uncheck(Integer id);
+
+    /**
+     * 合同失效
+     * @param id
+     * @return
+     */
+    int abandon(Integer id);
 }

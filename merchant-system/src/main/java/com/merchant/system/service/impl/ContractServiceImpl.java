@@ -1,5 +1,31 @@
 package com.merchant.system.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
+import com.merchant.common.annotation.ContractLog;
+import com.merchant.common.annotation.Excel;
+import com.merchant.common.core.domain.entity.SysUser;
+import com.merchant.common.core.domain.model.LoginUser;
+import com.merchant.common.enums.ContractOperType;
+import com.merchant.common.enums.ContractStatus;
+import com.merchant.common.exception.BaseException;
+import com.merchant.common.utils.DateUtils;
+import com.merchant.common.utils.ServletUtils;
+import com.merchant.common.utils.ip.IpUtils;
+import com.merchant.system.domain.Contract;
+import com.merchant.system.domain.ContractOperLog;
+import com.merchant.system.domain.bo.ContractBO;
+import com.merchant.system.mapper.ContractMapper;
+import com.merchant.system.service.IContractLogService;
+import com.merchant.system.service.IContractService;
+import com.merchant.system.service.ISysUserService;
+import org.n3r.idworker.Sid;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
@@ -9,28 +35,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiPredicate;
-
-import com.alibaba.fastjson.JSONObject;
-import com.merchant.common.annotation.ContractLog;
-import com.merchant.common.annotation.Excel;
-import com.merchant.common.core.domain.entity.SysUser;
-import com.merchant.common.enums.ContractOperType;
-import com.merchant.common.enums.ContractStatus;
-import com.merchant.common.exception.BaseException;
-import com.merchant.common.utils.DateUtils;
-import com.merchant.system.domain.ContractOperLog;
-import com.merchant.system.domain.bo.ContractBO;
-import com.merchant.system.service.IContractLogService;
-import com.merchant.system.service.ISysUserService;
-import org.n3r.idworker.Sid;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import com.merchant.system.mapper.ContractMapper;
-import com.merchant.system.domain.Contract;
-import com.merchant.system.service.IContractService;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 合同Service业务层处理
@@ -49,6 +53,9 @@ public class ContractServiceImpl implements IContractService
 
     @Autowired
     private IContractLogService contractLogService;
+
+    @Resource(name = "tokenServiceUtil")
+    private TokenService tokenService;
 
     @Autowired
     private Sid sid;
@@ -116,6 +123,10 @@ public class ContractServiceImpl implements IContractService
             ContractOperLog contractOperLog = new ContractOperLog();
             contractOperLog.setBusinessType(ContractOperType.ADD.ordinal());
             contractOperLog.setTitle("录入合同");
+            this.setContractOperLog(contractOperLog);
+            // 添加合同日志
+            contractOperLog.setRequestMethod("POST");
+            contractOperLog.setContractNum(contractBO.getNum());
             contractLogService.insertOperlog(contractOperLog);
         }
         return result;
@@ -128,28 +139,25 @@ public class ContractServiceImpl implements IContractService
      * @return 结果
      */
     @Override
-    @ContractLog(title = "测试")
     public int updateContract(ContractBO contractBO) throws Exception {
         Contract oldContract = contractMapper.selectContractById(contractBO.getId());
         int res = contractMapper.updateContract(contractBO);
         // 记录日志
-        ContractLog annotation = this.getClass().getMethod("updateContract",ContractBO.class).getAnnotation(ContractLog.class);
-        InvocationHandler invocationHandler = Proxy.getInvocationHandler(annotation);
-        Field value = invocationHandler.getClass().getDeclaredField("memberValues");
-        value.setAccessible(true);
-        Map<String, Object> memberValues = (Map<String, Object>) value.get(invocationHandler);
-        String description = (String) memberValues.get("description");
+//        Map memberValues = this.getAnnotationMemberValues("updateContract", ContractLog.class);
 
         if (res > 0) {
             Contract newContract = contractMapper.selectContractById(contractBO.getId());
             Map<String, String> compareRes = compareTwoObject(oldContract, newContract);
-            // 添加合同日志
+            // 请求的地址
             ContractOperLog contractOperLog = new ContractOperLog();
+            this.setContractOperLog(contractOperLog);
+            // 添加合同日志
+            contractOperLog.setRequestMethod("POST");
             contractOperLog.setContractNum(oldContract.getNum());
             contractOperLog.setBusinessType(ContractOperType.MODIFY.ordinal());
             contractOperLog.setTitle("修改合同");
-//            contractOperLog.setDescription(JSONObject.toJSONString(compareRes));
-            memberValues.put("description", compareRes);
+            contractOperLog.setDescription(JSONObject.toJSONString(compareRes));
+//            memberValues.put("description", compareRes);
 
             contractLogService.insertOperlog(contractOperLog);
         }
@@ -188,16 +196,30 @@ public class ContractServiceImpl implements IContractService
     }
 
     @Override
-    public int terminate(Integer id) {
-        Contract contract = contractMapper.selectContractById(id);
-        ContractBO contractBO = new ContractBO();
+    public int terminate(ContractBO contractBO) {
+        Contract contract = contractMapper.selectContractById(contractBO.getId());
+        ContractOperLog contractOperLog = new ContractOperLog();
         if (contract.getEndDate().after(DateUtils.getNowDate())) {
-            contractBO.setStatus("到期解约");
+            contractBO.setStatus(ContractStatus.EXPIRED_TERMINATION.getCode());
+            contractOperLog.setTitle("到期解约");
         } else {
-            contractBO.setStatus("未到期解约");
+            contractBO.setStatus(ContractStatus.UNEXPIRED_TERMINATION.getCode());
+            contractOperLog.setTitle("未到期解约");
+        }
+        int res = contractMapper.updateContract(contractBO);
+        if (res > 0) {
+            // 请求的地址
+            this.setContractOperLog(contractOperLog);
+            // 添加合同日志
+            contractOperLog.setRequestMethod("POST");
+            contractOperLog.setContractNum(contract.getNum());
+            contractOperLog.setBusinessType(ContractOperType.TERMINATE.ordinal());
+            contractOperLog.setDescription("解约时间：" + contractBO.getTerminateDate());
+
+            contractLogService.insertOperlog(contractOperLog);
         }
 
-        return contractMapper.updateContract(contractBO);
+        return res;
     }
 
     @Override
@@ -230,12 +252,27 @@ public class ContractServiceImpl implements IContractService
         // 设置新合同审核状态为未审核
         contractBO.setCheckStatus(ContractStatus.UNCHECK.getCode());
         // 根据新合同编号查询是否存在该合同
+        int res = contractMapper.insertContract(contractBO);
+        if (res > 0) {
+            // 请求的地址
+            ContractOperLog contractOperLog = new ContractOperLog();
+            this.setContractOperLog(contractOperLog);
+            // 添加合同日志
+            contractOperLog.setRequestMethod("POST");
+            contractOperLog.setContractNum(contract.getNum());
+            contractOperLog.setBusinessType(ContractOperType.RENEW.ordinal());
+            contractOperLog.setTitle("合同续约");
+            contractOperLog.setDescription("原合同：" + oldContract.getNum() + ";新合同：" + contractBO.getNum());
+//            memberValues.put("description", compareRes);
 
-        return contractMapper.insertContract(contractBO);
+            contractLogService.insertOperlog(contractOperLog);
+        }
+
+        return res;
     }
 
     @Override
-    public int transfer(Integer id, Integer managerId) {
+    public int transfer(Integer id, Integer managerId) throws IllegalAccessException {
         // 根据phone查询出负责人 判断系统中是否有此负责人
         SysUser sysUser = sysUserService.selectUserById(managerId.longValue());
         Contract contract = contractMapper.selectContractById(id);
@@ -245,11 +282,29 @@ public class ContractServiceImpl implements IContractService
         contractBO.setManager(sysUser.getUserName());
         contractBO.setSignUserId(contractBO.getId());
         contractBO.setSignUser(sysUser.getUserName());
-        return contractMapper.updateContract(contractBO);
+        int res = contractMapper.updateContract(contractBO);
+        // 查询出旧合同
+        Contract oldContract = contractMapper.selectContractById(id);
+        if (res > 0) {
+            Contract newContract = contractMapper.selectContractById(contractBO.getId());
+            Map<String, String> compareRes = compareTwoObject(oldContract, newContract);
+            // 请求的地址
+            ContractOperLog contractOperLog = new ContractOperLog();
+            this.setContractOperLog(contractOperLog);
+            // 添加合同日志
+            contractOperLog.setRequestMethod("POST");
+            contractOperLog.setContractNum(oldContract.getNum());
+            contractOperLog.setBusinessType(ContractOperType.TRANSFER.ordinal());
+            contractOperLog.setTitle("转移合同");
+            contractOperLog.setDescription(JSONObject.toJSONString(compareRes));
+
+            contractLogService.insertOperlog(contractOperLog);
+        }
+        return res;
     }
 
     @Override
-    public int check(Integer id, String signDate) {
+    public int check(Integer id, String signDate) throws IllegalAccessException {
         ContractBO contractBO = new ContractBO();
         contractBO.setId(id);
         if (contractBO.getSignDate() == null) {
@@ -260,7 +315,24 @@ public class ContractServiceImpl implements IContractService
         }
         // 设置状态为已审核
         contractBO.setCheckStatus(ContractStatus.CHECKED.getCode());
-        return contractMapper.updateContract(contractBO);
+
+        // 查询出旧合同
+        int res = contractMapper.updateContract(contractBO);
+        if (res > 0) {
+            Contract newContract = contractMapper.selectContractById(contractBO.getId());
+            // 请求的地址
+            ContractOperLog contractOperLog = new ContractOperLog();
+            this.setContractOperLog(contractOperLog);
+            // 添加合同日志
+            contractOperLog.setRequestMethod("POST");
+            contractOperLog.setContractNum(contractBO.getNum());
+            contractOperLog.setBusinessType(ContractOperType.CHECK.ordinal());
+            contractOperLog.setTitle("审核合同");
+            contractOperLog.setDescription("合同状态改为已审核");
+
+            contractLogService.insertOperlog(contractOperLog);
+        }
+        return res;
     }
 
     @Override
@@ -270,8 +342,44 @@ public class ContractServiceImpl implements IContractService
         // 设置状态为未审核
         contractBO.setCheckStatus(ContractStatus.UNCHECK.getCode());
         contractBO.setCheckDate(null);
-        return contractMapper.updateContract(contractBO);
+        int res = contractMapper.updateContract(contractBO);
+        if (res > 0) {
+            // 请求的地址
+            ContractOperLog contractOperLog = new ContractOperLog();
+            this.setContractOperLog(contractOperLog);
+            // 添加合同日志
+            contractOperLog.setRequestMethod("POST");
+            contractOperLog.setContractNum(contractBO.getNum());
+            contractOperLog.setBusinessType(ContractOperType.CHECK.ordinal());
+            contractOperLog.setTitle("反审核合同");
+            contractOperLog.setDescription("合同状态改为未审核");
 
+            contractLogService.insertOperlog(contractOperLog);
+        }
+        return res;
+
+    }
+
+    @Override
+    public int abandon(Integer id) {
+        ContractBO contractBO = new ContractBO();
+        contractBO.setId(id);
+        contractBO.setCheckStatus(ContractStatus.ABANDON.getCode());
+        int res = contractMapper.updateContract(contractBO);
+        if (res > 0) {
+            // 请求的地址
+            ContractOperLog contractOperLog = new ContractOperLog();
+            this.setContractOperLog(contractOperLog);
+            // 添加合同日志
+            contractOperLog.setRequestMethod("GET");
+            contractOperLog.setContractNum(contractBO.getNum());
+            contractOperLog.setBusinessType(ContractOperType.CHECK.ordinal());
+            contractOperLog.setTitle("合同失效");
+            contractOperLog.setDescription("合同状态改为失效");
+
+            contractLogService.insertOperlog(contractOperLog);
+        }
+        return res;
     }
 
 
@@ -323,6 +431,28 @@ public class ContractServiceImpl implements IContractService
             }
         }
         return diffMap;
+    }
+
+    private Map<String, Object> getAnnotationMemberValues(String methodName,Class clazz) throws Exception {
+        ContractLog annotation = this.getClass().getMethod(methodName,clazz).getAnnotation(ContractLog.class);
+        InvocationHandler invocationHandler = Proxy.getInvocationHandler(annotation);
+        Field value = invocationHandler.getClass().getDeclaredField("memberValues");
+        value.setAccessible(true);
+        Map<String, Object> memberValues = (Map<String, Object>) value.get(invocationHandler);
+        return memberValues;
+    }
+
+    private void setContractOperLog(ContractOperLog contractOperLog) {
+        String ip = IpUtils.getIpAddr(ServletUtils.getRequest());
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+        contractOperLog.setOperIp(ip);
+        contractOperLog.setOperUrl(ServletUtils.getRequest().getRequestURI());
+        contractOperLog.setMethod(Thread.currentThread().getStackTrace()[2].getMethodName());
+        if (loginUser != null)
+        {
+            contractOperLog.setOperName(loginUser.getUsername());
+            contractOperLog.setDeptName(loginUser.getUser().getDept().getDeptName());
+        }
     }
 
 }

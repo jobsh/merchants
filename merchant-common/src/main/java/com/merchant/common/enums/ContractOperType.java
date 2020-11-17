@@ -30,6 +30,8 @@ public enum ContractOperType
      */
     TERMINATE,
 
+    RENEW,
+
     /**
      * 失效
      */
@@ -54,5 +56,4 @@ public enum ContractOperType
      * 合同修改
      */
     MODIFY,
-
 }

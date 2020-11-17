@@ -9,6 +9,7 @@ public enum ContractStatus
 {
     UNCHECK("0", "未审核"),
     CHECKED("1", "已审核"),
+    ABANDON("2", "失效"),
 
     EFFECTIVE_EXECUTING("0", "有效执行中"),
     EFFECTIVE_NOT_EXECUTE("1", "有效未执行"),

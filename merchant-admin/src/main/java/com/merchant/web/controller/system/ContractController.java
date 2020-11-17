@@ -147,16 +147,14 @@ public class ContractController extends BaseController
     @ApiOperation(value = "合同解约", notes = "合同解约", httpMethod = "POST")
     @PreAuthorize("@ss.hasPermi('contract:contractManager:edit')")
     @Log(title = "合同", businessType = BusinessType.UPDATE)
-    @PostMapping("/terminate/{id}")
-    public AjaxResult terminate(
-            @ApiParam(name = "id", value = "合同id", required = true)
-            @PathVariable Integer id) {
+    @PostMapping("/terminate")
+    public AjaxResult terminate(@RequestBody ContractBO contractBO) {
 
-        if (id == null) {
+        if (contractBO.getId() == null) {
             return AjaxResult.error("id错误");
         }
 
-        return toAjax(contractService.terminate(id));
+        return toAjax(contractService.terminate(contractBO));
     }
 
 
@@ -185,7 +183,7 @@ public class ContractController extends BaseController
             @ApiParam(name = "id", value = "合同id", required = true)
             @RequestParam Integer id,
             @ApiParam(name = "managerId", value = "负责人id", required = true)
-            @RequestParam Integer managerId) {
+            @RequestParam Integer managerId) throws IllegalAccessException {
 
         // 查询合同
         if (managerId == null) {
@@ -193,7 +191,6 @@ public class ContractController extends BaseController
         }
 
         return toAjax(contractService.transfer(id, managerId));
-
     }
 
     /**
@@ -208,7 +205,7 @@ public class ContractController extends BaseController
     @PostMapping("/check/")
     public AjaxResult check(
             @ApiParam(name = "id", value = "合同id", required = true) @RequestParam Integer id,
-            @ApiParam(name = "signDate", value = "签约日期", required = true) @RequestParam String signDate) {
+            @ApiParam(name = "signDate", value = "签约日期", required = true) @RequestParam String signDate) throws IllegalAccessException {
 
         // 查询合同
         if (id == null) {
@@ -236,4 +233,23 @@ public class ContractController extends BaseController
 
         return toAjax(contractService.uncheck(id));
     }
+
+    /**
+     * 合同失效
+     */
+    @ApiOperation(value = "合同失效", notes = "合同失效", httpMethod = "GET")
+    @PreAuthorize("@ss.hasPermi('contract:contractManager:edit')")
+    @Log(title = "合同", businessType = BusinessType.UPDATE)
+    @GetMapping("/abandon/{id}")
+    public AjaxResult abandon(@ApiParam(name = "id", value = "合同id", required = true) @PathVariable("id") Integer id) {
+
+        // 查询合同
+        if (id == null) {
+            return AjaxResult.error("参数错误");
+        }
+
+        return toAjax(contractService.abandon(id));
+    }
+
+
 }
