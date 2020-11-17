@@ -22,6 +22,10 @@ public class ContractOperLog extends BaseEntity
     @Excel(name = "操作序号", cellType = ColumnType.NUMERIC)
     private Long operId;
 
+    /** 日志主键 */
+    @Excel(name = "合同编号")
+    private String contractNum;
+
     /** 操作模块 */
     @Excel(name = "操作模块")
     private String title;

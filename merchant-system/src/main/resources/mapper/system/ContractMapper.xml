@@ -11,6 +11,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="num"    column="num"    />
         <result property="customerName"    column="customer_name"    />
         <result property="customerId"    column="customer_id"    />
+        <result property="customerNum"    column="customer_num"    />
         <result property="customerPhone"    column="customer_phone"    />
         <result property="type"    column="type"    />
         <result property="produce"    column="produce"    />
@@ -38,7 +39,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectContractVo">
-        select id, pid, root_num, num, customer_name, customer_id, customer_phone, type, produce,
+        select id, pid, root_num, num, customer_name, customer_id, customer_num, customer_phone, type, produce,
         dianmian_name, dianmian_num, dianmian_province, dianmian_city, dianmian_district, dianmian_address,dianmian_longitude,dianmian_latitude,
         guarantee, fee, operation, manager_id, manager, sign_date, sign_user_id,
         sign_user, begin_date, end_date, status, create_by, remark from biz_contract
@@ -98,6 +99,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="rootNum != null and rootNum != ''">root_num,</if>
             <if test="customerName != null and customerName != ''">customer_name,</if>
             <if test="customerId != null">customer_id,</if>
+            <if test="customerNum != null and customerNum != ''">customer_num,</if>
             <if test="customerPhone != null and customerPhone != ''">customer_phone,</if>
             <if test="type != null and type != ''">type,</if>
             <if test="produce != null and produce != ''">produce,</if>
@@ -128,6 +130,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="rootNum != null and rootNum != ''">#{rootNum},</if>
             <if test="customerName != null and customerName != ''">#{customerName},</if>
             <if test="customerId != null">#{customerId},</if>
+            <if test="customerNum != null and customerNum != ''">#{customerNum},</if>
             <if test="customerPhone != null and customerPhone != ''">#{customerPhone},</if>
             <if test="type != null and type != ''">#{type},</if>
             <if test="produce != null and produce != ''">#{produce},</if>

@@ -50,7 +50,7 @@ public interface IContractService
      * @param contractBO 合同
      * @return 结果
      */
-    public int updateContract(ContractBO contractBO);
+    public int updateContract(ContractBO contractBO) throws IllegalAccessException, NoSuchFieldException, Exception;
 
     /**
      * 批量删除合同

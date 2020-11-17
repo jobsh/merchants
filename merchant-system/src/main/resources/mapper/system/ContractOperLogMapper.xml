@@ -6,8 +6,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 	<resultMap type="ContractOperLog" id="ContractOperLogResult">
 		<id     property="operId"         column="oper_id"        />
+		<result property="contractNum"    column="contract_num"          />
 		<result property="title"          column="title"          />
 		<result property="businessType"   column="business_type"  />
+		<result property="description"    column="description"  />
 		<result property="method"         column="method"         />
 		<result property="requestMethod"  column="request_method" />
 		<result property="operatorType"   column="operator_type"  />
@@ -24,13 +26,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</resultMap>
 
 	<sql id="selectOperLogVo">
-        select oper_id, title, business_type, method, request_method, operator_type, oper_name, dept_name, oper_url, oper_ip, oper_location, oper_param, json_result, status, error_msg, oper_time
+        select oper_id, contract_num, title, business_type, method, request_method, operator_type, oper_name, dept_name, oper_url, oper_ip, oper_location, oper_param, json_result, status, error_msg, oper_time
         from biz_contract_log
     </sql>
     
 	<insert id="insertOperlog" parameterType="ContractOperLog">
-		insert into biz_contract_log(title, business_type, method, request_method, operator_type, oper_name, dept_name, oper_url, oper_ip, oper_location, oper_param, json_result, status, error_msg, oper_time)
-        values (#{title}, #{businessType}, #{method}, #{requestMethod}, #{operatorType}, #{operName}, #{deptName}, #{operUrl}, #{operIp}, #{operLocation}, #{operParam}, #{jsonResult}, #{status}, #{errorMsg}, sysdate())
+		insert into biz_contract_log(contract_num, title, description, business_type, method, request_method, operator_type, oper_name, dept_name, oper_url, oper_ip, oper_location, oper_param, json_result, status, error_msg, oper_time)
+        values (#{contractNum}, #{title}, #{description}, #{businessType}, #{method}, #{requestMethod}, #{operatorType}, #{operName}, #{deptName}, #{operUrl}, #{operIp}, #{operLocation}, #{operParam}, #{jsonResult}, #{status}, #{errorMsg}, sysdate())
 	</insert>
 	
 	<select id="selectOperLogList" parameterType="ContractOperLog" resultMap="ContractOperLogResult">

@@ -1,6 +1,9 @@
 package com.merchant.framework.manager.factory;
 
 import java.util.TimerTask;
+
+import com.merchant.system.domain.ContractOperLog;
+import com.merchant.system.service.IContractLogService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.merchant.common.constant.Constants;
@@ -98,4 +101,19 @@ public class AsyncFactory
             }
         };
     }
+
+    public static TimerTask recordContractOper(final ContractOperLog operLog)
+    {
+        return new TimerTask()
+        {
+            @Override
+            public void run()
+            {
+                // 远程查询操作地点
+                operLog.setOperLocation(AddressUtils.getRealAddressByIP(operLog.getOperIp()));
+                SpringUtils.getBean(IContractLogService.class).insertOperlog(operLog);
+            }
+        };
+    }
+
 }

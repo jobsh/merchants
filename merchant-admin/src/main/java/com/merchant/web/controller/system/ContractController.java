@@ -2,9 +2,12 @@ package com.merchant.web.controller.system;
 
 import java.util.List;
 
+import com.merchant.common.enums.ContractOperType;
 import com.merchant.common.utils.DateUtils;
 import com.merchant.common.utils.StringUtils;
+import com.merchant.system.domain.ContractOperLog;
 import com.merchant.system.domain.bo.ContractBO;
+import com.merchant.system.service.IContractLogService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -33,7 +36,8 @@ public class ContractController extends BaseController
 {
     @Autowired
     private IContractService contractService;
-
+    @Autowired
+    private IContractLogService contractLogService;
     /**
      * 查询合同列表
      */
@@ -112,9 +116,14 @@ public class ContractController extends BaseController
     @PreAuthorize("@ss.hasPermi('contract:contractManager:edit')")
     @Log(title = "合同", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody ContractBO contractBO)
-    {
-        return toAjax(contractService.updateContract(contractBO));
+    public AjaxResult edit(@RequestBody ContractBO contractBO) {
+        int res = 0;
+        try {
+            res = contractService.updateContract(contractBO);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return toAjax(res);
     }
 
     /**

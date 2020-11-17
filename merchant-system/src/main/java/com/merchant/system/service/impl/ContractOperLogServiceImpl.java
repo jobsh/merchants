@@ -1,6 +1,7 @@
 package com.merchant.system.service.impl;
 
-import com.merchant.system.domain.SysOperLog;
+import com.merchant.system.domain.ContractOperLog;
+import com.merchant.system.domain.ContractOperLog;
 import com.merchant.system.mapper.ContractOperLogMapper;
 import com.merchant.system.service.IContractLogService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ public class ContractOperLogServiceImpl implements IContractLogService
      * @param operLog 操作日志对象
      */
     @Override
-    public void insertOperlog(SysOperLog operLog)
+    public void insertOperlog(ContractOperLog operLog)
     {
         contractOperLogMapper.insertOperlog(operLog);
     }
@@ -37,7 +38,7 @@ public class ContractOperLogServiceImpl implements IContractLogService
      * @return 操作日志集合
      */
     @Override
-    public List<SysOperLog> selectOperLogList(SysOperLog operLog)
+    public List<ContractOperLog> selectOperLogList(ContractOperLog operLog)
     {
         return contractOperLogMapper.selectOperLogList(operLog);
     }
@@ -61,7 +62,7 @@ public class ContractOperLogServiceImpl implements IContractLogService
      * @return 操作日志对象
      */
     @Override
-    public SysOperLog selectOperLogById(Long operId)
+    public ContractOperLog selectOperLogById(Long operId)
     {
         return contractOperLogMapper.selectOperLogById(operId);
     }

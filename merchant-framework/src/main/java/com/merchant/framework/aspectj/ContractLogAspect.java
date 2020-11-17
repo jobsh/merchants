@@ -13,7 +13,7 @@ import com.merchant.common.utils.spring.SpringUtils;
 import com.merchant.framework.manager.AsyncManager;
 import com.merchant.framework.manager.factory.AsyncFactory;
 import com.merchant.framework.web.service.TokenService;
-import com.merchant.system.domain.SysOperLog;
+import com.merchant.system.domain.ContractOperLog;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.*;
@@ -74,8 +74,6 @@ public class ContractLogAspect
 
     protected void handleLog(final JoinPoint joinPoint, final Exception e, Object jsonResult)
     {
-
-
         try
         {
             // 获得注解
@@ -89,7 +87,7 @@ public class ContractLogAspect
             LoginUser loginUser = SpringUtils.getBean(TokenService.class).getLoginUser(ServletUtils.getRequest());
 
             // *========数据库日志=========*//
-            SysOperLog operLog = new SysOperLog();
+            ContractOperLog operLog = new ContractOperLog();
             operLog.setStatus(BusinessStatus.SUCCESS.ordinal());
             // 请求的地址
             String ip = IpUtils.getIpAddr(ServletUtils.getRequest());
@@ -117,7 +115,7 @@ public class ContractLogAspect
             // 处理设置注解上的参数
             getControllerMethodDescription(joinPoint, controllerLog, operLog);
             // 保存数据库
-            AsyncManager.me().execute(AsyncFactory.recordOper(operLog));
+            AsyncManager.me().execute(AsyncFactory.recordContractOper(operLog));
         }
         catch (Exception exp)
         {
@@ -135,7 +133,7 @@ public class ContractLogAspect
      * @param operLog 操作日志
      * @throws Exception
      */
-    public void getControllerMethodDescription(JoinPoint joinPoint, Log log, SysOperLog operLog) throws Exception
+    public void getControllerMethodDescription(JoinPoint joinPoint, Log log, ContractOperLog operLog) throws Exception
     {
         // 设置action动作
         operLog.setBusinessType(log.businessType().ordinal());
@@ -159,7 +157,7 @@ public class ContractLogAspect
      * @param operLog 操作日志
      * @throws Exception 异常
      */
-    private void setRequestValue(JoinPoint joinPoint, SysOperLog operLog) throws Exception
+    private void setRequestValue(JoinPoint joinPoint, ContractOperLog operLog) throws Exception
     {
         String requestMethod = operLog.getRequestMethod();
         if (HttpMethod.PUT.name().equals(requestMethod) || HttpMethod.POST.name().equals(requestMethod))
@@ -225,31 +223,31 @@ public class ContractLogAspect
      * 将参数值设置到注解属性上
      * @param joinPoint
      */
-    @Before("contractLogPointCut()")
-    public void thirdBindInfoModifyBefore(JoinPoint joinPoint){
-        // 将参数值设置到注解属性上
-        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
-        ContractLog annotation = signature.getMethod().getAnnotation(ContractLog.class);
-        String fieldName;
-        if(StringUtils.isNotEmpty(fieldName = annotation.description())){
-            String[] parameterNames = signature.getParameterNames();
-            for (int i = 0; i < parameterNames.length; i++) {
-                String parameterName = parameterNames[i];
-                if (fieldName.equals(parameterName)) {
-                    InvocationHandler handler = Proxy.getInvocationHandler(annotation);
-                    Map fieldValues = null;
-                    try {
-                        Field hField = handler.getClass().getDeclaredField("memberValues");
-                        hField.setAccessible(true);
-                        fieldValues = (Map) hField.get(handler);
-                        fieldValues.put(fieldName, String.valueOf(joinPoint.getArgs()[i]));
-                    } catch (NoSuchFieldException | IllegalAccessException e) {
-                        if(fieldValues != null){
-                            fieldValues.put(fieldName, "");
-                        }
-                    }
-                }
-            }
-        }
-    }
+//    @Before("contractLogPointCut()")
+//    public void thirdBindInfoModifyBefore(JoinPoint joinPoint){
+//        // 将参数值设置到注解属性上
+//        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
+//        ContractLog annotation = signature.getMethod().getAnnotation(ContractLog.class);
+//        String fieldName;
+//        if(StringUtils.isNotEmpty(fieldName = annotation.description())){
+//            String[] parameterNames = signature.getParameterNames();
+//            for (int i = 0; i < parameterNames.length; i++) {
+//                String parameterName = parameterNames[i];
+//                if (fieldName.equals(parameterName)) {
+//                    InvocationHandler handler = Proxy.getInvocationHandler(annotation);
+//                    Map fieldValues = null;
+//                    try {
+//                        Field hField = handler.getClass().getDeclaredField("memberValues");
+//                        hField.setAccessible(true);
+//                        fieldValues = (Map) hField.get(handler);
+//                        fieldValues.put(fieldName, String.valueOf(joinPoint.getArgs()[i]));
+//                    } catch (NoSuchFieldException | IllegalAccessException e) {
+//                        if(fieldValues != null){
+//                            fieldValues.put(fieldName, "");
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
 }

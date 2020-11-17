@@ -41,6 +41,10 @@ public class ContractBO extends BaseEntity
     @ApiModelProperty(value = "客户id", name = "customerId")
     private Integer customerId;
 
+    @ApiModelProperty(value = "客户编号", name = "customerNum")
+    /** 客户编号 */
+    private String customerNum;
+
     /** 客户手机号（可以有多个手机号，逗号分隔） */
     @ApiModelProperty(value = "客户手机号", name = "customerPhone")
     private String customerPhone;
@@ -121,6 +125,7 @@ public class ContractBO extends BaseEntity
     private String signDate;
 
     /** 审核时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
     @ApiModelProperty(value = "审核时间", name = "checkDate")
     private String checkDate;
 
@@ -130,6 +135,7 @@ public class ContractBO extends BaseEntity
     private String beginDate;
 
     /** 合同结束日期 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
     @ApiModelProperty(value = "合同结束日期", name = "endDate")
     private String endDate;
 

@@ -37,6 +37,9 @@ public class Contract extends BaseEntity
     /** 客户id */
     private Integer customerId;
 
+    /** 客户编号 */
+    private String customerNum;
+
     /** 客户手机号（可以有多个手机号，逗号分隔） */
     @Excel(name = "客户手机号", readConverterExp = "可以有多个手机号，逗号分隔")
     private String customerPhone;
@@ -58,21 +61,27 @@ public class Contract extends BaseEntity
     private Integer dianmianNum;
 
     /** 店面所在省份 */
+    @Excel(name = "店面省份")
     private String dianmianProvince;
 
     /** 店面所在城市 */
+    @Excel(name = "店面城市")
     private String dianmianCity;
 
     /** 店面所在区 */
+    @Excel(name = "店面所在区")
     private String dianmianDistrict;
 
     /** 店面详细地址 */
+    @Excel(name = "店面地址")
     private String dianmianAddress;
 
     /** 店面经度 */
+    @Excel(name = "店面经度")
     private String dianmianLongitude;
 
     /** 店面纬度 */
+    @Excel(name = "店面维度")
     private String dianmianLatitude;
 
     /** 保证金 */
