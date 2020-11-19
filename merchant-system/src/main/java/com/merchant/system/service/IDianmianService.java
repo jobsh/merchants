@@ -62,4 +62,10 @@ public interface IDianmianService
     public int deleteDianmianById(Integer id);
 
     List<DianmianVO> selectDianmianByContractNum(String contractNum);
+
+    /**
+     * 跟进合同修改店面
+     * @param dianmian
+     */
+    int updateDianmianByContractNum(Dianmian dianmian);
 }

@@ -8,6 +8,7 @@ import com.merchant.common.core.domain.entity.SysUser;
 import com.merchant.common.core.domain.model.LoginUser;
 import com.merchant.common.enums.ContractOperType;
 import com.merchant.common.enums.ContractStatus;
+import com.merchant.common.enums.DianmianStatus;
 import com.merchant.common.exception.BaseException;
 import com.merchant.common.utils.DateUtils;
 import com.merchant.common.utils.ServletUtils;
@@ -15,10 +16,12 @@ import com.merchant.common.utils.file.FileUploadUtils;
 import com.merchant.common.utils.ip.IpUtils;
 import com.merchant.system.domain.Contract;
 import com.merchant.system.domain.ContractOperLog;
+import com.merchant.system.domain.Dianmian;
 import com.merchant.system.domain.bo.ContractBO;
 import com.merchant.system.mapper.ContractMapper;
 import com.merchant.system.service.IContractLogService;
 import com.merchant.system.service.IContractService;
+import com.merchant.system.service.IDianmianService;
 import com.merchant.system.service.ISysUserService;
 import org.n3r.idworker.Sid;
 import org.springframework.beans.BeanUtils;
@@ -57,6 +60,9 @@ public class ContractServiceImpl implements IContractService
 
     @Autowired
     private IContractLogService contractLogService;
+
+    @Autowired
+    private IDianmianService dianmianService;
 
     @Resource(name = "tokenServiceUtil")
     private TokenService tokenService;
@@ -203,6 +209,7 @@ public class ContractServiceImpl implements IContractService
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public int terminate(MultipartFile file, ContractBO contractBO) throws IOException {
         Contract contract = contractMapper.selectContractById(contractBO.getId());
         ContractOperLog contractOperLog = new ContractOperLog();
@@ -225,6 +232,11 @@ public class ContractServiceImpl implements IContractService
             contractOperLog.setDescription("解约时间：" + contractBO.getTerminateDate());
 
             contractLogService.insertOperlog(contractOperLog);
+
+            Dianmian dianmian = new Dianmian();
+            // 修改店面状态为闭店
+            dianmian.setStatus(DianmianStatus.ClOSED.getCode());
+            dianmianService.updateDianmianByContractNum(dianmian);
         }
 
         return res;

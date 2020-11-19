@@ -46,6 +46,14 @@ public interface DianmianMapper
     public int updateDianmian(Dianmian dianmian);
 
     /**
+     * 通过合同编号修改店面
+     *
+     * @param dianmian 店面管理
+     * @return 结果
+     */
+    public int updateDianmianByContractNum(Dianmian dianmian);
+
+    /**
      * 删除店面管理
      * 
      * @param id 店面管理ID

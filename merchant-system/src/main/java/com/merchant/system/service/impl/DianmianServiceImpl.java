@@ -100,4 +100,9 @@ public class DianmianServiceImpl implements IDianmianService
         dianmianBO.setContractNum(contractNum);
         return dianmianMapper.selectDianmianByContractNum(contractNum);
     }
+
+    @Override
+    public int updateDianmianByContractNum(Dianmian dianmian) {
+        return dianmianMapper.updateDianmianByContractNum(dianmian);
+    }
 }

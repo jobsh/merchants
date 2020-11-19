@@ -190,6 +190,36 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where d.id = #{id}
     </update>
 
+    <update id="updateDianmianByContractNum" parameterType="Dianmian">
+        update biz_dianmian
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="diandongId != null">diandong_id = #{diandongId},</if>
+            <if test="diandongName != null and diandongName != ''">diandong_name = #{diandongName},</if>
+            <if test="diandongPhone != null and diandongPhone != ''">diandong_phone = #{diandongPhone},</if>
+            <if test="sysUserId != null">sys_user_id = #{sysUserId},</if>
+            <if test="companyId != null">company_id = #{companyId},</if>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="status != null and status != ''">status = #{status},</if>
+            <if test="province != null and province != ''">province = #{province},</if>
+            <if test="city != null and city != ''">city = #{city},</if>
+            <if test="district != null and district != ''">district = #{district},</if>
+            <if test="longitude != null and longitude != ''">longitude = #{longitude},</if>
+            <if test="latitude != null and latitude != ''">latitude = #{latitude},</if>
+            <if test="address != null and address != ''">address = #{address},</if>
+            <if test="checkResult != null and checkResult != ''">check_result = #{checkResult},</if>
+            <if test="openDate != null">open_date = #{openDate},</if>
+            <if test="contractNum != null and contractNum != ''">contract_num = #{contractNum},</if>
+            <if test="type != null and type != ''">type = #{type},</if>
+            <if test="area != null and area != ''">area = #{area},</if>
+            <if test="closeDate != null">close_date = #{closeDate},</if>
+            <if test="closeDays != null">close_days = #{closeDays},</if>
+            <if test="closeReason != null">close_reason = #{closeReason},</if>
+            <if test="checkInfo != null">check_info = #{checkInfo},</if>
+            <if test="remark != null and remark != ''">remark = #{remark},</if>
+        </trim>
+        where d.contract_num = #{contractNum}
+    </update>
+
     <delete id="deleteDianmianById" parameterType="Integer">
         delete from biz_dianmian where d.id = #{id}
     </delete>
