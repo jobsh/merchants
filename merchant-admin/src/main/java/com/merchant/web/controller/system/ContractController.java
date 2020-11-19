@@ -1,27 +1,28 @@
 package com.merchant.web.controller.system;
 
-import java.util.List;
-
-import com.merchant.common.enums.ContractOperType;
-import com.merchant.common.utils.DateUtils;
-import com.merchant.common.utils.StringUtils;
-import com.merchant.system.domain.ContractOperLog;
+import com.merchant.common.annotation.Log;
+import com.merchant.common.config.MerchantConfig;
+import com.merchant.common.core.controller.BaseController;
+import com.merchant.common.core.domain.AjaxResult;
+import com.merchant.common.core.page.TableDataInfo;
+import com.merchant.common.enums.BusinessType;
+import com.merchant.common.exception.BaseException;
+import com.merchant.common.utils.file.FileUploadUtils;
+import com.merchant.common.utils.poi.ExcelUtil;
+import com.merchant.system.domain.Contract;
 import com.merchant.system.domain.bo.ContractBO;
 import com.merchant.system.service.IContractLogService;
+import com.merchant.system.service.IContractService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import com.merchant.common.annotation.Log;
-import com.merchant.common.core.controller.BaseController;
-import com.merchant.common.core.domain.AjaxResult;
-import com.merchant.common.enums.BusinessType;
-import com.merchant.system.domain.Contract;
-import com.merchant.system.service.IContractService;
-import com.merchant.common.utils.poi.ExcelUtil;
-import com.merchant.common.core.page.TableDataInfo;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.List;
 
 /**
  * 合同Controller
@@ -118,8 +119,12 @@ public class ContractController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody ContractBO contractBO) {
         int res = 0;
+
         try {
             res = contractService.updateContract(contractBO);
+            if (res == -1) {
+                return AjaxResult.error("合同已审核，不可编辑");
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -148,17 +153,25 @@ public class ContractController extends BaseController
     @PreAuthorize("@ss.hasPermi('contract:contractManager:edit')")
     @Log(title = "合同", businessType = BusinessType.UPDATE)
     @PostMapping("/terminate")
-    public AjaxResult terminate(@RequestBody ContractBO contractBO) {
+    public AjaxResult terminate(
+            @ApiParam(name = "file", value = "解约附件")
+            @RequestParam(name = "file", required = false) MultipartFile file,@RequestBody ContractBO contractBO) {
 
         if (contractBO.getId() == null) {
             return AjaxResult.error("id错误");
         }
 
-        return toAjax(contractService.terminate(contractBO));
+        int res = 0;
+        try {
+            res = contractService.terminate(file, contractBO);
+        } catch (IOException e) {
+            throw new BaseException("附件上传异常");
+        }
+        return toAjax(res);
     }
 
 
-    /**
+    /**gr
      * 合同续约
      */
     @ApiOperation(value = "合同续约", notes = "合同续约", httpMethod = "POST")
@@ -169,7 +182,8 @@ public class ContractController extends BaseController
             @ApiParam(name = "id", value = "合同id", required = true)
             @PathVariable Integer id,
             @RequestBody ContractBO contractBO) {
-        return toAjax(contractService.renew(id, contractBO));
+        int res = contractService.renew(id, contractBO);
+        return toAjax(res);
     }
 
     /**
@@ -206,13 +220,16 @@ public class ContractController extends BaseController
     public AjaxResult check(
             @ApiParam(name = "id", value = "合同id", required = true) @RequestParam Integer id,
             @ApiParam(name = "signDate", value = "签约日期", required = true) @RequestParam String signDate) throws IllegalAccessException {
-
         // 查询合同
         if (id == null) {
             return AjaxResult.error("参数错误");
         }
+        int res = contractService.check(id, signDate);
+        if (res == -1) {
+            return AjaxResult.error("合同已审核，不可失效操作");
+        }
 
-        return toAjax(contractService.check(id, signDate));
+        return toAjax(res);
     }
 
     /**
@@ -225,13 +242,16 @@ public class ContractController extends BaseController
     @Log(title = "合同", businessType = BusinessType.UPDATE)
     @GetMapping("/uncheck/{id}")
     public AjaxResult uncheck(@ApiParam(name = "id", value = "合同id", required = true) @PathVariable("id") Integer id) {
-
         // 查询合同
         if (id == null) {
             return AjaxResult.error("参数错误");
         }
 
-        return toAjax(contractService.uncheck(id));
+        int res = contractService.uncheck(id);
+        if (res == -1) {
+            return AjaxResult.error("合同已是未审核状态，无需操作");
+        }
+        return toAjax(res);
     }
 
     /**
@@ -247,9 +267,12 @@ public class ContractController extends BaseController
         if (id == null) {
             return AjaxResult.error("参数错误");
         }
+        int res = contractService.abandon(id);
+        if (res == -1) {
+            return AjaxResult.error("合同已审核，不可失效操作");
+        }
 
-        return toAjax(contractService.abandon(id));
+        return toAjax(res);
     }
-
 
 }

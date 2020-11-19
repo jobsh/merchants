@@ -54,11 +54,17 @@ public class  ContractFee extends BaseEntity
     @Excel(name = "费用状态")
     private String checkStatus;
 
+    /** 费用状态 */
+    @Excel(name = "费用状态")
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date checkDate;
+
     /** 收款时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "收款时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date shoukuanDate;
 
     /** 更新时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date updateDate;
 }

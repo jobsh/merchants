@@ -2,6 +2,7 @@ package com.merchant.system.service;
 
 import java.util.List;
 import com.merchant.system.domain.Dianmian;
+import com.merchant.system.domain.bo.DianmianBO;
 import com.merchant.system.domain.vo.DianmianVO;
 
 /**
@@ -23,10 +24,10 @@ public interface IDianmianService
     /**
      * 查询店面管理列表
      * 
-     * @param dianmian 店面管理
+     * @param dianmianBO 店面管理
      * @return 店面管理集合
      */
-    public List<DianmianVO> selectDianmianList(Dianmian dianmian);
+    public List<DianmianVO> selectDianmianList(DianmianBO dianmianBO);
 
     /**
      * 新增店面管理

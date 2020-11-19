@@ -2,6 +2,7 @@ package com.merchant.web.controller.system;
 
 import java.util.List;
 
+import com.merchant.system.domain.bo.DianmianBO;
 import com.merchant.system.domain.vo.DianmianVO;
 import io.swagger.annotations.Api;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -42,10 +43,10 @@ public class DianmianController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('dianmian:dianmianManager:list')")
     @PostMapping("/list")
-    public TableDataInfo list(@RequestBody Dianmian dianmian)
+    public TableDataInfo list(@RequestBody DianmianBO dianmianBO)
     {
         startPage();
-        List<DianmianVO> list = dianmianService.selectDianmianList(dianmian);
+        List<DianmianVO> list = dianmianService.selectDianmianList(dianmianBO);
         return getDataTable(list);
     }
 
@@ -67,9 +68,9 @@ public class DianmianController extends BaseController
     @PreAuthorize("@ss.hasPermi('dianmian:dianmianManager:export')")
     @Log(title = "店面管理", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
-    public AjaxResult export(Dianmian dianmian)
+    public AjaxResult export(DianmianBO dianmianBO)
     {
-        List<DianmianVO> list = dianmianService.selectDianmianList(dianmian);
+        List<DianmianVO> list = dianmianService.selectDianmianList(dianmianBO);
         ExcelUtil<DianmianVO> util = new ExcelUtil<DianmianVO>(DianmianVO.class);
         return util.exportExcel(list, "dianmianManager");
     }
@@ -116,4 +117,6 @@ public class DianmianController extends BaseController
     {
         return toAjax(dianmianService.deleteDianmianByIds(ids));
     }
+
+
 }

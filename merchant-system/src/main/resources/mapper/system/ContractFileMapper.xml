@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.merchant.system.mapper.ContractFileMapper">
+    
+    <resultMap type="ContractFile" id="ContractFileResult">
+        <result property="id"    column="id"    />
+        <result property="contractNum"    column="contract_num"    />
+        <result property="file"    column="file"    />
+        <result property="image"    column="image"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="description"    column="description"    />
+        <result property="inputDate"    column="input_date"    />
+        <result property="updateDate"    column="update_date"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectContractFileVo">
+        select id, contract_num, file, image, create_by, description, input_date, update_date, remark from biz_contract_file
+    </sql>
+
+    <select id="selectContractFileList" parameterType="ContractFile" resultMap="ContractFileResult">
+        <include refid="selectContractFileVo"/>
+        <where>  
+            <if test="contractNum != null  and contractNum != ''"> and contract_num = #{contractNum}</if>
+            <if test="file != null  and file != ''"> and file = #{file}</if>
+            <if test="image != null  and image != ''"> and image = #{image}</if>
+            <if test="description != null  and description != ''"> and description = #{description}</if>
+            <if test="inputDate != null "> and input_date = #{inputDate}</if>
+            <if test="updateDate != null "> and update_date = #{updateDate}</if>
+        </where>
+    </select>
+    
+    <select id="selectContractFileById" parameterType="Long" resultMap="ContractFileResult">
+        <include refid="selectContractFileVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertContractFile" parameterType="ContractFile">
+        insert into biz_contract_file
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="contractNum != null and contractNum != ''">contract_num,</if>
+            <if test="file != null">file,</if>
+            <if test="image != null">image,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="description != null">description,</if>
+            <if test="inputDate != null">input_date,</if>
+            <if test="updateDate != null">update_date,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="contractNum != null and contractNum != ''">#{contractNum},</if>
+            <if test="file != null">#{file},</if>
+            <if test="image != null">#{image},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="description != null">#{description},</if>
+            <if test="inputDate != null">#{inputDate},</if>
+            <if test="updateDate != null">#{updateDate},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateContractFile" parameterType="ContractFile">
+        update biz_contract_file
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="contractNum != null and contractNum != ''">contract_num = #{contractNum},</if>
+            <if test="file != null">file = #{file},</if>
+            <if test="image != null">image = #{image},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="inputDate != null">input_date = #{inputDate},</if>
+            <if test="updateDate != null">update_date = #{updateDate},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteContractFileById" parameterType="Long">
+        delete from biz_contract_file where id = #{id}
+    </delete>
+
+    <delete id="deleteContractFileByIds" parameterType="String">
+        delete from biz_contract_file where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

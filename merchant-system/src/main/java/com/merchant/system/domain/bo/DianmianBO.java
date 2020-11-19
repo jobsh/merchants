@@ -18,6 +18,24 @@ import java.util.Date;
  */
 @Data
 public class DianmianBO {
+
+    /** 店面表主键id */
+    @ApiModelProperty(value = "店面表主键id", name = "id")
+    private Integer id;
+
+    /** 店东id */
+    @ApiModelProperty(value = "店东id", name = "diandongId")
+    private Integer diandongId;
+
+    /** 管理人id */
+    @ApiModelProperty(value = "负责人id", name = "sysUserId")
+    private Long sysUserId;
+
+    /** 所属公司id */
+    @Excel(name = "所属公司id")
+    @ApiModelProperty(value = "所属公司id", name = "companyId")
+    private Integer companyId;
+
     /** 店东姓名 */
     @ApiModelProperty(value = "店东姓名", name = "diandongName")
     private String diandongName;
@@ -74,9 +92,18 @@ public class DianmianBO {
     @ApiModelProperty(value = "授权区域", name = "area")
     private String area;
 
+    /** 授权区域 */
+    @ApiModelProperty(value = "关键字", name = "keywords")
+    private String keywords;
+
     /** 验收信息 */
     @ApiModelProperty(value = "验收信息", name = "checkInfo")
     private String checkInfo;
+
+    /** 开店时间*/
+    @ApiModelProperty(value = "开店时间", name = "openDate")
+    private String openDate;
+
 
     @ApiModelProperty(value = "最早录入时间", name = "inputDateStart")
     private String inputDateStart;

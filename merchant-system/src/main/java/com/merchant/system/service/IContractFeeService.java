@@ -66,4 +66,18 @@ public interface IContractFeeService
      * @return
      */
     List<ContractFeeVO> getFeeByContractNum(String contractNum);
+
+    /**
+     * 根据费用编号审核费用
+     * @param num
+     * @return
+     */
+    int checkContractFeeByNum(String num, String checkDate);
+
+    /**
+     * 根据费用编号反审核费用
+     * @param num
+     * @return
+     */
+    int unCheckContractFeeByNum(String num);
 }

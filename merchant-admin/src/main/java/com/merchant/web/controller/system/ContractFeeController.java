@@ -5,14 +5,7 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.merchant.common.annotation.Log;
 import com.merchant.common.core.controller.BaseController;
 import com.merchant.common.core.domain.AjaxResult;
@@ -89,7 +82,11 @@ public class ContractFeeController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody ContractFee contractFee)
     {
-        return toAjax(contractFeeService.updateContractFee(contractFee));
+        int res = contractFeeService.updateContractFee(contractFee);
+        if (res == -1) {
+            return AjaxResult.error("该费用已审核不可编辑");
+        }
+        return toAjax(res);
     }
 
     /**
@@ -114,5 +111,23 @@ public class ContractFeeController extends BaseController
             return AjaxResult.error("参数有误");
         }
         return AjaxResult.success(contractFeeService.getFeeByContractNum(contractNum));
+    }
+
+    /**
+     * 费用审核
+     */
+    @GetMapping(value = "/check/")
+    public AjaxResult check(@RequestParam String num,@RequestParam String checkDate)
+    {
+        return toAjax(contractFeeService.checkContractFeeByNum(num, checkDate));
+    }
+
+    /**
+     * 费用反审核
+     */
+    @GetMapping(value = "/uncheck/")
+    public AjaxResult uncheck(@RequestParam String num)
+    {
+        return toAjax(contractFeeService.unCheckContractFeeByNum(num));
     }
 }

@@ -3,6 +3,7 @@ package com.merchant.system.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.merchant.common.annotation.ContractLog;
 import com.merchant.common.annotation.Excel;
+import com.merchant.common.config.MerchantConfig;
 import com.merchant.common.core.domain.entity.SysUser;
 import com.merchant.common.core.domain.model.LoginUser;
 import com.merchant.common.enums.ContractOperType;
@@ -10,6 +11,7 @@ import com.merchant.common.enums.ContractStatus;
 import com.merchant.common.exception.BaseException;
 import com.merchant.common.utils.DateUtils;
 import com.merchant.common.utils.ServletUtils;
+import com.merchant.common.utils.file.FileUploadUtils;
 import com.merchant.common.utils.ip.IpUtils;
 import com.merchant.system.domain.Contract;
 import com.merchant.system.domain.ContractOperLog;
@@ -24,8 +26,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
@@ -141,6 +145,9 @@ public class ContractServiceImpl implements IContractService
     @Override
     public int updateContract(ContractBO contractBO) throws Exception {
         Contract oldContract = contractMapper.selectContractById(contractBO.getId());
+        if (ContractStatus.CHECKED.getCode().equals(oldContract.getCheckDate())){
+            return -1;
+        }
         int res = contractMapper.updateContract(contractBO);
         // 记录日志
 //        Map memberValues = this.getAnnotationMemberValues("updateContract", ContractLog.class);
@@ -196,7 +203,7 @@ public class ContractServiceImpl implements IContractService
     }
 
     @Override
-    public int terminate(ContractBO contractBO) {
+    public int terminate(MultipartFile file, ContractBO contractBO) throws IOException {
         Contract contract = contractMapper.selectContractById(contractBO.getId());
         ContractOperLog contractOperLog = new ContractOperLog();
         if (contract.getEndDate().after(DateUtils.getNowDate())) {
@@ -206,6 +213,7 @@ public class ContractServiceImpl implements IContractService
             contractBO.setStatus(ContractStatus.UNEXPIRED_TERMINATION.getCode());
             contractOperLog.setTitle("未到期解约");
         }
+        this.addSave(file, contractBO);
         int res = contractMapper.updateContract(contractBO);
         if (res > 0) {
             // 请求的地址
@@ -228,6 +236,9 @@ public class ContractServiceImpl implements IContractService
 
         // 查询出要续签的合同
         Contract contract = contractMapper.selectContractById(id);
+        if (ContractStatus.CHECKED.getCode().equals(contract.getCheckDate())){
+            return -1;
+        }
         ContractBO oldContract = new ContractBO();
 
         BeanUtils.copyProperties(contract,oldContract);
@@ -307,6 +318,10 @@ public class ContractServiceImpl implements IContractService
     public int check(Integer id, String signDate) throws IllegalAccessException {
         ContractBO contractBO = new ContractBO();
         contractBO.setId(id);
+        Contract contract = contractMapper.selectContractById(id);
+        if (ContractStatus.CHECKED.getCode().equals(contract.getCheckDate())) {
+            return -1;
+        }
         if (contractBO.getSignDate() == null) {
             contractBO.setSignDate(signDate);
         }
@@ -338,6 +353,10 @@ public class ContractServiceImpl implements IContractService
     @Override
     public int uncheck(Integer id) {
         ContractBO contractBO = new ContractBO();
+        Contract contract = contractMapper.selectContractById(id);
+        if (ContractStatus.CHECKED.getCode().equals(contract.getCheckDate())) {
+            return -1;
+        }
         contractBO.setId(id);
         // 设置状态为未审核
         contractBO.setCheckStatus(ContractStatus.UNCHECK.getCode());
@@ -362,6 +381,10 @@ public class ContractServiceImpl implements IContractService
 
     @Override
     public int abandon(Integer id) {
+        Contract contract = contractMapper.selectContractById(id);
+        if (ContractStatus.CHECKED.getCode().equals(contract.getCheckDate())) {
+            return -1;
+        }
         ContractBO contractBO = new ContractBO();
         contractBO.setId(id);
         contractBO.setCheckStatus(ContractStatus.ABANDON.getCode());
@@ -453,6 +476,17 @@ public class ContractServiceImpl implements IContractService
             contractOperLog.setOperName(loginUser.getUsername());
             contractOperLog.setDeptName(loginUser.getUser().getDept().getDeptName());
         }
+    }
+
+    /**
+     * 合同附件上传
+     */
+    public void addSave(MultipartFile file, ContractBO contractBO) throws IOException {
+        // 上传文件路径
+        String filePath = MerchantConfig.getContractPath();
+        // 上传并返回新文件名称
+        String fileName = FileUploadUtils.upload(filePath, file);
+        contractBO.setFile(fileName);
     }
 
 }

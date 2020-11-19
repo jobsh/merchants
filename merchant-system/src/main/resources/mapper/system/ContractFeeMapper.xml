@@ -104,6 +104,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </update>
 
+    <update id="updateContractFeeByNum" parameterType="ContractFeeBO">
+        update biz_contract_fee
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="contractNum != null and contractNum != ''">contract_num = #{contractNum},</if>
+            <if test="type != null and type != ''">type = #{type},</if>
+            <if test="amount != null and amount != ''">amount = #{amount},</if>
+            <if test="payMethod != null and payMethod != ''">pay_method = #{payMethod},</if>
+            <if test="payer != null and payer != ''">payer = #{payer},</if>
+            <if test="reciever != null and reciever != ''">reciever = #{reciever},</if>
+            <if test="checkStatus != null and checkStatus != ''">check_status = #{checkStatus},</if>
+            <if test="shoukuanDate != null">shoukuan_date = #{shoukuanDate},</if>
+            <if test="updateDate != null">update_date = #{updateDate},</if>
+        </trim>
+        where num = #{num}
+    </update>
+
     <delete id="deleteContractFeeById" parameterType="Long">
         delete from biz_contract_fee where id = #{id}
     </delete>

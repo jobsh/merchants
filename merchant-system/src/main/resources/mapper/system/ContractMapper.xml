@@ -35,6 +35,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="endDate"    column="end_date"    />
         <result property="terminateDate"    column="terminate_date"    />
         <result property="status"    column="status"    />
+        <result property="checkStatus"    column="check_status"    />
         <result property="file"    column="file"    />
         <result property="create_by"    column="createBy"    />
         <result property="remark"    column="remark"    />
@@ -44,7 +45,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select id, pid, root_num, num, customer_name, customer_id, customer_num, customer_phone, type, produce,
         dianmian_name, dianmian_num, dianmian_province, dianmian_city, dianmian_district, dianmian_address,dianmian_longitude,dianmian_latitude,
         guarantee, fee, operation, manager_id, manager, sign_date, sign_user_id,
-        sign_user, begin_date, end_date,terminate_date, status, create_by, remark, file from biz_contract
+        sign_user, begin_date, end_date,terminate_date, status, check_status, create_by, remark, file from biz_contract
     </sql>
 
     <select id="selectContractList" parameterType="ContractBO" resultMap="ContractResult">
@@ -188,6 +189,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="signDate != null">sign_date = #{signDate},</if>
             <if test="signUserId != null">#{signUserId},</if>
             <if test="signUser != null and signUser != ''">sign_user = #{signUser},</if>
+            <if test="checkStatus != null and checkStatus != ''">check_status = #{checkStatus},</if>
             <if test="beginDate != null">begin_date = #{beginDate},</if>
             <if test="endDate != null and endDate != ''">end_date = #{endDate},</if>
             <if test="terminateDate != null and terminateDate != ''">terminate_date = #{terminateDate},</if>

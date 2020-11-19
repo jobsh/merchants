@@ -2,6 +2,7 @@ package com.merchant.system.mapper;
 
 import java.util.List;
 import com.merchant.system.domain.ContractFee;
+import com.merchant.system.domain.bo.ContractFeeBO;
 import com.merchant.system.domain.vo.ContractFeeVO;
 
 /**
@@ -43,6 +44,8 @@ public interface ContractFeeMapper
      * @return 结果
      */
     public int updateContractFee(ContractFee contractFee);
+
+    int updateContractFeeByNum(ContractFeeBO contractFeeBO);
 
     /**
      * 删除费用管理

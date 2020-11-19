@@ -37,13 +37,13 @@ public class DianmianServiceImpl implements IDianmianService
     /**
      * 查询店面管理列表
      * 
-     * @param dianmian 店面管理
+     * @param dianmianBO 店面管理
      * @return 店面管理
      */
     @Override
-    public List<DianmianVO> selectDianmianList(Dianmian dianmian)
+    public List<DianmianVO> selectDianmianList(DianmianBO dianmianBO)
     {
-        return dianmianMapper.selectDianmianList(dianmian);
+        return dianmianMapper.selectDianmianList(dianmianBO);
     }
 
     /**

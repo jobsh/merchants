@@ -24,10 +24,10 @@ public interface DianmianMapper
     /**
      * 查询店面管理列表
      * 
-     * @param dianmian 店面管理
+     * @param dianmianBO 店面管理
      * @return 店面管理集合
      */
-    public List<DianmianVO> selectDianmianList(Dianmian dianmian);
+    public List<DianmianVO> selectDianmianList(DianmianBO dianmianBO);
 
     /**
      * 新增店面管理

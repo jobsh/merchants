@@ -110,6 +110,14 @@ public class MerchantConfig
     }
 
     /**
+     * 获取合同上传路径
+     */
+    public static String getContractPath()
+    {
+        return getProfile() + "/contract";
+    }
+
+    /**
      * 获取店面上传路径
      */
     public static String getDianmianPath()

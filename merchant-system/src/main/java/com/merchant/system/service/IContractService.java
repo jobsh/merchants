@@ -1,8 +1,10 @@
 package com.merchant.system.service;
 
+import java.io.IOException;
 import java.util.List;
 import com.merchant.system.domain.Contract;
 import com.merchant.system.domain.bo.ContractBO;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 合同Service接口
@@ -76,10 +78,12 @@ public interface IContractService
 
     /**
      * 根据合同id解约合同
+     *
+     * @param file
      * @param contractBO
      * @return
      */
-    int terminate(ContractBO contractBO);
+    int terminate(MultipartFile file, ContractBO contractBO) throws IOException;
 
     /**
      * 续签合同

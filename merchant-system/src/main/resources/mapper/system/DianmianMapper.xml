@@ -29,11 +29,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="closeReason"    column="close_reason"    />
         <result property="checkInfo"    column="check_info"    />
         <result property="remark"    column="remark"    />
-        <collection property="customer" ofType="com.merchant.system.domain.Customer">
+        <association property="customer" javaType="com.merchant.system.domain.Customer">
             <id column="id" property="id"/>
             <result column="user_id" property="userId"/>
             <result column="phone" property="phone"/>
-            <result column="name" property="name"/>
+            <result column="customerName" property="name"/>
             <result column="username" property="username"/>
             <result column="num" property="num"/>
             <result column="level" property="level"/>
@@ -52,12 +52,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <result column="remark" property="remark"/>
             <result column="input_date" property="inputDate"/>
             <result column="update_date" property="updateDate"/>
-        </collection>
+        </association>
     </resultMap>
 
     <sql id="selectDianmianVo">
         select d.id, d.diandong_id, d.diandong_name, d.diandong_phone, d.sys_user_id, d.company_id, d.name, d.status, d.province, d.city, d.district, d.longitude, d.latitude, d.address, d.check_result, d.open_date, d.contract_num, d.type, d.area, d.close_date, d.close_days, d.close_reason, d.check_info, d.remark,
-        c.*
+        c.name as customerName,c.*
         from
             biz_dianmian d
         left join
@@ -66,7 +66,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             d.diandong_id = c.id
     </sql>
 
-    <select id="selectDianmianList" parameterType="Dianmian" resultMap="DianmianResult">
+    <select id="selectCustomerById" parameterType="Integer" resultType="Customer">
+        select * from biz_customer
+        where id = #{diandongId}
+    </select>
+
+    <select id="selectDianmianList" parameterType="DianmianBO" resultMap="DianmianResult">
         <include refid="selectDianmianVo"/>
         <where>
             <if test="diandongId != null "> and diandong_id = #{diandongId}</if>
@@ -84,6 +89,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="contractNum != null  and contractNum != ''"> and contract_num = #{contractNum}</if>
             <if test="type != null  and type != ''"> and type = #{type}</if>
             <if test="area != null  and area != ''"> and area = #{area}</if>
+            <if test="keywords != null and keywords != ''">and (
+                instr(biz_dianmian.name, #{keywords}) +
+                instr(biz_dianmian.area, #{keywords}) +
+                instr(biz_dianmian.address, #{keywords})
+                ) > 0</if>
         </where>
     </select>
     
