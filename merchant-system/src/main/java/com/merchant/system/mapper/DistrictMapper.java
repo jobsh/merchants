@@ -15,23 +15,23 @@ public interface DistrictMapper {
 
     /**
      * 根据city_id获得所有地区(map形式)
-     * @param cityId
+     * @param citycode
      * @return
      */
-    public List<Map<String, Object>> getAllDistrictsByCityId(int cityId);
+    public List<Map<String, Object>> getAllDistrictsByCityId(int citycode);
 
     /**
      * 根据city_id获得所有地区(对象形式)
-     * @param cityId
+     * @param citycode
      * @return
      */
-    public List<DistrictBean> getAllDistrictObjectsByCityId(int cityId);
+    public List<DistrictBean> getAllDistrictObjectsByCityId(int citycode);
 
     /**
      * 根据dis_id获得地区(对象形式)
-     * @param disId
+     * @param code
      * @return
      */
-    public DistrictBean getDistrictObjectByDisId(int disId);
+    public DistrictBean getDistrictObjectByDisId(int code);
 
 }

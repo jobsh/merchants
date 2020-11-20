@@ -15,23 +15,23 @@ public interface CityMapper {
 
     /**
      * 根据pro_id获得所有城市(map形式)
-     * @param proId
+     * @param provincecode
      * @return
      */
-    List<Map<String, Object>> getAllCitiesByProId(int proId);
+    List<Map<String, Object>> getAllCitiesByProId(int provincecode);
 
     /**
      * 根据pro_id获得所有城市(对象形式)
-     * @param proId
+     * @param provincecode
      * @return
      */
-    public List<CityBean> getAllCityObjectsByProId(int proId);
+    public List<CityBean> getAllCityObjectsByProId(int provincecode);
 
     /**
      * 根据city_id获得城市(对象形式)
-     * @param cityId
+     * @param code
      * @return
      */
-    public CityBean getCityObjectByCityId(int cityId);
+    public CityBean getCityObjectByCityId(int code);
 
 }

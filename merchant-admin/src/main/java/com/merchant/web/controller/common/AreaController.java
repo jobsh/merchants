@@ -55,9 +55,9 @@ public class AreaController {
     }
 
     @ApiOperation(value = "通过省份id查询省份", notes = "通过省份id查询省份", httpMethod = "GET")
-    @GetMapping("province/{id}")
-    public AjaxResult getProvinceObjectByProId(@ApiParam(name = "id", value = "省份id", required = true) @PathVariable Integer id){
-        ProvinceBean province = provinceService.getProvinceObjectByProId(id);
+    @GetMapping("province/{code}")
+    public AjaxResult getProvinceObjectByProId(@ApiParam(name = "code", value = "省份code", required = true) @PathVariable Integer code){
+        ProvinceBean province = provinceService.getProvinceObjectByProId(code);
         return AjaxResult.success(province);
     }
 

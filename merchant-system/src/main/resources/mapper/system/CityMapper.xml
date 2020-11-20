@@ -5,18 +5,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="com.merchant.system.mapper.CityMapper">
     
     <resultMap type="com.merchant.common.bean.CityBean" id="cityBean">
-        <result column="city_id" property="cityId" />
-        <result column="city_name" property="cityName" />
-        <result column="pro_id" property="proId" />
+        <result column="code" property="code" />
+        <result column="name" property="name" />
+        <result column="provincecode" property="provincecode" />
     </resultMap>
     <select id="getAllCitiesByProId" resultType="java.util.Map">
-        select city_name,city_id from t_city where pro_id = #{proId}
+        select `name`,code, provincecode from t_city where provincecode = #{provincecode}
     </select>
     <select id="getAllCityObjectsByProId" resultMap="cityBean" parameterType="Integer">
-        select city_name,city_id from t_city where pro_id = #{proId}
+        select `name`,code, provincecode from t_city where provincecode = #{provincecode}
     </select>
     <select id="getCityObjectByCityId" resultMap="cityBean" parameterType="Integer">
-        select city_name,city_id from t_city where city_id = #{cityId}
+        select `name`,code, provincecode from t_city where code = #{code}
     </select>
 
 
