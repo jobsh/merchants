@@ -1,5 +1,6 @@
 package com.merchant.system.service.impl;
 
+import com.merchant.common.annotation.DataScope;
 import com.merchant.common.core.domain.entity.SysUser;
 import com.merchant.common.enums.CustomerStatus;
 import com.merchant.common.exception.CustomException;
@@ -62,6 +63,7 @@ public class CustomerServiceImpl implements ICustomerService
      * @return 我的客户
      */
     @Override
+    @DataScope(deptAlias = "d", userAlias = "u")
     public List<Customer> selectCustomerList(@RequestBody CustomerBO customerBO)
     {
         customerBO.setStatus(CustomerStatus.OK.getCode());

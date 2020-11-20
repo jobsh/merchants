@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.merchant.system.mapper.DistrictMapper">
+    
+    <resultMap type="com.merchant.common.bean.DistrictBean" id="districtBean">
+        <result property="disId" column="dis_id" />
+        <result property="disName" column="dis_name" />
+        <result property="cityId" column="city_id" />
+    </resultMap>
+    <select id="getAllDistrictsByCityId" resultType="java.util.Map">
+        select dis_name,dis_id from t_district where city_id = #{cityId}
+    </select>
+    <select id="getAllDistrictObjectsByCityId" resultMap="districtBean" parameterType="Integer">
+        select dis_name,dis_id from t_district where city_id = #{cityId}
+    </select>
+    <select id="getDistrictObjectByDisId" resultMap="districtBean" parameterType="Integer">
+        select dis_name,dis_id from t_district where dis_id = #{disId}
+    </select>
+
+
+</mapper>

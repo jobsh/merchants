@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.merchant.system.mapper.ProvinceMapper">
+    
+    <resultMap type="com.merchant.common.bean.ProvinceBean" id="provinceBean">
+        <result property="proId"    column="pro_id"    />
+        <result property="proName"    column="pro_name"    />
+        <result property="proRemark"    column="pro_remark"    />
+    </resultMap>
+    <select id="getAllProvinces" resultType="java.util.Map">
+        select pro_name,pro_id from t_province
+    </select>
+    <select id="getAllProvinceObjects" resultMap="provinceBean" >
+        select pro_name,pro_id,pro_remark from t_province
+    </select>
+    <select id="getProvinceObjectByProId" resultMap="provinceBean" parameterType="Integer">
+        select pro_name,pro_id,pro_remark from t_province where pro_id = #{proId}
+    </select>
+
+
+</mapper>

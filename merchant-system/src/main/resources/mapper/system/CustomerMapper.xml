@@ -59,6 +59,8 @@
                 instr(biz_customer.phone, #{keywords})
                 ) > 0</if>
         </where>
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
     </select>
 
     <select id="selectCustomerById" parameterType="Integer" resultMap="CustomerResult">

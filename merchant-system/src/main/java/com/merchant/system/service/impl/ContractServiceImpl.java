@@ -477,6 +477,10 @@ public class ContractServiceImpl implements IContractService
         return memberValues;
     }
 
+    /**
+     * 设置合同日志基础信息
+     * @param contractOperLog 合同日志实体类
+     */
     private void setContractOperLog(ContractOperLog contractOperLog) {
         String ip = IpUtils.getIpAddr(ServletUtils.getRequest());
         LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
