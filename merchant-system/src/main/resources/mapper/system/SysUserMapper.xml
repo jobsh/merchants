@@ -164,7 +164,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  			<if test="loginDate != null">login_date = #{loginDate},</if>
  			<if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
  			<if test="remark != null">remark = #{remark},</if>
- 			update_time = sysdate()
+ 			update_date = sysdate()
  		</set>
  		where id = #{id}
 	</update>
