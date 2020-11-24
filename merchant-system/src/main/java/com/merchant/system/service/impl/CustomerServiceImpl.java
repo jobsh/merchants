@@ -78,6 +78,7 @@ public class CustomerServiceImpl implements ICustomerService
      */
 
     @Override
+    @DataScope(deptAlias = "d", userAlias = "u")
     public List<Customer> selectXiansuoList(@RequestBody CustomerBO customerBO) {
         customerBO.setStatus(CustomerStatus.DISABLE.getCode());
         return customerMapper.selectCustomerList(customerBO);
@@ -169,6 +170,7 @@ public class CustomerServiceImpl implements ICustomerService
         sysUser = sysUsers.get(0);
         customerBO.setUserId(sysUser.getId().intValue());
         customerBO.setUsername(sysUser.getUserName());
+        customerBO.setDeptId(sysUser.getDeptId().intValue());
 
         // 更新customer负责人id和username
         return customerMapper.updateCustomerByIds(customerBO);

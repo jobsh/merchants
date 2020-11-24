@@ -3,6 +3,7 @@ package com.merchant.system.domain.bo;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.merchant.common.annotation.Excel;
 import com.merchant.common.core.domain.BaseEntity;
+import com.merchant.system.domain.Contract;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -24,6 +25,10 @@ public class ContractBO extends BaseEntity
     /** 合同表主键id */
     @ApiModelProperty(value = "合同id", name = "id")
     private Integer id;
+
+    /** 合同表主键id */
+    @ApiModelProperty(value = "部门id", name = "deptId")
+    private Integer deptId;
 
     /** 上级合同id */
     private Integer pid;

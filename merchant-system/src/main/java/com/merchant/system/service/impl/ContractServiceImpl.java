@@ -2,6 +2,7 @@ package com.merchant.system.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.merchant.common.annotation.ContractLog;
+import com.merchant.common.annotation.DataScope;
 import com.merchant.common.annotation.Excel;
 import com.merchant.common.config.MerchantConfig;
 import com.merchant.common.core.domain.entity.SysUser;
@@ -94,6 +95,7 @@ public class ContractServiceImpl implements IContractService
      * @return 合同
      */
     @Override
+    @DataScope(deptAlias = "d", userAlias = "u")
     public List<Contract> selectContractList(ContractBO contractBO)
     {
         return contractMapper.selectContractList(contractBO);
@@ -202,6 +204,7 @@ public class ContractServiceImpl implements IContractService
     }
 
     @Override
+    @DataScope(deptAlias = "d", userAlias = "u")
     public List<Contract> selectContractListByCustomerId(Integer customerId) {
         ContractBO contractBO = new ContractBO();
         contractBO.setCustomerId(customerId);

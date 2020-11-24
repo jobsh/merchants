@@ -2,6 +2,7 @@ package com.merchant.system.service.impl;
 
 import java.util.List;
 
+import com.merchant.common.annotation.DataScope;
 import com.merchant.common.enums.ContractFeeStatus;
 import com.merchant.common.utils.DateUtils;
 import com.merchant.system.domain.bo.ContractFeeBO;
@@ -31,6 +32,7 @@ public class ContractFeeServiceImpl implements IContractFeeService
      * @return 费用管理
      */
     @Override
+    @DataScope(deptAlias = "d", userAlias = "u")
     public ContractFee selectContractFeeById(Long id)
     {
         return contractFeeMapper.selectContractFeeById(id);
@@ -43,6 +45,7 @@ public class ContractFeeServiceImpl implements IContractFeeService
      * @return 费用管理
      */
     @Override
+    @DataScope(deptAlias = "d", userAlias = "u")
     public List<ContractFee> selectContractFeeList(ContractFee contractFee)
     {
         return contractFeeMapper.selectContractFeeList(contractFee);
@@ -102,6 +105,7 @@ public class ContractFeeServiceImpl implements IContractFeeService
     }
 
     @Override
+    @DataScope(deptAlias = "d", userAlias = "u")
     public List<ContractFeeVO> getFeeByContractNum(String contractNum) {
         ContractFee contractFee = new ContractFee();
         contractFee.setContractNum(contractNum);

@@ -95,7 +95,6 @@ public class GenjinController extends BaseController
     /**
      * 上传跟进图片
      */
-
     @PostMapping("/genjinImg")
     public AjaxResult uploadGenjinImager(@RequestParam("imgs") List<MultipartFile> imgs) throws IOException{
         LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());

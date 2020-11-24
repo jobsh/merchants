@@ -6,6 +6,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <resultMap type="com.merchant.system.domain.vo.DianmianVO" id="DianmianResult">
         <result property="id"    column="id"    />
+        <result property="deptId"    column="dept_id"    />
         <result property="diandongId"    column="diandong_id"    />
         <result property="diandongName"    column="diandong_name"    />
         <result property="diandongPhone"    column="diandong_phone"    />
@@ -56,54 +57,64 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectDianmianVo">
-        select d.id, d.diandong_id, d.diandong_name, d.diandong_phone, d.sys_user_id, d.company_id, d.name, d.status, d.province, d.city, d.district, d.longitude, d.latitude, d.address, d.check_result, d.open_date, d.contract_num, d.type, d.area, d.close_date, d.close_days, d.close_reason, d.check_info, d.remark,
+        select dianmian.id, dianmian.dept_id, dianmian.diandong_id, dianmian.diandong_name, dianmian.diandong_phone, dianmian.sys_user_id, dianmian.company_id, dianmian.name, dianmian.status, dianmian.province, dianmian.city, dianmian.district, dianmian.longitude, dianmian.latitude, dianmian.address, dianmian.check_result, dianmian.open_date, dianmian.contract_num, dianmian.type, dianmian.area, dianmian.close_date, dianmian.close_days, dianmian.close_reason, dianmian.check_info, dianmian.remark,
         c.name as customerName,c.*
         from
-            biz_dianmian d
+            biz_dianmian dianmian
         left join
             biz_customer c
         on
-            d.diandong_id = c.id
+            dianmian.diandong_id = c.id
+        left join
+            sys_dept d
+        on
+            dianmian.dept_id = d.id
+        left join
+            sys_user u
+        on
+            dianmian.sys_user_id = u.id
     </sql>
 
     <select id="selectCustomerById" parameterType="Integer" resultType="Customer">
-        select * from biz_customer
-        where id = #{diandongId}
+        select * from biz_customer dianmian
+        where dianmian.id = #{diandongId}
     </select>
 
-    <select id="selectDianmianList" parameterType="DianmianBO" resultMap="DianmianResult">
+    <select id="selectDianmianList" parameterType="com.merchant.system.domain.bo.DianmianBO" resultMap="DianmianResult">
         <include refid="selectDianmianVo"/>
         <where>
-            <if test="diandongId != null "> and diandong_id = #{diandongId}</if>
-            <if test="diandongName != null  and diandongName != ''"> and diandong_name like concat('%', #{diandongName}, '%')</if>
-            <if test="diandongPhone != null  and diandongPhone != ''"> and diandong_phone = #{diandongPhone}</if>
-            <if test="companyId != null "> and company_id = #{companyId}</if>
-            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
-            <if test="status != null  and status != ''"> and status = #{status}</if>
-            <if test="province != null  and province != ''"> and province = #{province}</if>
-            <if test="city != null  and city != ''"> and city = #{city}</if>
-            <if test="district != null  and district != ''"> and district = #{district}</if>
-            <if test="address != null  and address != ''"> and address = #{address}</if>
-            <if test="checkResult != null  and checkResult != ''"> and check_result = #{checkResult}</if>
-            <if test="openDate != null "> and open_date = #{openDate}</if>
-            <if test="contractNum != null  and contractNum != ''"> and contract_num = #{contractNum}</if>
-            <if test="type != null  and type != ''"> and type = #{type}</if>
-            <if test="area != null  and area != ''"> and area = #{area}</if>
+            <if test="diandongId != null "> and dianmian.diandong_id = #{diandongId}</if>
+            <if test="diandongName != null  and diandongName != ''"> and dianmian.diandong_name like concat('%', #{diandongName}, '%')</if>
+            <if test="diandongPhone != null  and diandongPhone != ''"> and dianmian.diandong_phone = #{diandongPhone}</if>
+            <if test="companyId != null "> and dianmian.company_id = #{companyId}</if>
+            <if test="name != null  and name != ''"> and dianmian.`name` like concat('%', #{name}, '%')</if>
+            <if test="status != null  and status != ''"> and dianmian.status = #{status}</if>
+            <if test="province != null  and province != ''"> and dianmian.province = #{province}</if>
+            <if test="city != null  and city != ''"> and dianmian.city = #{city}</if>
+            <if test="district != null  and district != ''"> and dianmian.district = #{district}</if>
+            <if test="address != null  and address != ''"> and dianmian.address = #{address}</if>
+            <if test="checkResult != null  and checkResult != ''"> and dianmian.check_result = #{checkResult}</if>
+            <if test="openDate != null "> and dianmian.open_date = #{openDate}</if>
+            <if test="contractNum != null  and contractNum != ''"> and dianmian.contract_num = #{contractNum}</if>
+            <if test="type != null  and type != ''"> and dianmian.`type` = #{type}</if>
+            <if test="area != null  and area != ''"> and dianmian.area = #{area}</if>
             <if test="keywords != null and keywords != ''">and (
-                instr(biz_dianmian.name, #{keywords}) +
-                instr(biz_dianmian.area, #{keywords}) +
-                instr(biz_dianmian.address, #{keywords})
+                instr(dianmian.name, #{keywords}) +
+                instr(dianmian.area, #{keywords}) +
+                instr(dianmian.address, #{keywords})
                 ) > 0</if>
+            <!-- 数据范围过滤 -->
+            ${params.dataScope}
         </where>
     </select>
-    
+
     <select id="selectDianmianById" parameterType="Integer" resultMap="DianmianResult">
         <include refid="selectDianmianVo"/>
-        where d.id = #{id}
+        where dianmian.id = #{id}
     </select>
     <select id="selectDianmianByContractNum" parameterType="String" resultMap="DianmianResult">
         <include refid="selectDianmianVo"/>
-        where d.contract_num = #{contractNum}
+        where dianmian.contract_num = #{contractNum}
     </select>
 
     <insert id="insertDianmian" parameterType="Dianmian" useGeneratedKeys="true" keyProperty="id">
@@ -187,7 +198,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="checkInfo != null">check_info = #{checkInfo},</if>
             <if test="remark != null and remark != ''">remark = #{remark},</if>
         </trim>
-        where d.id = #{id}
+        where biz_dianmian.id = #{id}
     </update>
 
     <update id="updateDianmianByContractNum" parameterType="Dianmian">
@@ -217,15 +228,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="checkInfo != null">check_info = #{checkInfo},</if>
             <if test="remark != null and remark != ''">remark = #{remark},</if>
         </trim>
-        where d.contract_num = #{contractNum}
+        where biz_dianmian.contract_num = #{contractNum}
     </update>
 
     <delete id="deleteDianmianById" parameterType="Integer">
-        delete from biz_dianmian where d.id = #{id}
+        delete from biz_dianmian where biz_dianmian.id = #{id}
     </delete>
 
     <delete id="deleteDianmianByIds" parameterType="String">
-        delete from biz_dianmian where d.id in
+        delete from biz_dianmian where biz_dianmian.id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

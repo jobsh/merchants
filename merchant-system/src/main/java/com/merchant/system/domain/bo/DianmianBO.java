@@ -1,6 +1,7 @@
 package com.merchant.system.domain.bo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.ser.Serializers;
 import com.merchant.common.annotation.Excel;
 import com.merchant.common.core.domain.BaseEntity;
 import io.swagger.annotations.ApiModelProperty;
@@ -17,11 +18,15 @@ import java.util.Date;
  * @date 2020-11-02
  */
 @Data
-public class DianmianBO {
+public class DianmianBO extends BaseEntity {
 
     /** 店面表主键id */
     @ApiModelProperty(value = "店面表主键id", name = "id")
     private Integer id;
+
+    /** 所属部门id */
+    @ApiModelProperty(value = "所属部门id", name = "deptId")
+    private Integer deptId;
 
     /** 店东id */
     @ApiModelProperty(value = "店东id", name = "diandongId")

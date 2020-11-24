@@ -32,7 +32,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         left join
             biz_contract
         on
-        biz_contract_fee.contract_num = biz_contract.num
+            biz_contract_fee.contract_num = biz_contract.num
+        left join
+            sys_dept d
+        on  biz_contract.dept_id = d.id
+        left join
+            sys_user u
+        on  biz_contract.manager_id = u.id
     </sql>
 
     <select id="selectContractFeeList" parameterType="ContractFee" resultMap="ContractFeeResult">
@@ -46,6 +52,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="reciever != null  and reciever != ''"> and reciever = #{reciever}</if>
             <if test="checkStatus != null  and checkStatus != ''"> and check_status = #{checkStatus}</if>
             <if test="shoukuanDate != null "> and shoukuan_date = #{shoukuanDate}</if>
+            <!-- 数据范围过滤 -->
+            ${params.dataScope}
         </where>
     </select>
     

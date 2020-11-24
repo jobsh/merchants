@@ -22,6 +22,9 @@ public class Contract extends BaseEntity
     /** 合同表主键id */
     private Integer id;
 
+    /** 部门id */
+    private Integer deptId;
+
     private Integer pid;
 
     private String rootNum;

@@ -6,6 +6,7 @@
 
     <resultMap type="Customer" id="CustomerResult">
         <result property="id" column="id"/>
+        <result property="deptId" column="dept_id"/>
         <result property="name" column="name"/>
         <result property="num" column="num"/>
         <result property="phone" column="phone"/>
@@ -29,53 +30,56 @@
     </resultMap>
 
     <sql id="selectCustomerVo">
-        select id,num, name, phone, level, customer_needs, company_name, province, dianmian_address, city, district, resource, user_id, username, luru_name, experience, remark, status, input_date, update_date,
-         genjin_date
-         from biz_customer
+        select biz_customer.id, biz_customer.num, biz_customer.name, biz_customer.phone, biz_customer.level, biz_customer.customer_needs, biz_customer.company_name,
+        biz_customer.province, biz_customer.dianmian_address, biz_customer.city, biz_customer.district, biz_customer.resource, biz_customer.user_id, biz_customer.username, biz_customer.luru_name, biz_customer.experience, biz_customer.remark, biz_customer.status, biz_customer.input_date, biz_customer.update_date,
+        biz_customer.genjin_date, biz_customer.dept_id
+        from biz_customer
+        left join sys_dept d on biz_customer.dept_id = d.id
+        left join sys_user u on biz_customer.user_id = u.id
     </sql>
 
     <select id="selectCustomerList" parameterType="CustomerBO" resultMap="CustomerResult">
         <include refid="selectCustomerVo"/>
         <where>
-            <if test="name !=  null  and name != ''">and name like concat('%', #{name}, '%')</if>
-            <if test="phone != null  and phone != ''">and phone = #{phone}</if>
-            <if test="level != null  and level != ''">and level = #{level}</if>
-            <if test="customerNeeds != null  and customerNeeds != ''">and customer_needs = #{customerNeeds}</if>
-            <if test="companyName != null  and companyName != ''">and company_name like concat('%', #{companyName},
+            <if test="name !=  null  and name != ''">and biz_customer.name like concat('%', #{name}, '%')</if>
+            <if test="phone != null  and phone != ''">and biz_customer.phone = #{phone}</if>
+            <if test="level != null  and level != ''">and biz_customer.level = #{level}</if>
+            <if test="customerNeeds != null  and customerNeeds != ''">and biz_customer.customer_needs = #{customerNeeds}</if>
+            <if test="companyName != null  and companyName != ''">and biz_customer.company_name like concat('%', #{companyName},
                 '%')
             </if>
-            <if test="province != null  and province != ''">and province = #{province}</if>
-            <if test="dianmianAddress != null  and dianmianAddress != ''">and dianmian_address = #{dianmianAddress}</if>
-            <if test="city != null  and city != ''">and city = #{city}</if>
-            <if test="district != null  and district != ''">and district = #{district}</if>
-            <if test="resource != null  and resource != ''">and resource = #{resource}</if>
-            <if test="username != null  and username != ''">and username like concat('%', #{username}, '%')</if>
-            <if test="inputDateStart != null  and inputDateStart != ''">and date_format(input_date,'%y%m%d') &gt;= date_format(#{inputDateStart},'%y%m%d')</if>
-            <if test="inputDateEnd != null and inputDateEnd != ''">and date_format(input_date,'%y%m%d')  &lt;= date_format(#{inputDateEnd},'%y%m%d')</if>
-            <if test="status != null and status != ''">and status = #{status}</if>
+            <if test="province != null  and province != ''">and biz_customer.province = #{province}</if>
+            <if test="dianmianAddress != null  and dianmianAddress != ''">and biz_customer.dianmian_address = #{dianmianAddress}</if>
+            <if test="city != null  and city != ''">and biz_customer.city = #{city}</if>
+            <if test="district != null  and district != ''">and biz_customer.district = #{district}</if>
+            <if test="resource != null  and resource != ''">and biz_customer.resource = #{resource}</if>
+            <if test="username != null  and username != ''">and biz_customer.username like concat('%', #{username}, '%')</if>
+            <if test="inputDateStart != null  and inputDateStart != ''">and date_format(biz_customer.input_date,'%y%m%d') &gt;= date_format(#{inputDateStart},'%y%m%d')</if>
+            <if test="inputDateEnd != null and inputDateEnd != ''">and date_format(biz_customer.input_date,'%y%m%d')  &lt;= date_format(#{inputDateEnd},'%y%m%d')</if>
+            <if test="status != null and status != ''">and biz_customer.status = #{status}</if>
             <if test="keywords != null and keywords != ''">and (
                 instr(biz_customer.company_name, #{keywords}) +
                 instr(biz_customer.name, #{keywords}) +
                 instr(biz_customer.phone, #{keywords})
                 ) > 0</if>
+            <!-- 数据范围过滤 -->
+            ${params.dataScope}
         </where>
-        <!-- 数据范围过滤 -->
-        ${params.dataScope}
     </select>
 
     <select id="selectCustomerById" parameterType="Integer" resultMap="CustomerResult">
         <include refid="selectCustomerVo"/>
-        where id = #{id} and  biz_customer.status = 1
+        where biz_customer.id = #{id} and  biz_customer.status = 1
     </select>
 
     <select id="selectXiansuoById" parameterType="Integer" resultMap="CustomerResult">
         <include refid="selectCustomerVo"/>
-        where id = #{id} and  biz_customer.status = 0
+        where biz_customer.id = #{id} and  biz_customer.status = 0
     </select>
 
     <select id="selectCustomerByIds" parameterType="com.merchant.system.domain.bo.CustomerBO" resultMap="CustomerResult">
         <include refid="selectCustomerVo"/>
-        where biz_customer.status = 1 and id in
+        where biz_customer.status = 1 and biz_customer.id in
         <foreach item="id" collection="ids" open="(" separator="," close=")">
             #{id}
         </foreach>
@@ -83,7 +87,7 @@
 
     <select id="selectXiansuoByIds" parameterType="CustomerBO" resultMap="CustomerResult">
         <include refid="selectCustomerVo"/>
-        where biz_customer.status = 0 and id in
+        where biz_customer.status = 0 and biz_customer.id in
         <foreach item="id" collection="ids" open="(" separator="," close=")">
             #{id}
         </foreach>
@@ -101,6 +105,7 @@
     <insert id="insertCustomer" parameterType="Customer" useGeneratedKeys="true" keyProperty="id">
         insert into biz_customer
         <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="deptId != null and deptId != ''">dept_id,</if>
             <if test="num != null and num != ''">num,</if>
             <if test="name != null and name != ''">name,</if>
             <if test="phone != null and phone != ''">phone,</if>
@@ -123,6 +128,7 @@
             genjin_date,
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="deptId != null and deptId != ''">#{deptId},</if>
             <if test="num != null and num != ''">#{num},</if>
             <if test="name != null and name != ''">#{name},</if>
             <if test="phone != null and phone != ''">#{phone},</if>
@@ -147,6 +153,7 @@
     <update id="updateCustomer" parameterType="CustomerBO">
         update biz_customer
         <trim prefix="SET" suffixOverrides=",">
+            <if test="deptId != null and deptId != ''">dept_id = #{deptId},</if>
             <if test="name != null and name != ''">name = #{name},</if>
             <if test="phone != null and phone != ''">phone = #{phone},</if>
             <if test="level != null and level != ''">level = #{level},</if>
@@ -172,6 +179,7 @@
     <update id="updateCustomerByIds" parameterType="CustomerBO">
         update biz_customer
         <trim prefix="SET" suffixOverrides=",">
+            <if test="deptId != null and deptId != ''">dept_id = #{deptId},</if>
             <if test="name != null and name != ''">name = #{name},</if>
             <if test="phone != null and phone != ''">phone = #{phone},</if>
             <if test="level != null and level != ''">level = #{level},</if>
@@ -194,7 +202,6 @@
         <foreach item="id" collection="ids" open="(" separator="," close=")">
             #{id}
         </foreach>
-
     </update>
 
     <update id="autoDegradeToXianSuo" parameterType="Integer">

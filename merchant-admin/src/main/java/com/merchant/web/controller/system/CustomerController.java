@@ -107,7 +107,7 @@ public class CustomerController extends BaseController {
     }
 
     /**
-     * 获取我的客户详细信息
+     * 获取我的线索详细信息
      */
     @ApiOperation(value = "根据id获取客户详情", notes = "根据id获取客户详情", httpMethod = "GET")
     @PreAuthorize("@ss.hasPermi('system:customer:query')")

@@ -130,7 +130,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  			<if test="status != null and status != ''">status,</if>
  			<if test="createBy != null and createBy != ''">create_by,</if>
  			<if test="remark != null and remark != ''">remark,</if>
- 			create_date
+ 			create_date,
+ 			update_date
  		)values(
  			<if test="id != null and id != ''">#{id},</if>
  			<if test="deptId != null and deptId != ''">#{deptId},</if>
@@ -144,7 +145,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  			<if test="status != null and status != ''">#{status},</if>
  			<if test="createBy != null and createBy != ''">#{createBy},</if>
  			<if test="remark != null and remark != ''">#{remark},</if>
- 			sysdate()
+ 			sysdate(),sysdate()
  		)
 	</insert>
 	

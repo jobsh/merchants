@@ -22,6 +22,9 @@ public class Dianmian extends BaseEntity
     /** 店面表主键id */
     private Integer id;
 
+    /** 所属部门id */
+    private Integer deptId;
+
     /** 店东id */
     @Excel(name = "店东id")
     private Integer diandongId;

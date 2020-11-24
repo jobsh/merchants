@@ -2,6 +2,7 @@ package com.merchant.system.service.impl;
 
 import java.util.List;
 
+import com.merchant.common.annotation.DataScope;
 import com.merchant.system.domain.bo.DianmianBO;
 import com.merchant.system.domain.vo.DianmianVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,7 @@ public class DianmianServiceImpl implements IDianmianService
      * @return 店面管理
      */
     @Override
+    @DataScope(deptAlias = "d", userAlias = "u")
     public DianmianVO selectDianmianById(Integer id)
     {
         return dianmianMapper.selectDianmianById(id);
@@ -41,6 +43,7 @@ public class DianmianServiceImpl implements IDianmianService
      * @return 店面管理
      */
     @Override
+    @DataScope(deptAlias = "d", userAlias = "u")
     public List<DianmianVO> selectDianmianList(DianmianBO dianmianBO)
     {
         return dianmianMapper.selectDianmianList(dianmianBO);
@@ -95,6 +98,7 @@ public class DianmianServiceImpl implements IDianmianService
     }
 
     @Override
+    @DataScope(deptAlias = "d", userAlias = "u")
     public List<DianmianVO> selectDianmianByContractNum(String contractNum) {
         DianmianBO dianmianBO = new DianmianBO();
         dianmianBO.setContractNum(contractNum);
