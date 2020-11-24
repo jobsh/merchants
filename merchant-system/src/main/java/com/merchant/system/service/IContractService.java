@@ -121,4 +121,20 @@ public interface IContractService
      * @return
      */
     int abandon(Integer id);
+
+    /**
+     * 更改合同附件路径信息
+     * @param id
+     * @param files
+     * @return
+     */
+    int uploadContractFile(Integer id, String files);
+
+    /**
+     * 更改合同图片路径信息
+     * @param id
+     * @param imgs
+     * @return
+     */
+    int uploadContractImgs(Integer id, String imgs);
 }

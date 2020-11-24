@@ -1,12 +1,18 @@
 package com.merchant.web.controller.system;
 
+import com.alibaba.fastjson.JSONObject;
 import com.merchant.common.annotation.Log;
+import com.merchant.common.config.MerchantConfig;
 import com.merchant.common.core.controller.BaseController;
 import com.merchant.common.core.domain.AjaxResult;
+import com.merchant.common.core.domain.model.LoginUser;
 import com.merchant.common.core.page.TableDataInfo;
 import com.merchant.common.enums.BusinessType;
 import com.merchant.common.exception.BaseException;
+import com.merchant.common.utils.ServletUtils;
+import com.merchant.common.utils.file.FileUploadUtils;
 import com.merchant.common.utils.poi.ExcelUtil;
+import com.merchant.framework.web.service.TokenService;
 import com.merchant.system.domain.Contract;
 import com.merchant.system.domain.bo.ContractBO;
 import com.merchant.system.service.IContractLogService;
@@ -15,12 +21,14 @@ import com.merchant.system.service.IDianmianService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -40,6 +48,8 @@ public class ContractController extends BaseController
     private IContractLogService contractLogService;
     @Autowired
     private IDianmianService dianmianService;
+    @Autowired
+    private TokenService tokenService;
 
     /**
      * 查询合同列表
@@ -155,7 +165,8 @@ public class ContractController extends BaseController
     @PreAuthorize("@ss.hasPermi('contract:contractManager:edit')")
     @Log(title = "合同", businessType = BusinessType.UPDATE)
     @PostMapping("/terminate")
-    public AjaxResult terminate(
+    public AjaxResult
+    terminate(
             @ApiParam(name = "file", value = "解约附件")
             @RequestParam(name = "file", required = false) MultipartFile file,@RequestBody ContractBO contractBO) {
 
@@ -173,7 +184,7 @@ public class ContractController extends BaseController
     }
 
 
-    /**gr
+    /**
      * 合同续约
      */
     @ApiOperation(value = "合同续约", notes = "合同续约", httpMethod = "POST")
@@ -277,6 +288,51 @@ public class ContractController extends BaseController
         return toAjax(res);
     }
 
+    /**
+     * 上传合同图片
+     */
+    @PostMapping("/contractImg")
+    public AjaxResult uploadContractImage(@RequestParam("id") Integer id, @RequestParam("imgs") List<MultipartFile> imgs) throws IOException{
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+        String phonenumber = loginUser.getUser().getPhonenumber();
+        if (!imgs.isEmpty() && imgs.size() > 0 && imgs != null) {
+            List<String> imgPathList = new ArrayList<>();
+            for (MultipartFile img : imgs) {
+                String imgPath = FileUploadUtils.upload(MerchantConfig.getContractPath() + "/img/" + phonenumber, img);
+                imgPathList.add(imgPath);
+            }
+            if (imgPathList != null && imgPathList.size() > 0 && !imgPathList.isEmpty()) {
+                AjaxResult ajax = AjaxResult.success();
+                contractService.uploadContractImgs(id, JSONObject.toJSONString(imgPathList));
+                ajax.put("imgUrl", JSONObject.toJSONString(imgPathList));
+                return ajax;
+            }
+        }
+        return AjaxResult.error("上传图片异常，请联系管理员");
+    }
 
+    /**
+     * 上传合同附件
+     */
+    @PostMapping("/contractFile")
+    public AjaxResult uploadContractFile(@RequestParam("id") Integer id, @RequestParam("files") List<MultipartFile> files) throws IOException{
+
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+        String phonenumber = loginUser.getUser().getPhonenumber();
+        if (!files.isEmpty() && files.size() > 0 && files != null) {
+            List<String> filePathList = new ArrayList<>();
+            for (MultipartFile file : files) {
+                String imgPath = FileUploadUtils.upload(MerchantConfig.getContractPath() + "/file/" + phonenumber, file);
+                filePathList.add(imgPath);
+            }
+            if (filePathList != null && filePathList.size() > 0 && !filePathList.isEmpty()) {
+                AjaxResult ajax = AjaxResult.success();
+                contractService.uploadContractFile(id, JSONObject.toJSONString(filePathList));
+                ajax.put("fileUrl", JSONObject.toJSONString(filePathList));
+                return ajax;
+            }
+        }
+        return AjaxResult.error("上传附件异常，请联系管理员");
+    }
 
 }

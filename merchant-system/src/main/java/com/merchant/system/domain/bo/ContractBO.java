@@ -150,6 +150,14 @@ public class ContractBO extends BaseEntity
     @ApiModelProperty(value = "合同附件", name = "file")
     private String file;
 
+    /** 合同附件 */
+    @ApiModelProperty(value = "合同附件", name = "file")
+    private String terminateFile;
+
+    /** 合同图片 */
+    @ApiModelProperty(value = "合同图片", name = "imgs")
+    private String imgs;
+
     /** 合同解约日期 */
     @JsonFormat(pattern = "yyyy-MM-dd")
     @ApiModelProperty(value = "合同解约日期", name = "terminateDate")

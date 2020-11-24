@@ -420,6 +420,24 @@ public class ContractServiceImpl implements IContractService
         return res;
     }
 
+    @Override
+    public int uploadContractFile(Integer id, String files) {
+        Contract contract = contractMapper.selectContractById(id);
+        ContractBO contractBO = new ContractBO();
+        BeanUtils.copyProperties(contract, contractBO);
+        contractBO.setFile(files);
+        return contractMapper.updateContract(contractBO);
+    }
+
+    @Override
+    public int uploadContractImgs(Integer id, String imgs) {
+        Contract contract = contractMapper.selectContractById(id);
+        ContractBO contractBO = new ContractBO();
+        BeanUtils.copyProperties(contract, contractBO);
+        contractBO.setImgs(imgs);
+        return contractMapper.updateContract(contractBO);
+    }
+
 
     public static Map<String, String> compareTwoObject(Object obj1, Object obj2, String... ignoreFields) throws IllegalAccessException {
         Map<String, String> diffMap = new LinkedHashMap<>();
@@ -498,14 +516,14 @@ public class ContractServiceImpl implements IContractService
     }
 
     /**
-     * 合同附件上传
+     * 合同解约附件上传
      */
     public void addSave(MultipartFile file, ContractBO contractBO) throws IOException {
         // 上传文件路径
         String filePath = MerchantConfig.getContractPath();
         // 上传并返回新文件名称
         String fileName = FileUploadUtils.upload(filePath, file);
-        contractBO.setFile(fileName);
+        contractBO.setTerminateFile(fileName);
     }
 
 }

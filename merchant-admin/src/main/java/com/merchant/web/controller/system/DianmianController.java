@@ -5,6 +5,8 @@ import java.util.List;
 import com.merchant.system.domain.bo.DianmianBO;
 import com.merchant.system.domain.vo.DianmianVO;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,6 +43,7 @@ public class DianmianController extends BaseController
     /**
      * 查询店面管理列表
      */
+    @ApiOperation(value = "查询店面管理列表", notes = "查询店面管理列表", httpMethod = "POST")
     @PreAuthorize("@ss.hasPermi('dianmian:dianmianManager:list')")
     @PostMapping("/list")
     public TableDataInfo list(@RequestBody DianmianBO dianmianBO)
@@ -52,19 +55,21 @@ public class DianmianController extends BaseController
 
 
     /**
-     * 查询店面管理列表
+     * 根据合同num查询店面管理列表
      */
+    @ApiOperation(value = "根据合同num查询店面管理列表", notes = "根据合同num查询店面管理列表", httpMethod = "GET")
     @PreAuthorize("@ss.hasPermi('dianmian:dianmianManager:list')")
-    @GetMapping("/listOfContractNum/{ContractNum}")
-    public TableDataInfo listByContractNum(@PathVariable String ContractNum)
+    @GetMapping("/listOfContractNum/{contractNum}")
+    public TableDataInfo listByContractNum(@ApiParam(name = "contractNum", value = "合同num", required = true) @PathVariable String contractNum)
     {
         startPage();
-        List<DianmianVO> list = dianmianService.selectDianmianByContractNum(ContractNum);
+        List<DianmianVO> list = dianmianService.selectDianmianByContractNum(contractNum);
         return getDataTable(list);
     }
     /**
      * 导出店面管理列表
      */
+    @ApiOperation(value = "导出店面管理列表", notes = "导出店面管理列表", httpMethod = "GET")
     @PreAuthorize("@ss.hasPermi('dianmian:dianmianManager:export')")
     @Log(title = "店面管理", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
@@ -78,9 +83,10 @@ public class DianmianController extends BaseController
     /**
      * 获取店面管理详细信息
      */
+    @ApiOperation(value = "根据店面id查询店面管理列表", notes = "根据店面id查询店面管理列表", httpMethod = "GET")
     @PreAuthorize("@ss.hasPermi('dianmian:dianmianManager:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Integer id)
+    public AjaxResult getInfo(@ApiParam(name = "id", value = "店面id", required = true) @PathVariable("id") Integer id)
     {
         return AjaxResult.success(dianmianService.selectDianmianById(id));
     }
@@ -88,6 +94,7 @@ public class DianmianController extends BaseController
     /**
      * 新增店面管理
      */
+    @ApiOperation(value = "新增店面管理", notes = "新增店面管理", httpMethod = "POST")
     @PreAuthorize("@ss.hasPermi('dianmian:dianmianManager:add')")
     @Log(title = "店面管理", businessType = BusinessType.INSERT)
     @PostMapping
@@ -99,6 +106,7 @@ public class DianmianController extends BaseController
     /**
      * 修改店面管理
      */
+    @ApiOperation(value = "修改店面管理", notes = "修改店面管理", httpMethod = "PUT")
     @PreAuthorize("@ss.hasPermi('dianmian:dianmianManager:edit')")
     @Log(title = "店面管理", businessType = BusinessType.UPDATE)
     @PutMapping
@@ -110,6 +118,7 @@ public class DianmianController extends BaseController
     /**
      * 删除店面管理
      */
+    @ApiOperation(value = "删除店面", notes = "删除店面", httpMethod = "DELETE")
     @PreAuthorize("@ss.hasPermi('dianmian:dianmianManager:remove')")
     @Log(title = "店面管理", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")

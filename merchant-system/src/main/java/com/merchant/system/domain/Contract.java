@@ -4,6 +4,7 @@ import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.merchant.common.annotation.Excel;
 import com.merchant.common.core.domain.BaseEntity;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -146,4 +147,10 @@ public class Contract extends BaseEntity
 
     /** 合同附件 */
     private String file;
+
+    /** 合同附件 */
+    private String terminateFile;
+
+    /** 合同图片 */
+    private String imgs;
 }
