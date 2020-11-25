@@ -5,6 +5,7 @@ import com.merchant.common.annotation.Excel;
 import com.merchant.common.core.domain.BaseEntity;
 import com.merchant.system.domain.Contract;
 import com.merchant.system.domain.ContractFee;
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -16,8 +17,10 @@ import java.util.Date;
  * @author hanke
  * @date 2020-11-10
  */
-public class ContractFeeBO extends ContractFee
-{
+@Data
+public class ContractFeeBO extends ContractFee {
 
+    /** 部门名称 */
+    private String deptName;
 
 }

@@ -23,6 +23,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="updateBy"     column="update_by"    />
 		<result property="updateTime"   column="update_date"  />
 		<result property="remark"       column="remark"       />
+		<result property="companyName"       column="companyName"       />
 		<association property="dept"    column="dept_id" javaType="SysDept" resultMap="deptResult" />
 		<collection  property="roles"   javaType="java.util.List"        resultMap="RoleResult" />
 	</resultMap>
@@ -48,11 +49,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<sql id="selectUserVo">
         select u.id, u.dept_id, u.user_name, u.nick_name, u.email, u.avatar, u.phonenumber, u.password, u.sex, u.status, u.del_flag, u.login_ip, u.login_date, u.create_by, u.create_date, u.remark,
         d.id, d.parent_id, d.dept_name, d.order_num, d.leader, d.status as dept_status,
-        r.role_id, r.role_name, r.role_key, r.role_sort, r.data_scope, r.status as role_status
+        r.role_id, r.role_name, r.role_key, r.role_sort, r.data_scope, r.status, sys_company.name companyName as role_status
         from sys_user u
 		    left join sys_dept d on u.dept_id = d.id
 		    left join sys_user_role ur on u.id = ur.user_id
 		    left join sys_role r on r.role_id = ur.role_id
+		    left join sys_company on u.company_id = sys_company.id
     </sql>
     
     <select id="selectUserList" parameterType="SysUser" resultMap="SysUserResult">

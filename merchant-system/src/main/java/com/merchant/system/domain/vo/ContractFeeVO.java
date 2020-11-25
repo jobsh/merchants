@@ -32,4 +32,7 @@ public class ContractFeeVO extends ContractFee {
     /** 负责人 */
     private String manager;
 
+    /** 部门名称 */
+    private String deptName;
+
 }

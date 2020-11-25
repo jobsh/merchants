@@ -2,6 +2,7 @@ package com.merchant.system.service;
 
 import java.util.List;
 import com.merchant.system.domain.ContractFee;
+import com.merchant.system.domain.bo.ContractFeeBO;
 import com.merchant.system.domain.vo.ContractFeeVO;
 
 /**
@@ -23,10 +24,10 @@ public interface IContractFeeService
     /**
      * 查询费用管理列表
      * 
-     * @param contractFee 费用管理
+     * @param contractFeeBO 费用管理
      * @return 费用管理集合
      */
-    public List<ContractFee> selectContractFeeList(ContractFee contractFee);
+    public List<ContractFee> selectContractFeeList(ContractFeeBO contractFeeBO);
 
     /**
      * 新增费用管理

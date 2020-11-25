@@ -2,6 +2,7 @@ package com.merchant.web.controller.system;
 
 import java.util.List;
 
+import com.merchant.system.domain.bo.ContractFeeBO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,10 +34,10 @@ public class ContractFeeController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('fee:feeManager:list')")
     @GetMapping("/list")
-    public TableDataInfo list(ContractFee contractFee)
+    public TableDataInfo list(ContractFeeBO contractFeeBO)
     {
         startPage();
-        List<ContractFee> list = contractFeeService.selectContractFeeList(contractFee);
+        List<ContractFee> list = contractFeeService.selectContractFeeList(contractFeeBO);
         return getDataTable(list);
     }
 
@@ -46,9 +47,9 @@ public class ContractFeeController extends BaseController
     @PreAuthorize("@ss.hasPermi('fee:feeManager:export')")
     @Log(title = "费用管理", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
-    public AjaxResult export(ContractFee contractFee)
+    public AjaxResult export(ContractFeeBO contractFeeBO)
     {
-        List<ContractFee> list = contractFeeService.selectContractFeeList(contractFee);
+        List<ContractFee> list = contractFeeService.selectContractFeeList(contractFeeBO);
         ExcelUtil<ContractFee> util = new ExcelUtil<ContractFee>(ContractFee.class);
         return util.exportExcel(list, "feeManager");
     }

@@ -41,14 +41,14 @@ public class ContractFeeServiceImpl implements IContractFeeService
     /**
      * 查询费用管理列表
      * 
-     * @param contractFee 费用管理
+     * @param contractFeeBO 费用管理
      * @return 费用管理
      */
     @Override
     @DataScope(deptAlias = "d", userAlias = "u")
-    public List<ContractFee> selectContractFeeList(ContractFee contractFee)
+    public List<ContractFee> selectContractFeeList(ContractFeeBO contractFeeBO)
     {
-        return contractFeeMapper.selectContractFeeList(contractFee);
+        return contractFeeMapper.selectContractFeeList(contractFeeBO);
     }
 
     /**

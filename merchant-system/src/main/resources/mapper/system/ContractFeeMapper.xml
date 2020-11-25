@@ -22,12 +22,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="dianmianName"    column="dianmian_name"    />
         <result property="dianmianNum"    column="dianmian_num"    />
         <result property="manager"    column="manager"    />
+        <result property="deptName"    column="deptName"    />
+
     </resultMap>
 
     <sql id="selectContractFeeVo">
         select
             biz_contract_fee.id, biz_contract_fee.num, biz_contract_fee.contract_num, biz_contract_fee.type, biz_contract_fee.amount,biz_contract_fee.pay_method, biz_contract_fee.payer,
-            biz_contract_fee.reciever, biz_contract_fee.check_status, biz_contract_fee.shoukuan_date, biz_contract_fee.update_date, biz_contract.customer_name, biz_contract.customer_id, biz_contract.produce, biz_contract.dianmian_name, biz_contract.dianmian_num, biz_contract.manager
+            biz_contract_fee.reciever, biz_contract_fee.check_status, biz_contract_fee.shoukuan_date, biz_contract.customer_name, biz_contract.customer_id,
+            biz_contract.produce, biz_contract.dianmian_name, biz_contract.dianmian_num, biz_contract.manager, d.dept_name as deptName
         from biz_contract_fee
         left join
             biz_contract
@@ -41,7 +44,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         on  biz_contract.manager_id = u.id
     </sql>
 
-    <select id="selectContractFeeList" parameterType="ContractFee" resultMap="ContractFeeResult">
+    <select id="selectContractFeeList" parameterType="ContractFeeBO" resultMap="ContractFeeResult">
         <include refid="selectContractFeeVo"></include>
         <where>  
             <if test="num != null  and num != ''"> and num = #{num}</if>
@@ -52,6 +55,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="reciever != null  and reciever != ''"> and reciever = #{reciever}</if>
             <if test="checkStatus != null  and checkStatus != ''"> and check_status = #{checkStatus}</if>
             <if test="shoukuanDate != null "> and shoukuan_date = #{shoukuanDate}</if>
+            <if test="deptName != null and deptName != ''"> and deptName = #{deptName}</if>
             <!-- 数据范围过滤 -->
             ${params.dataScope}
         </where>

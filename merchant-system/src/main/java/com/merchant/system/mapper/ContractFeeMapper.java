@@ -24,10 +24,10 @@ public interface ContractFeeMapper
     /**
      * 查询费用管理列表
      * 
-     * @param contractFee 费用管理
+     * @param contractFeeBO 费用管理
      * @return 费用管理集合
      */
-    public List<ContractFee> selectContractFeeList(ContractFee contractFee);
+    public List<ContractFee> selectContractFeeList(ContractFeeBO contractFeeBO);
 
     /**
      * 新增费用管理
