@@ -66,6 +66,7 @@ public class DianmianController extends BaseController
         List<DianmianVO> list = dianmianService.selectDianmianByContractNum(contractNum);
         return getDataTable(list);
     }
+
     /**
      * 导出店面管理列表
      */
@@ -126,6 +127,5 @@ public class DianmianController extends BaseController
     {
         return toAjax(dianmianService.deleteDianmianByIds(ids));
     }
-
 
 }

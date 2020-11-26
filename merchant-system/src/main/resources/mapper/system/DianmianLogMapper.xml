@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.merchant.system.mapper.DianmianLogMapper">
+    
+    <resultMap type="DianmianLog" id="DianmianLogResult">
+        <result property="id"    column="id"    />
+        <result property="dianmianId"    column="dianmian_id"    />
+        <result property="oper"    column="oper"    />
+        <result property="discription"    column="discription"    />
+        <result property="status"    column="status"    />
+        <result property="openDate"    column="open_date"    />
+        <result property="closeDate"    column="close_date"    />
+        <result property="inputDate"    column="input_date"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectDianmianLogVo">
+        select id, dianmian_id, oper, discription, status, open_date, close_date, input_date, remark from biz_dianmian_log
+    </sql>
+
+    <select id="selectDianmianLogList" parameterType="DianmianLog" resultMap="DianmianLogResult">
+        <include refid="selectDianmianLogVo"/>
+        <where>  
+            <if test="dianmianId != null "> and dianmian_id = #{dianmianId}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectDianmianLogById" parameterType="Integer" resultMap="DianmianLogResult">
+        <include refid="selectDianmianLogVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertDianmianLog" parameterType="DianmianLog">
+        insert into biz_dianmian_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="dianmianId != null">dianmian_id,</if>
+            <if test="oper != null">oper,</if>
+            <if test="discription != null">discription,</if>
+            <if test="status != null">status,</if>
+            <if test="openDate != null">open_date,</if>
+            <if test="closeDate != null">close_date,</if>
+            <if test="inputDate != null">input_date,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="dianmianId != null">#{dianmianId},</if>
+            <if test="oper != null">#{oper},</if>
+            <if test="discription != null">#{discription},</if>
+            <if test="status != null">#{status},</if>
+            <if test="openDate != null">#{openDate},</if>
+            <if test="closeDate != null">#{closeDate},</if>
+            <if test="inputDate != null">#{inputDate},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDianmianLog" parameterType="DianmianLog">
+        update biz_dianmian_log
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="dianmianId != null">dianmian_id = #{dianmianId},</if>
+            <if test="oper != null">oper = #{oper},</if>
+            <if test="discription != null">discription = #{discription},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="openDate != null">open_date = #{openDate},</if>
+            <if test="closeDate != null">close_date = #{closeDate},</if>
+            <if test="inputDate != null">input_date = #{inputDate},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteDianmianLogById" parameterType="Integer">
+        delete from biz_dianmian_log where id = #{id}
+    </delete>
+
+    <delete id="deleteDianmianLogByIds" parameterType="String">
+        delete from biz_dianmian_log where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

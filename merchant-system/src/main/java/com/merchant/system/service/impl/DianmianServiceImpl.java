@@ -3,13 +3,19 @@ package com.merchant.system.service.impl;
 import java.util.List;
 
 import com.merchant.common.annotation.DataScope;
+import com.merchant.common.enums.DianmianStatus;
+import com.merchant.common.utils.StringUtils;
+import com.merchant.system.domain.DianmianLog;
 import com.merchant.system.domain.bo.DianmianBO;
 import com.merchant.system.domain.vo.DianmianVO;
+import com.merchant.system.mapper.DianmianLogMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.merchant.system.mapper.DianmianMapper;
 import com.merchant.system.domain.Dianmian;
 import com.merchant.system.service.IDianmianService;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 店面管理Service业务层处理
@@ -23,6 +29,8 @@ public class DianmianServiceImpl implements IDianmianService
     @Autowired
     private DianmianMapper dianmianMapper;
 
+    @Autowired
+    private DianmianLogMapper dianmianLogMapper;
     /**
      * 查询店面管理
      * 
@@ -62,14 +70,37 @@ public class DianmianServiceImpl implements IDianmianService
     }
 
     /**
-     * 修改店面管理
+     * 修改店面管理，更改店面状态也调用此接口
      * 
      * @param dianmian 店面管理
      * @return 结果
      */
     @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public int updateDianmian(Dianmian dianmian)
     {
+        if (StringUtils.isNoneBlank(dianmian.getStatus())){
+            DianmianLog dianmianLog = new DianmianLog();
+            // 如果修改门店状态需要记录日志
+            if (DianmianStatus.OPEN.getCode().equals(dianmian.getStatus())) {
+                dianmianLog.setOpenDate(dianmian.getOpenDate());
+                dianmianLog.setStatus(dianmian.getStatus());
+                dianmianLog.setOper(DianmianStatus.OPEN.getInfo());
+            } else if (DianmianStatus.ClOSED.getCode().equals(dianmian.getStatus())) {
+                dianmianLog.setOpenDate(dianmian.getOpenDate());
+                dianmian.setCloseDate(dianmian.getCloseDate());
+                dianmianLog.setStatus(dianmian.getStatus());
+                dianmianLog.setOper(DianmianStatus.ClOSED.getInfo());
+                dianmianLog.setDiscription(dianmian.getCloseReason());
+            } else {
+                dianmianLog.setOpenDate(dianmian.getOpenDate());
+                dianmian.setCloseDate(dianmian.getCloseDate());
+                dianmianLog.setStatus(dianmian.getStatus());
+                dianmianLog.setOper(DianmianStatus.REST.getInfo());
+                dianmianLog.setDiscription(dianmian.getCloseReason());
+            }
+            dianmianLogMapper.updateDianmianLog(dianmianLog);
+        }
         return dianmianMapper.updateDianmian(dianmian);
     }
 
