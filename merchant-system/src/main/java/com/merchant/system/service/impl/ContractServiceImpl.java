@@ -236,10 +236,10 @@ public class ContractServiceImpl implements IContractService
 
             contractLogService.insertOperlog(contractOperLog);
 
-            Dianmian dianmian = new Dianmian();
-            // 修改店面状态为闭店
-            dianmian.setStatus(DianmianStatus.ClOSED.getCode());
-            dianmianService.updateDianmianByContractNum(dianmian);
+//            Dianmian dianmian = new Dianmian();
+//            // 修改店面状态为闭店
+//            dianmian.setStatus(DianmianStatus.ClOSED.getCode());
+//            dianmianService.updateDianmianByContractNum(dianmian);
         }
 
         return res;
