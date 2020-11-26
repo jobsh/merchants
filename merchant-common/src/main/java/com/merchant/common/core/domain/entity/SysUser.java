@@ -31,6 +31,8 @@ public class SysUser extends BaseEntity
     @Excel(name = "用户序号", cellType = Excel.ColumnType.NUMERIC, prompt = "用户编号")
     private Integer companyId;
 
+    private SysCompany sysCompany;
+
     /** 部门ID */
     @Excel(name = "部门编号", type = Excel.Type.IMPORT)
     private Long deptId;
@@ -345,5 +347,13 @@ public class SysUser extends BaseEntity
 
     public void setCompanyId(Integer companyId) {
         this.companyId = companyId;
+    }
+
+    public SysCompany getSysCompany() {
+        return sysCompany;
+    }
+
+    public void setSysCompany(SysCompany sysCompany) {
+        this.sysCompany = sysCompany;
     }
 }

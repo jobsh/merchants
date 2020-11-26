@@ -86,7 +86,7 @@ public class DianmianBO extends BaseEntity {
     private String checkResult;
 
     /** 合同编号 */
-    @ApiModelProperty(value = "合同编号", name = "contractnum")
+    @ApiModelProperty(value = "合同编号", name = "contractNum")
     private String contractNum;
 
     /** 店面类型（0：单店加盟，1：区域加盟） */

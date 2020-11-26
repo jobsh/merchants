@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.merchant.system.mapper.SysCompanyMapper">
+    
+    <resultMap type="SysCompany" id="SysCompanyResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="simpleName"    column="simple_name"    />
+        <result property="sourceName"    column="source_name"    />
+        <result property="sign"    column="sign"    />
+        <result property="type"    column="type"    />
+        <result property="contactPerson"    column="contact_person"    />
+        <result property="address"    column="address"    />
+        <result property="image"    column="image"    />
+        <result property="phone"    column="phone"    />
+        <result property="introduce"    column="introduce"    />
+        <result property="inputDate"    column="input_date"    />
+        <result property="cityId"    column="city_id"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+
+    <sql id="selectSysCompanyVo">
+        select id, name, simple_name, source_name, sign, type, contact_person, address, image, phone, introduce, input_date, city_id, status from sys_company
+    </sql>
+
+    <select id="selectSysCompanyList" parameterType="SysCompany" resultMap="SysCompanyResult">
+        <include refid="selectSysCompanyVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="simpleName != null  and simpleName != ''"> and simple_name like concat('%', #{simpleName}, '%')</if>
+            <if test="contactPerson != null  and contactPerson != ''"> and contact_person = #{contactPerson}</if>
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysCompanyById" parameterType="Integer" resultMap="SysCompanyResult">
+        <include refid="selectSysCompanyVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSysCompany" parameterType="SysCompany" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_company
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="simpleName != null">simple_name,</if>
+            <if test="sourceName != null">source_name,</if>
+            <if test="sign != null">sign,</if>
+            <if test="type != null">type,</if>
+            <if test="contactPerson != null">contact_person,</if>
+            <if test="address != null">address,</if>
+            <if test="image != null">image,</if>
+            <if test="phone != null">phone,</if>
+            <if test="introduce != null">introduce,</if>
+            <if test="inputDate != null">input_date,</if>
+            <if test="cityId != null">city_id,</if>
+            <if test="status != null">status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="simpleName != null">#{simpleName},</if>
+            <if test="sourceName != null">#{sourceName},</if>
+            <if test="sign != null">#{sign},</if>
+            <if test="type != null">#{type},</if>
+            <if test="contactPerson != null">#{contactPerson},</if>
+            <if test="address != null">#{address},</if>
+            <if test="image != null">#{image},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="introduce != null">#{introduce},</if>
+            <if test="inputDate != null">#{inputDate},</if>
+            <if test="cityId != null">#{cityId},</if>
+            <if test="status != null">#{status},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysCompany" parameterType="SysCompany">
+        update sys_company
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="simpleName != null">simple_name = #{simpleName},</if>
+            <if test="sourceName != null">source_name = #{sourceName},</if>
+            <if test="sign != null">sign = #{sign},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="contactPerson != null">contact_person = #{contactPerson},</if>
+            <if test="address != null">address = #{address},</if>
+            <if test="image != null">image = #{image},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="introduce != null">introduce = #{introduce},</if>
+            <if test="inputDate != null">input_date = #{inputDate},</if>
+            <if test="cityId != null">city_id = #{cityId},</if>
+            <if test="status != null">status = #{status},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysCompanyById" parameterType="Integer">
+        delete from sys_company where id = #{id}
+    </delete>
+
+    <delete id="deleteSysCompanyByIds" parameterType="String">
+        delete from sys_company where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

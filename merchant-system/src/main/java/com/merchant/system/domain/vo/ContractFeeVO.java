@@ -1,6 +1,7 @@
 package com.merchant.system.domain.vo;
 
 import com.merchant.common.annotation.Excel;
+import com.merchant.common.core.domain.entity.SysCompany;
 import com.merchant.system.domain.Contract;
 import com.merchant.system.domain.ContractFee;
 import lombok.Data;
@@ -34,5 +35,8 @@ public class ContractFeeVO extends ContractFee {
 
     /** 部门名称 */
     private String deptName;
+
+    /** 公司 */
+    private SysCompany sysCompany;
 
 }

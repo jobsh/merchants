@@ -23,25 +23,52 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="dianmianNum"    column="dianmian_num"    />
         <result property="manager"    column="manager"    />
         <result property="deptName"    column="deptName"    />
+        <association property="sysCompany"    column="company_id" javaType="SysCompany" resultMap="companyResult" />
+    </resultMap>
 
+    <resultMap id="companyResult" type="SysCompany">
+        <id     property="id"   column="id"     />
+        <result property="name" column="name"   />
+        <result property="simpleName" column="simple_name"   />
+        <result property="sourceName" column="source_name"   />
+        <result property="sign"   column="sign"      />
+        <result property="type"   column="company_type" />
+        <result property="contactPerson"   column="contact_person" />
+        <result property="address"   column="address" />
+        <result property="image"   column="image" />
+        <result property="phone"   column="phone" />
+        <result property="introduce"   column="introduce" />
+        <result property="inputDate"   column="input_date" />
+        <result property="cityId"   column="city_id" />
+        <result property="status"   column="status" />
     </resultMap>
 
     <sql id="selectContractFeeVo">
         select
-            biz_contract_fee.id, biz_contract_fee.num, biz_contract_fee.contract_num, biz_contract_fee.type, biz_contract_fee.amount,biz_contract_fee.pay_method, biz_contract_fee.payer,
-            biz_contract_fee.reciever, biz_contract_fee.check_status, biz_contract_fee.shoukuan_date, biz_contract.customer_name, biz_contract.customer_id,
-            biz_contract.produce, biz_contract.dianmian_name, biz_contract.dianmian_num, biz_contract.manager, d.dept_name as deptName
-        from biz_contract_fee
+            biz_contract_fee.id, biz_contract_fee.num, biz_contract_fee.contract_num, biz_contract_fee.type, biz_contract_fee.amount,biz_contract_fee.pay_method, biz_contract_fee.payer,biz_contract_fee.reciever, biz_contract_fee.check_status, biz_contract_fee.shoukuan_date,
+            biz_contract.customer_name, biz_contract.customer_id, biz_contract.produce, biz_contract.dianmian_name, biz_contract.dianmian_num, biz_contract.manager,
+            d.dept_name as deptName,
+            u.company_id as company_id,
+            sys_company.name, sys_company.simple_name, sys_company.source_name, sys_company.sign, sys_company.type company_type, sys_company.contact_person, sys_company.address, sys_company.image, sys_company.phone, sys_company.introduce, sys_company.city_id, sys_company.status
+        from
+            biz_contract_fee
         left join
             biz_contract
         on
             biz_contract_fee.contract_num = biz_contract.num
         left join
             sys_dept d
-        on  biz_contract.dept_id = d.id
+        on
+            biz_contract.dept_id = d.id
         left join
             sys_user u
-        on  biz_contract.manager_id = u.id
+        on
+            biz_contract.manager_id = u.id
+        left join
+            sys_company
+        on
+            u.company_id = sys_company.id
+
     </sql>
 
     <select id="selectContractFeeList" parameterType="ContractFeeBO" resultMap="ContractFeeResult">

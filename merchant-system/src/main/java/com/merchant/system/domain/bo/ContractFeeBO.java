@@ -3,6 +3,7 @@ package com.merchant.system.domain.bo;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.merchant.common.annotation.Excel;
 import com.merchant.common.core.domain.BaseEntity;
+import com.merchant.common.core.domain.entity.SysCompany;
 import com.merchant.system.domain.Contract;
 import com.merchant.system.domain.ContractFee;
 import lombok.Data;

@@ -22,7 +22,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="address"    column="address"    />
         <result property="checkResult"    column="check_result"    />
         <result property="openDate"    column="open_date"    />
-        <result property="contractnum"    column="contractNum"    />
+        <result property="contractNum"    column="contract_num"    />
         <result property="type"    column="type"    />
         <result property="area"    column="area"    />
         <result property="closeDate"    column="close_date"    />
