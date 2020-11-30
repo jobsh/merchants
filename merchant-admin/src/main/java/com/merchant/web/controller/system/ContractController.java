@@ -210,26 +210,20 @@ public class ContractController extends BaseController
     @ApiOperation(value = "转移合同", notes = "转移合同", httpMethod = "POST")
     @PreAuthorize("@ss.hasPermi('contract:contractManager:edit')")
     @Log(title = "合同", businessType = BusinessType.UPDATE)
-    @PostMapping("/transfer/")
-    public AjaxResult transfer(
-            @ApiParam(name = "ids", value = "合同ids", required = true)
-            @RequestParam Integer[] ids,
-            @ApiParam(name = "phone", value = "合同负责人手机号", required = true)
-            @RequestParam String phone,
-            @ApiParam(name = "managerId", value = "负责人id", required = true)
-            @RequestParam Integer managerId) throws IllegalAccessException {
+    @PostMapping("/transfer/ids")
+    public AjaxResult transfer(@RequestBody ContractBO contractBO) throws IllegalAccessException {
 
         // 查询合同
-        if (StringUtils.isBlank(phone)) {
+        if (StringUtils.isBlank(contractBO.getManagerPhone())) {
             return AjaxResult.error("参数错误");
         }
 
-        SysUser sysUser = userService.selectUserByPhone(phone);
+        SysUser sysUser = userService.selectUserByPhone(contractBO.getManagerPhone());
         if (sysUser == null) {
             return AjaxResult.error("无此负责人，请重新输入手机号");
         }
 
-        return toAjax(contractService.transfer(ids, phone));
+        return toAjax(contractService.transfer(contractBO.getIds(), contractBO.getManagerPhone()));
     }
 
     /**

@@ -1,0 +1,17 @@
+package com.merchant.system.mapper;
+
+import com.merchant.system.domain.vo.CustomerReportVO;
+
+import java.util.List;
+
+/**
+ * @Classname CustomerReportMapper
+ * @Description CustomerReportMapper
+ * @Date 2020/11/30 16:00
+ * @Created by hanke
+ */
+public interface CustomerReportMapper {
+
+    List<CustomerReportVO> selectCustomerReportList();
+
+}

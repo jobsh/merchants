@@ -26,6 +26,10 @@ public class ContractBO extends BaseEntity
     @ApiModelProperty(value = "合同id", name = "id")
     private Integer id;
 
+    /** 合同表主键ids */
+    @ApiModelProperty(value = "合同ids", name = "ids")
+    private Integer[] ids;
+
     /** 合同表主键id */
     @ApiModelProperty(value = "部门id", name = "deptId")
     private Integer deptId;
@@ -55,6 +59,10 @@ public class ContractBO extends BaseEntity
     /** 客户手机号（可以有多个手机号，逗号分隔） */
     @ApiModelProperty(value = "客户手机号", name = "customerPhone")
     private String customerPhone;
+
+    /** 客户手机号（可以有多个手机号，逗号分隔） */
+    @ApiModelProperty(value = "负责人手机号", name = "managerPhone")
+    private String managerPhone;
 
     /** 合同类型(0：新签:1：续签) */
     @Excel(name = "合同类型(0：新签:1：续签)")

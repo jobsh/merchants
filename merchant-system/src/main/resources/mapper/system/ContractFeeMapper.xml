@@ -90,12 +90,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <select id="selectContractFeeById" parameterType="Long" resultMap="ContractFeeResult">
         <include refid="selectContractFeeVo"/>
-        where id = #{id}
+        where biz_contract_fee.id = #{id}
     </select>
 
     <select id="selectContractFeeByContractNum" parameterType="String" resultMap="ContractFeeResult">
         <include refid="selectContractFeeVo"/>
-        where contract_num = #{contractNum}
+        where biz_contract_fee.contract_num = #{contractNum}
     </select>
         
     <insert id="insertContractFee" parameterType="ContractFee" useGeneratedKeys="true" keyProperty="id">
@@ -110,7 +110,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="reciever != null and reciever != ''">reciever,</if>
             <if test="checkStatus != null and checkStatus != ''">check_status,</if>
             <if test="shoukuanDate != null">shoukuan_date,</if>
-            <if test="updateDate != null">update_date,</if>
+            update_date,
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="num != null and num != ''">#{num},</if>
@@ -122,7 +122,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="reciever != null and reciever != ''">#{reciever},</if>
             <if test="checkStatus != null and checkStatus != ''">#{checkStatus},</if>
             <if test="shoukuanDate != null">#{shoukuanDate},</if>
-            <if test="updateDate != null">#{updateDate},</if>
+            now()
          </trim>
     </insert>
 
@@ -140,7 +140,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="shoukuanDate != null">shoukuan_date = #{shoukuanDate},</if>
             <if test="updateDate != null">update_date = #{updateDate},</if>
         </trim>
-        where id = #{id}
+        where biz_contract_fee.id = #{id}
     </update>
 
     <update id="updateContractFeeByNum" parameterType="ContractFeeBO">
@@ -156,11 +156,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="shoukuanDate != null">shoukuan_date = #{shoukuanDate},</if>
             <if test="updateDate != null">update_date = #{updateDate},</if>
         </trim>
-        where num = #{num}
+        where biz_contract_fee.num = #{num}
     </update>
 
     <delete id="deleteContractFeeById" parameterType="Long">
-        delete from biz_contract_fee where id = #{id}
+        delete from biz_contract_fee where biz_contract_fee.id = #{id}
     </delete>
 
     <delete id="deleteContractFeeByIds" parameterType="String">

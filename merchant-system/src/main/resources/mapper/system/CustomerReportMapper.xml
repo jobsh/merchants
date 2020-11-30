@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.merchant.system.mapper.CustomerReportMapper">
+
+    <resultMap type="com.merchant.system.domain.vo.CustomerReportVO" id="CustomerReportVO" autoMapping="true">
+        <result column="user_name" property="userName"></result>
+        <result column="phonenumber" property="phonenumber"></result>
+        <result column="dept_name" property="deptName"></result>
+        <result column="company_name" property="companyName"></result>
+        <result column="post_name" property="postName"></result>
+        <result column="xiansuo_num" property="xiansuoNum"></result>
+        <result column="customer_num" property="customerNum"></result>
+        <result column="gj_num" property="gjNum"></result>
+        <result column="dandian_contract_num" property="dandianContractNum"></result>
+        <result column="quyu_contract_num" property="quyuContractNum"></result>
+        <result column="quyu_dianmian_num" property="quyuDianmianNum"></result>
+        <result column="dianmian_num" property="dianmianNum"></result>
+    </resultMap>
+
+    <select id="selectCustomerReportList" resultMap="CustomerReportVO" parameterType="Integer">
+        select
+            u.user_name,
+            u.phonenumber,
+            d.dept_name,
+            cm.`name` company_name,
+            p.post_name,
+            IFNULL(xiansuo_num,0) xiansuo_num,
+            IFNULL(customer_num,0) customer_num,
+            IFNULL(gj_num,0) gj_num,
+            IFNULL(dandian_contract_num,0) dandian_contract_num,
+            IFNULL(quyu_contract_num,0) quyu_contract_num,
+            IFNULL(quyu_dianmian_num,0) quyu_dianmian_num,
+            IFNULL(dandian_contract_num + quyu_dianmian_num,0) as dianmian_num
+        from
+            sys_user u
+        left join
+            sys_dept d
+        ON
+            u.dept_id = d.id
+        left JOIN
+            sys_company cm
+        ON
+            cm.id = u.company_id
+        left JOIN
+            sys_user_post up
+        ON
+            up.user_id = u.id
+        left JOIN
+            sys_post p
+        ON
+            p.post_id = up.post_id
+        -- 线索和客户
+        left JOIN
+            (SELECT
+            c.user_id uid,
+            count(case when c.`status` = 0 then 1 else null end) xiansuo_num, -- 线索状态为0
+            count(case when c.`status` = 1 then 1 else null end) customer_num -- 客户状态为1
+            FROM
+            biz_customer c
+            WHERE
+            c.resource &lt;= '6'
+            GROUP BY
+            uid
+            ) as xiansuo_num
+        on
+            xiansuo_num.uid = u.id
+        -- 客户跟进
+        LEFT JOIN
+            (select
+            gj.sys_user_id uid,
+            COUNT(gj.id) as gj_num
+            from
+            biz_genjin gj
+            GROUP BY
+            gj.sys_user_id
+            ) as gj_num
+        on
+            gj_num.uid = u.id
+        -- 合同
+        LEFT JOIN
+            (
+            SELECT
+            contract.manager_id uid,
+            count(case when contract.produce = 0 then 1 else null end) dandian_contract_num,
+            count(case when contract.produce = 1 then 1 else null end) quyu_contract_num
+            -- 	COUNT(contract.id) dandian_contract_num
+            FROM
+            biz_contract contract
+            GROUP BY
+            contract.manager_id
+            ) contract_num
+        ON
+            contract_num.uid = u.id
+        -- 店面
+        LEFT JOIN
+            (
+            SELECT
+            dianmian.sys_user_id uid,
+            COUNT(dianmian.id) quyu_dianmian_num
+            FROM
+            biz_dianmian dianmian
+            WHERE
+            dianmian.type = 1 -- 区域加盟
+            GROUP BY
+            dianmian.sys_user_id
+            ) dianmian
+        ON
+            dianmian.uid = u.id
+    </select>
+
+
+</mapper>
