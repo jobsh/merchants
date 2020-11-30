@@ -5,11 +5,13 @@ import com.merchant.common.annotation.Log;
 import com.merchant.common.config.MerchantConfig;
 import com.merchant.common.core.controller.BaseController;
 import com.merchant.common.core.domain.AjaxResult;
+import com.merchant.common.core.domain.entity.SysUser;
 import com.merchant.common.core.domain.model.LoginUser;
 import com.merchant.common.core.page.TableDataInfo;
 import com.merchant.common.enums.BusinessType;
 import com.merchant.common.exception.BaseException;
 import com.merchant.common.utils.ServletUtils;
+import com.merchant.common.utils.StringUtils;
 import com.merchant.common.utils.file.FileUploadUtils;
 import com.merchant.common.utils.poi.ExcelUtil;
 import com.merchant.framework.web.service.TokenService;
@@ -18,6 +20,7 @@ import com.merchant.system.domain.bo.ContractBO;
 import com.merchant.system.service.IContractLogService;
 import com.merchant.system.service.IContractService;
 import com.merchant.system.service.IDianmianService;
+import com.merchant.system.service.ISysUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -48,6 +51,8 @@ public class ContractController extends BaseController
     private IContractLogService contractLogService;
     @Autowired
     private IDianmianService dianmianService;
+    @Autowired
+    private ISysUserService userService;
     @Autowired
     private TokenService tokenService;
 
@@ -207,17 +212,24 @@ public class ContractController extends BaseController
     @Log(title = "合同", businessType = BusinessType.UPDATE)
     @PostMapping("/transfer/")
     public AjaxResult transfer(
-            @ApiParam(name = "id", value = "合同id", required = true)
-            @RequestParam Integer id,
+            @ApiParam(name = "ids", value = "合同ids", required = true)
+            @RequestParam Integer[] ids,
+            @ApiParam(name = "phone", value = "合同负责人手机号", required = true)
+            @RequestParam String phone,
             @ApiParam(name = "managerId", value = "负责人id", required = true)
             @RequestParam Integer managerId) throws IllegalAccessException {
 
         // 查询合同
-        if (managerId == null) {
+        if (StringUtils.isBlank(phone)) {
             return AjaxResult.error("参数错误");
         }
 
-        return toAjax(contractService.transfer(id, managerId));
+        SysUser sysUser = userService.selectUserByPhone(phone);
+        if (sysUser == null) {
+            return AjaxResult.error("无此负责人，请重新输入手机号");
+        }
+
+        return toAjax(contractService.transfer(ids, phone));
     }
 
     /**

@@ -196,6 +196,9 @@ public class CustomerController extends BaseController {
     @PostMapping("/customer/transfer")
     public AjaxResult transferCustomer(@RequestBody CustomerBO customerBO) {
 
+        if (customerService.existCustomer(customerBO.getPhone()) < 1) {
+            return AjaxResult.error("无此负责人，请输入正确手机号");
+        }
         int result = customerService.transferCustomer(customerBO);
         if (result == -1) {
             return AjaxResult.error(HttpStatus.NOT_FIND_SYSUSER, "没有该负责人");

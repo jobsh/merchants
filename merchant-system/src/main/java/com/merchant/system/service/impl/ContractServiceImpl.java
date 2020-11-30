@@ -298,39 +298,44 @@ public class ContractServiceImpl implements IContractService
     }
 
     @Override
-    public int transfer(Integer id, Integer managerId) throws IllegalAccessException {
+    public int transfer(Integer[] ids, String phone) throws IllegalAccessException {
         // 根据phone查询出负责人 判断系统中是否有此负责人
-        SysUser sysUser = sysUserService.selectUserById(managerId.longValue());
-        Contract contract = contractMapper.selectContractById(id);
-        ContractBO contractBO = new ContractBO();
-        BeanUtils.copyProperties(contract, contractBO);
-        contractBO.setManagerId(contractBO.getId());
-        contractBO.setManager(sysUser.getUserName());
-        contractBO.setSignUserId(contractBO.getId());
-        contractBO.setSignUser(sysUser.getUserName());
-        int res = contractMapper.updateContract(contractBO);
-        // 查询出旧合同
-        Contract oldContract = contractMapper.selectContractById(id);
-        if (res > 0) {
-            Contract newContract = contractMapper.selectContractById(contractBO.getId());
-            Map<String, String> compareRes = compareTwoObject(oldContract, newContract);
-            // 请求的地址
-            ContractOperLog contractOperLog = new ContractOperLog();
-            this.setContractOperLog(contractOperLog);
-            // 添加合同日志
-            contractOperLog.setRequestMethod("POST");
-            contractOperLog.setContractNum(oldContract.getNum());
-            contractOperLog.setBusinessType(ContractOperType.TRANSFER.ordinal());
-            contractOperLog.setTitle("转移合同");
-            contractOperLog.setDescription(JSONObject.toJSONString(compareRes));
+        SysUser sysUser = sysUserService.selectUserByPhone(phone);
+        List<Contract> contractList = contractMapper.selectContractByIds(ids);
+        int updateNum = 0;
+        for (Contract contract : contractList) {
+            ContractBO contractBO = new ContractBO();
+            BeanUtils.copyProperties(contract, contractBO);
+            contractBO.setManagerId(contractBO.getId());
+            contractBO.setManager(sysUser.getUserName());
+            contractBO.setSignUserId(contractBO.getId());
+            contractBO.setSignUser(sysUser.getUserName());
+            int res = contractMapper.updateContract(contractBO);
+            // 查询出旧合同
+            Contract oldContract = contractMapper.selectContractById(contract.getId());
+            if (res > 0) {
+                updateNum++;
+                Contract newContract = contractMapper.selectContractById(contractBO.getId());
+                Map<String, String> compareRes = compareTwoObject(oldContract, newContract);
+                // 请求的地址
+                ContractOperLog contractOperLog = new ContractOperLog();
+                this.setContractOperLog(contractOperLog);
+                // 添加合同日志
+                contractOperLog.setRequestMethod("POST");
+                contractOperLog.setContractNum(oldContract.getNum());
+                contractOperLog.setBusinessType(ContractOperType.TRANSFER.ordinal());
+                contractOperLog.setTitle("转移合同");
+                contractOperLog.setDescription(JSONObject.toJSONString(compareRes));
 
-            contractLogService.insertOperlog(contractOperLog);
+                contractLogService.insertOperlog(contractOperLog);
+            }
         }
-        return res;
+
+        return updateNum;
     }
 
     @Override
-    public int check(Integer id, String signDate) throws IllegalAccessException {
+    public int check(Integer id, String signDate) {
         ContractBO contractBO = new ContractBO();
         contractBO.setId(id);
         Contract contract = contractMapper.selectContractById(id);

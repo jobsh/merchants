@@ -94,10 +94,10 @@ public interface IContractService
 
     /**
      * 转移给手机号为phone的负责人
-     * @param managerId
+     * @param phone
      * @return
      */
-    int transfer(Integer id, Integer managerId) throws IllegalAccessException;
+    int transfer(Integer[] ids, String phone) throws IllegalAccessException;
 
     /**
      * 审核合同

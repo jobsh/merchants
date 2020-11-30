@@ -110,7 +110,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectContractVo"/>
         where biz_contract.num = #{num}
     </select>
-
+    <select id="selectContractByIds" resultType="com.merchant.system.domain.Contract" parameterType="String">
+        select from biz_contract where biz_contract.id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
 
 
     <insert id="insertContract" parameterType="ContractBO" useGeneratedKeys="true" keyProperty="id">

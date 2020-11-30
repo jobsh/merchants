@@ -75,4 +75,6 @@ public interface ContractMapper
      * @return
      */
     int countContractByNum(String num);
+
+    List<Contract> selectContractByIds(Integer[] ids);
 }
