@@ -63,7 +63,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				and date_format(oper_time,'%y%m%d') &lt;= date_format(#{endTime},'%y%m%d')
 			</if>
 		</where>
-		order by oper_id desc
+		order by oper_time desc
 	</select>
 	
 	<delete id="deleteOperLogByIds" parameterType="Long">

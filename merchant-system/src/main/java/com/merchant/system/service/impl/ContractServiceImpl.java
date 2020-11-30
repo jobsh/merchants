@@ -519,7 +519,7 @@ public class ContractServiceImpl implements IContractService
      * 合同解约附件上传
      */
     public void addSave(MultipartFile file, ContractBO contractBO) throws IOException {
-        // 上传文件路径
+        // 上传文件路径-
         String filePath = MerchantConfig.getContractPath();
         // 上传并返回新文件名称
         String fileName = FileUploadUtils.upload(filePath, file);

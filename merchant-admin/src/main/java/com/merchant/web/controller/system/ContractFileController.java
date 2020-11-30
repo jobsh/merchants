@@ -34,7 +34,7 @@ public class ContractFileController extends BaseController
     private IContractFileService contractFileService;
 
     /**
-     * 查询【请填写功能名称】列表
+     * 查询列表
      */
     @PreAuthorize("@ss.hasPermi('system:file:list')")
     @GetMapping("/list")
@@ -46,7 +46,7 @@ public class ContractFileController extends BaseController
     }
 
     /**
-     * 导出【请填写功能名称】列表
+     * 导出
      */
     @PreAuthorize("@ss.hasPermi('system:file:export')")
     @Log(title = "【请填写功能名称】", businessType = BusinessType.EXPORT)
@@ -59,7 +59,7 @@ public class ContractFileController extends BaseController
     }
 
     /**
-     * 获取【请填写功能名称】详细信息
+     * 根据id获取合同附件详情
      */
     @PreAuthorize("@ss.hasPermi('system:file:query')")
     @GetMapping(value = "/{id}")
@@ -69,7 +69,7 @@ public class ContractFileController extends BaseController
     }
 
     /**
-     * 新增【请填写功能名称】
+     * 新增
      */
     @PreAuthorize("@ss.hasPermi('system:file:add')")
     @Log(title = "【请填写功能名称】", businessType = BusinessType.INSERT)
@@ -80,7 +80,7 @@ public class ContractFileController extends BaseController
     }
 
     /**
-     * 修改【请填写功能名称】
+     * 修改
      */
     @PreAuthorize("@ss.hasPermi('system:file:edit')")
     @Log(title = "【请填写功能名称】", businessType = BusinessType.UPDATE)
@@ -91,7 +91,7 @@ public class ContractFileController extends BaseController
     }
 
     /**
-     * 删除【请填写功能名称】
+     * 根据ids批量删除
      */
     @PreAuthorize("@ss.hasPermi('system:file:remove')")
     @Log(title = "【请填写功能名称】", businessType = BusinessType.DELETE)

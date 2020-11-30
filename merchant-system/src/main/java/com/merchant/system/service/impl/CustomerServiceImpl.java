@@ -158,6 +158,7 @@ public class CustomerServiceImpl implements ICustomerService
         // 根据负责人phone 查询出负责人id和负责人name
         SysUser sysUser = new SysUser();
         sysUser.setPhonenumber(customerBO.getManagerPhone());
+        sysUser.setId(customerBO.getUserId().longValue());
         // 获取要转移给的人的User信息
         List<SysUser> sysUsers = sysUserMapper.selectUserList(sysUser);
         List<Customer> customers = customerMapper.selectCustomerByIds(customerBO);

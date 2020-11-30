@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.merchant.common.constant.HttpStatus;
 import com.merchant.common.core.domain.model.LoginUser;
+import com.merchant.common.enums.CustomerStatus;
 import com.merchant.common.utils.DateUtils;
 import com.merchant.common.utils.ServletUtils;
 import com.merchant.framework.web.service.TokenService;
@@ -87,8 +88,21 @@ public class CustomerController extends BaseController {
     @PreAuthorize("@ss.hasPermi('system:customer:export')")
     @Log(title = "我的客户", businessType = BusinessType.EXPORT)
     @GetMapping("/customer/export")
-    public AjaxResult export(CustomerBO customerBO) {
+    public AjaxResult exportCustomer(CustomerBO customerBO) {
         List<Customer> list = customerService.selectCustomerList(customerBO);
+        ExcelUtil<Customer> util = new ExcelUtil<Customer>(Customer.class);
+        return util.exportExcel(list, "customer");
+    }
+
+    /**
+     * 导出我的客户列表
+     */
+    @ApiOperation(value = "客户线索导出", notes = "客户线索导出", httpMethod = "GET")
+    @PreAuthorize("@ss.hasPermi('system:customer:export')")
+    @Log(title = "我的客户", businessType = BusinessType.EXPORT)
+    @GetMapping("/xiansuo/export")
+    public AjaxResult exportXiansuo(CustomerBO customerBO) {
+        List<Customer> list = customerService.selectXiansuoList(customerBO);
         ExcelUtil<Customer> util = new ExcelUtil<Customer>(Customer.class);
         return util.exportExcel(list, "customer");
     }

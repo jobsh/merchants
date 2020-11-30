@@ -106,6 +106,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <!-- 数据范围过滤 -->
             ${params.dataScope}
         </where>
+        order by dianmian.input_date desc
     </select>
 
     <select id="selectDianmianById" parameterType="Integer" resultMap="DianmianResult">

@@ -65,6 +65,7 @@
             <!-- 数据范围过滤 -->
             ${params.dataScope}
         </where>
+        order by biz_customer.genjin_date desc
     </select>
 
     <select id="selectCustomerById" parameterType="Integer" resultMap="CustomerResult">

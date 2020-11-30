@@ -12,50 +12,50 @@ import com.merchant.system.domain.ContractFile;
 public interface ContractFileMapper 
 {
     /**
-     * 查询【请填写功能名称】
+     * 根据id查询合同附件信息
      * 
-     * @param id 【请填写功能名称】ID
-     * @return 【请填写功能名称】
+     * @param id
+     * @return  ContractFile
      */
     public ContractFile selectContractFileById(Long id);
 
     /**
-     * 查询【请填写功能名称】列表
+     * 查询合同附件列表
      * 
-     * @param contractFile 【请填写功能名称】
-     * @return 【请填写功能名称】集合
+     * @param contractFile
+     * @return
      */
     public List<ContractFile> selectContractFileList(ContractFile contractFile);
 
     /**
-     * 新增【请填写功能名称】
+     * 新增
      * 
-     * @param contractFile 【请填写功能名称】
-     * @return 结果
+     * @param contractFile
+     * @return
      */
     public int insertContractFile(ContractFile contractFile);
 
     /**
      * 修改【请填写功能名称】
      * 
-     * @param contractFile 【请填写功能名称】
-     * @return 结果
+     * @param contractFile
+     * @return
      */
     public int updateContractFile(ContractFile contractFile);
 
     /**
-     * 删除【请填写功能名称】
+     * 删除
      * 
-     * @param id 【请填写功能名称】ID
-     * @return 结果
+     * @param id
+     * @return
      */
     public int deleteContractFileById(Long id);
 
     /**
-     * 批量删除【请填写功能名称】
+     *
      * 
-     * @param ids 需要删除的数据ID
-     * @return 结果
+     * @param ids
+     * @return
      */
     public int deleteContractFileByIds(Long[] ids);
 }

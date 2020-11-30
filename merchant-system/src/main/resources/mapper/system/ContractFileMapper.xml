@@ -6,6 +6,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <resultMap type="ContractFile" id="ContractFileResult">
         <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
         <result property="contractNum"    column="contract_num"    />
         <result property="file"    column="file"    />
         <result property="image"    column="image"    />
@@ -17,7 +18,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectContractFileVo">
-        select id, contract_num, file, image, create_by, description, input_date, update_date, remark from biz_contract_file
+        select id, name, contract_num, file, image, create_by, description, input_date, update_date, remark from biz_contract_file
     </sql>
 
     <select id="selectContractFileList" parameterType="ContractFile" resultMap="ContractFileResult">

@@ -25,72 +25,36 @@ public class ContractFileServiceImpl implements IContractFileService
     @Autowired
     private ContractFileMapper contractFileMapper;
 
-    /**
-     * 查询【请填写功能名称】
-     * 
-     * @param id 【请填写功能名称】ID
-     * @return 【请填写功能名称】
-     */
     @Override
     public ContractFile selectContractFileById(Long id)
     {
         return contractFileMapper.selectContractFileById(id);
     }
 
-    /**
-     * 查询【请填写功能名称】列表
-     * 
-     * @param contractFile 【请填写功能名称】
-     * @return 【请填写功能名称】
-     */
     @Override
     public List<ContractFile> selectContractFileList(ContractFile contractFile)
     {
         return contractFileMapper.selectContractFileList(contractFile);
     }
 
-    /**
-     * 新增【请填写功能名称】
-     * 
-     * @param contractFile 【请填写功能名称】
-     * @return 结果
-     */
     @Override
     public int insertContractFile(ContractFile contractFile)
     {
         return contractFileMapper.insertContractFile(contractFile);
     }
 
-    /**
-     * 修改【请填写功能名称】
-     * 
-     * @param contractFile 【请填写功能名称】
-     * @return 结果
-     */
     @Override
     public int updateContractFile(ContractFile contractFile)
     {
         return contractFileMapper.updateContractFile(contractFile);
     }
 
-    /**
-     * 批量删除【请填写功能名称】
-     * 
-     * @param ids 需要删除的【请填写功能名称】ID
-     * @return 结果
-     */
     @Override
     public int deleteContractFileByIds(Long[] ids)
     {
         return contractFileMapper.deleteContractFileByIds(ids);
     }
 
-    /**
-     * 删除【请填写功能名称】信息
-     * 
-     * @param id 【请填写功能名称】ID
-     * @return 结果
-     */
     @Override
     public int deleteContractFileById(Long id)
     {
