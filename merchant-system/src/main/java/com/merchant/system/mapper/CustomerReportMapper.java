@@ -1,5 +1,6 @@
 package com.merchant.system.mapper;
 
+import com.merchant.system.domain.bo.CustomerReportBO;
 import com.merchant.system.domain.vo.CustomerReportVO;
 
 import java.util.List;
@@ -12,6 +13,6 @@ import java.util.List;
  */
 public interface CustomerReportMapper {
 
-    List<CustomerReportVO> selectCustomerReportList();
+    List<CustomerReportVO> selectCustomerReportList(CustomerReportBO customerReportBO);
 
 }

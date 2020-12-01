@@ -1,12 +1,13 @@
 package com.merchant.web.controller.system;
 
-import com.merchant.common.core.domain.AjaxResult;
+import com.merchant.common.core.controller.BaseController;
+import com.merchant.common.core.page.TableDataInfo;
+import com.merchant.system.domain.bo.CustomerReportBO;
 import com.merchant.system.domain.vo.CustomerReportVO;
-import com.merchant.system.mapper.CustomerReportMapper;
 import com.merchant.system.service.ICustomerReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -18,15 +19,16 @@ import java.util.List;
  * @Created by hanke
  */
 @RestController("customerReport")
-public class CustomerReportController {
+public class CustomerReportController extends BaseController {
 
     @Autowired
     private ICustomerReportService customerReportService;
 
     @GetMapping("list")
-    public AjaxResult selectCustomerReportList() {
-        List<CustomerReportVO> customerReportVOList = customerReportService.selectCustomerReportList();
-        return AjaxResult.success(customerReportVOList);
+    public TableDataInfo selectCustomerReportList(@RequestBody CustomerReportBO customerReportBO) {
+        startPage();
+        List<CustomerReportVO> customerReportVOList = customerReportService.selectCustomerReportList(customerReportBO);
+        return getDataTable(customerReportVOList);
     }
 
 }

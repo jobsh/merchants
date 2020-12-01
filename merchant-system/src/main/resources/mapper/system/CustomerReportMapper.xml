@@ -5,34 +5,35 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="com.merchant.system.mapper.CustomerReportMapper">
 
     <resultMap type="com.merchant.system.domain.vo.CustomerReportVO" id="CustomerReportVO" autoMapping="true">
-        <result column="user_name" property="userName"></result>
-        <result column="phonenumber" property="phonenumber"></result>
-        <result column="dept_name" property="deptName"></result>
-        <result column="company_name" property="companyName"></result>
-        <result column="post_name" property="postName"></result>
-        <result column="xiansuo_num" property="xiansuoNum"></result>
-        <result column="customer_num" property="customerNum"></result>
-        <result column="gj_num" property="gjNum"></result>
-        <result column="dandian_contract_num" property="dandianContractNum"></result>
-        <result column="quyu_contract_num" property="quyuContractNum"></result>
-        <result column="quyu_dianmian_num" property="quyuDianmianNum"></result>
-        <result column="dianmian_num" property="dianmianNum"></result>
+        <result column="user_name" property="userName" />
+        <result column="phonenumber" property="phonenumber" />
+        <result column="dept_name" property="deptName" />
+        <result column="company_name" property="companyName" />
+        <result column="post_name" property="postName" />
+        <result column="xiansuo_num" property="xiansuoNum" />
+        <result column="customer_num" property="customerNum" />
+        <result column="gj_num" property="gjNum" />
+        <result column="dandian_contract_num" property="dandianContractNum"/>
+        <result column="quyu_contract_num" property="quyuContractNum" />
+        <result column="quyu_dianmian_num" property="quyuDianmianNum" />
+        <result column="dianmian_num" property="dianmianNum" />
     </resultMap>
 
-    <select id="selectCustomerReportList" resultMap="CustomerReportVO" parameterType="Integer">
+    <select id="selectCustomerReportList" resultMap="CustomerReportVO" parameterType="com.merchant.system.domain.bo.CustomerReportBO">
         select
             u.user_name,
             u.phonenumber,
+            d.id,
             d.dept_name,
             cm.`name` company_name,
             p.post_name,
-            IFNULL(xiansuo_num,0) xiansuo_num,
-            IFNULL(customer_num,0) customer_num,
-            IFNULL(gj_num,0) gj_num,
-            IFNULL(dandian_contract_num,0) dandian_contract_num,
-            IFNULL(quyu_contract_num,0) quyu_contract_num,
-            IFNULL(quyu_dianmian_num,0) quyu_dianmian_num,
-            IFNULL(dandian_contract_num + quyu_dianmian_num,0) as dianmian_num
+            IFNULL(xiansuo_num, 0) xiansuo_num,
+            IFNULL(customer_num, 0) customer_num,
+            IFNULL(gj_num, 0) gj_num,
+            IFNULL(dandian_contract_num, 0) dandian_contract_num,
+            IFNULL(quyu_contract_num, 0) quyu_contract_num,
+            IFNULL(quyu_dianmian_num, 0) quyu_dianmian_num,
+            IFNULL(dandian_contract_num + quyu_dianmian_num, 0) as dianmian_num
         from
             sys_user u
         left join
@@ -61,6 +62,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             biz_customer c
             WHERE
             c.resource &lt;= '6'
+            <if test="inputDate !=  null  and inputDate != ''">and c.input_date &gt; #{inputDate}</if>
             GROUP BY
             uid
             ) as xiansuo_num
@@ -73,6 +75,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             COUNT(gj.id) as gj_num
             from
             biz_genjin gj
+            where 1=1
+            <if test="inputDate !=  null  and inputDate != ''">and gj.genjin_date &gt; #{inputDate}</if>
             GROUP BY
             gj.sys_user_id
             ) as gj_num
@@ -88,6 +92,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             -- 	COUNT(contract.id) dandian_contract_num
             FROM
             biz_contract contract
+            where 1=1
+            <if test="inputDate !=  null  and inputDate != ''">and contract.sign_date &gt; #{inputDate}</if>
             GROUP BY
             contract.manager_id
             ) contract_num
@@ -97,17 +103,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         LEFT JOIN
             (
             SELECT
-            dianmian.sys_user_id uid,
+                dianmian.sys_user_id uid,
             COUNT(dianmian.id) quyu_dianmian_num
             FROM
-            biz_dianmian dianmian
+                biz_dianmian dianmian
             WHERE
-            dianmian.type = 1 -- 区域加盟
+                dianmian.type = 1 -- 区域加盟
+                <if test="inputDate !=  null  and inputDate != ''">and dianmian.open_date &gt; #{inputDate}</if>
             GROUP BY
-            dianmian.sys_user_id
+                dianmian.sys_user_id
             ) dianmian
         ON
             dianmian.uid = u.id
+        <where>
+            <if test="deptId !=  null">and d.id = #{deptId}</if>
+            <if test="userId !=  null">and u.id = #{userId}</if>
+        </where>
     </select>
 
 
