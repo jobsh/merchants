@@ -22,6 +22,8 @@ public class  ContractFee extends BaseEntity
     /** 合同费用表id */
     private Long id;
 
+    private Integer receiverId;
+
     /** 费用编号 */
     @Excel(name = "费用编号")
     private String num;

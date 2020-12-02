@@ -1,5 +1,7 @@
 package com.merchant.system.domain.vo;
 
+import com.fasterxml.jackson.databind.ser.Serializers;
+import com.merchant.common.core.domain.BaseEntity;
 import lombok.Data;
 
 /**
@@ -9,7 +11,7 @@ import lombok.Data;
  * @Created by hanke
  */
 @Data
-public class CustomerReportVO {
+public class CustomerReportVO extends BaseEntity {
 
     private String userName;
     private String phonenumber;

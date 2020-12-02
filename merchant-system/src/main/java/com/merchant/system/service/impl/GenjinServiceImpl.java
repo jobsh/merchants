@@ -64,6 +64,12 @@ public class GenjinServiceImpl implements IGenjinService {
         // 查询出客户信息
         Customer customer = customerService.selectCustomerById(genjinBO.getCustomerId());
         CustomerBO customerBO = new CustomerBO();
+        if (customer == null) {
+            customer = customerService.selectXiansuoById(genjinBO.getCustomerId());
+        }
+        if (customer == null) {
+            return -1;
+        }
         if (customer != null) {
             BeanUtils.copyProperties(customer, customerBO);
         }

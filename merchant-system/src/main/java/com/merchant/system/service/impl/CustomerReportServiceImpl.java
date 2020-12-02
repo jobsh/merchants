@@ -1,6 +1,7 @@
 package com.merchant.system.service.impl;
 
 import com.merchant.system.domain.bo.CustomerReportBO;
+import com.merchant.system.domain.vo.CustomerFeeReportVO;
 import com.merchant.system.domain.vo.CustomerReportVO;
 import com.merchant.system.mapper.CustomerReportMapper;
 import com.merchant.system.service.ICustomerReportService;
@@ -24,5 +25,10 @@ public class CustomerReportServiceImpl implements ICustomerReportService {
     @Override
     public List<CustomerReportVO> selectCustomerReportList(CustomerReportBO customerReportBO) {
         return customerReportMapper.selectCustomerReportList(customerReportBO);
+    }
+
+    @Override
+    public List<CustomerFeeReportVO> selectCustomerFeeReportList(CustomerReportBO customerReportBO) {
+        return customerReportMapper.selectCustomerFeeReportList(customerReportBO);
     }
 }

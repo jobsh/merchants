@@ -84,15 +84,20 @@ public class GenjinController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody GenjinBO genjinBO)
     {
+        int res = 0;
         try {
-            genjinService.insertGenjin(genjinBO);
+             genjinService.insertGenjin(genjinBO);
         } catch (IOException e) {
             e.printStackTrace();
+        }
+        if (res == -1) {
+            return AjaxResult.error("客户或线索不存在");
         }
         return AjaxResult.success("新增跟进成功");
     }
 
     /**
+     *
      * 上传跟进图片
      */
     @PostMapping("/genjinImg")

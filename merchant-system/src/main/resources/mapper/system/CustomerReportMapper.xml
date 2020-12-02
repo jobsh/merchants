@@ -4,7 +4,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.merchant.system.mapper.CustomerReportMapper">
 
-    <resultMap type="com.merchant.system.domain.vo.CustomerReportVO" id="CustomerReportVO" autoMapping="true">
+    <resultMap type="com.merchant.system.domain.vo.CustomerReportVO" id="CustomerReportVO">
         <result column="user_name" property="userName" />
         <result column="phonenumber" property="phonenumber" />
         <result column="dept_name" property="deptName" />
@@ -17,6 +17,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result column="quyu_contract_num" property="quyuContractNum" />
         <result column="quyu_dianmian_num" property="quyuDianmianNum" />
         <result column="dianmian_num" property="dianmianNum" />
+    </resultMap>
+
+    <resultMap type="com.merchant.system.domain.vo.CustomerFeeReportVO" id="CustomerFeeReportVO">
+        <result column="user_name" property="userName" />
+        <result column="phonenumber" property="phonenumber" />
+        <result column="dept_name" property="deptName" />
+        <result column="company_name" property="companyName" />
+        <result column="post_name" property="postName" />
+        <result column="lvyue_fee" property="lvyueFee" />
+        <result column="jingying_manager_fee" property="jingyingManagerFee" />
+        <result column="yunying_manager_fee" property="yunyingManagerFee" />
+        <result column="system_use_fee" property="systemUseFee" />
+        <result column="system_maintenance_fee" property="systemMaintenanceFee" />
+        <result column="daiban_fee" property="daibanFee" />
+        <result column="guohuo_fee" property="guohuoFee" />
+        <result column="total_fee" property="totalFee" />
     </resultMap>
 
     <select id="selectCustomerReportList" resultMap="CustomerReportVO" parameterType="com.merchant.system.domain.bo.CustomerReportBO">
@@ -115,6 +131,69 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             ) dianmian
         ON
             dianmian.uid = u.id
+        <where>
+            <if test="deptId !=  null">and d.id = #{deptId}</if>
+            <if test="userId !=  null">and u.id = #{userId}</if>
+        </where>
+    </select>
+
+
+
+    <select id="selectCustomerFeeReportList" resultMap="CustomerFeeReportVO" parameterType="CustomerReportBO">
+        select
+            u.user_name,
+            u.phonenumber,
+            d.id,
+            d.dept_name,
+            cm.`name` company_name,
+            p.post_name,
+            lvyue_fee,
+            jingying_manager_fee,
+            yunying_manager_fee,
+            system_use_fee,
+            system_maintenance_fee,
+            daiban_fee,
+            guohuo_fee,
+            lvyue_fee + jingying_manager_fee + yunying_manager_fee + system_use_fee + system_maintenance_fee + daiban_fee + guohuo_fee as total_fee
+        from
+            sys_user u
+        left join
+            sys_dept d
+        ON
+            u.dept_id = d.id
+        left JOIN
+            sys_company cm
+        ON
+            cm.id = u.company_id
+        left JOIN
+            sys_user_post up
+        ON
+            up.user_id = u.id
+        left JOIN
+            sys_post p
+        ON
+            p.post_id = up.post_id
+        left JOIN
+        (
+            select
+                fee.receiver_id uid,
+                SUM(case when fee.type = '履约保证金' then fee.amount else 0 end) lvyue_fee,
+                SUM(case when fee.type = '经营管理费' then fee.amount else 0 end) jingying_manager_fee,
+                SUM(case when fee.type = '运营管理费' then fee.amount else 0 end) yunying_manager_fee,
+                SUM(case when fee.type = '系统使用费' then fee.amount else 0 end) system_use_fee,
+                SUM(case when fee.type = '系统维护费' then fee.amount else 0 end) system_maintenance_fee,
+                SUM(case when fee.type = '代办费' then fee.amount else 0 end) daiban_fee,
+                SUM(case when fee.type = '过户费' then fee.amount else 0 end) guohuo_fee
+            FROM
+                biz_contract_fee fee
+            <where>
+                <if test="inputDate !=  null  and inputDate != ''">and fee.shoukuan_date &gt; #{inputDate}</if>
+            </where>
+        GROUP BY
+                fee.receiver_id
+        ) fee
+        ON fee.uid = u.id
+        -- 查询条件
         <where>
             <if test="deptId !=  null">and d.id = #{deptId}</if>
             <if test="userId !=  null">and u.id = #{userId}</if>
