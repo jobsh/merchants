@@ -200,5 +200,67 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </where>
     </select>
 
+    <select id="">
+        select
+            u.id,
+            u.user_name,
+            u.phonenumber,
+            dept_id,
+          dept_name,
+            cm.`name` company_name,
+            p.post_name,
+          contract.contract_num,
+            jingying_manager_fee_yingshou,
+        jingying_manager_fee_yishou
+
+        from
+            sys_user u
+        left join
+            sys_dept d
+        ON
+            u.dept_id = d.id
+        left JOIN
+            sys_company cm
+        ON
+            cm.id = u.company_id
+        left JOIN
+            sys_user_post up
+        ON
+            up.user_id = u.id
+        left JOIN
+            sys_post p
+        ON
+            p.post_id = up.post_id
+        -- 合同
+        LEFT JOIN
+        (
+        select
+        contract.manager_id,
+        contract.num contract_num,
+        contract.fee -> '$.jingyingManagerFee.total' as 	jingying_manager_fee_yingshou
+
+        from
+        biz_contract contract
+        ) contract
+        ON
+        contract.manager_id = u.id
+        -- contract_fee
+        left JOIN
+        (
+            select
+                fee.contract_num contract_num,
+                SUM(case when fee.type = '经营管理费' then fee.amount else 0 end) jingying_manager_fee_yishou
+            FROM
+                biz_contract_fee fee
+            GROUP BY
+                fee.contract_num
+        ) fee
+        ON fee.contract_num = contract.contract_num
+        -- 查询条件
+        where
+            d.id = 103 AND
+            u.id = 1
+    </select>
+
 
 </mapper>
