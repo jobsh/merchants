@@ -1,12 +1,7 @@
 package com.merchant.system.service;
 
-import com.merchant.common.bean.CityBean;
-import com.merchant.common.bean.DistrictBean;
 import com.merchant.common.bean.ProvinceBean;
-import org.springframework.stereotype.Service;
 
-import javax.jws.WebParam;
-import javax.jws.WebResult;
 import java.util.List;
 import java.util.Map;
 

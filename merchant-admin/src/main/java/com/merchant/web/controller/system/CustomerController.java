@@ -60,7 +60,7 @@ public class CustomerController extends BaseController {
     @ApiOperation(value = "查寻线索", notes = "查寻线索", httpMethod = "GET")
     @PreAuthorize("@ss.hasPermi('system:customer:list')")
     @PostMapping("/xiansuo/list")
-    public TableDataInfo xiansuoList(CustomerBO customerBO) {
+    public TableDataInfo xiansuoList(@RequestBody(required = false) CustomerBO customerBO) {
         startPage();
         List<Customer> list = customerService.selectXiansuoList(customerBO);
         return getDataTable(list);
