@@ -42,6 +42,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="imgs"    column="imgs"    />
         <result property="create_by"    column="createBy"    />
         <result property="remark"    column="remark"    />
+        <result property="deptName"    column="dept_name"    />
     </resultMap>
 
     <sql id="selectContractVo">
@@ -49,7 +50,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             biz_contract.id, biz_contract.dept_id, biz_contract.pid, biz_contract.root_num, biz_contract.num, customer_name, biz_contract.customer_id, biz_contract.customer_num, biz_contract.customer_phone, biz_contract.type, biz_contract.produce,
             biz_contract.dianmian_name, biz_contract.dianmian_num, biz_contract.dianmian_province, biz_contract.dianmian_city, biz_contract.dianmian_district, biz_contract.dianmian_address, biz_contract.dianmian_longitude, biz_contract.dianmian_latitude,
             biz_contract.guarantee, biz_contract.fee, biz_contract.operation, biz_contract.manager_id, biz_contract.manager, biz_contract.sign_date, biz_contract.sign_user_id,
-            biz_contract.sign_user, biz_contract.begin_date, biz_contract.end_date,biz_contract.terminate_date, biz_contract.status, biz_contract.check_status, biz_contract.create_by, biz_contract.remark, biz_contract.file, biz_contract.terminate_file, biz_contract.imgs
+            biz_contract.sign_user, biz_contract.begin_date, biz_contract.end_date,biz_contract.terminate_date, biz_contract.status, biz_contract.check_status, biz_contract.create_by, biz_contract.remark, biz_contract.file, biz_contract.terminate_file, biz_contract.imgs,
+            d.dept_name
         from
             biz_contract
         left join
@@ -65,7 +67,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectContractList" parameterType="ContractBO" resultMap="ContractResult">
         <include refid="selectContractVo"/>
         <where>  
-            <if test="num != null  and num != ''"> and biz_contract.num = #{num}</if>
+            <if test="num != null  and num != ''"> and biz_contract.num  like concat('%', #{num}, '%')</if>
             <if test="customerName != null  and customerName != ''"> and biz_contract.customer_name like concat('%', #{customerName}, '%')</if>
             <if test="customerPhone != null  and customerPhone != ''"> and biz_contract.customer_phone = #{customerPhone}</if>
             <if test="type != null  and type != ''"> and biz_contract.type = #{type}</if>
@@ -81,8 +83,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="endDateEnd != null  and endDateEnd != ''">and biz_contract.date_format(end_date,'%y%m%d') &lt;= date_format(#{endDateEnd},'%y%m%d')</if>
             <if test="status != null  and status != ''"> and biz_contract.status = #{status}</if>
             <if test="keywords != null and keywords != ''">and (
-                instr(biz_contract.customerName, #{keywords}) +
-                instr(biz_contract.customerPhone, #{keywords}) +
+                instr(biz_contract.customer_name, #{keywords}) +
+                instr(biz_contract.customer_phone, #{keywords}) +
                 instr(biz_contract.num, #{keywords})
                 ) > 0</if>
             <!-- 数据范围过滤 -->

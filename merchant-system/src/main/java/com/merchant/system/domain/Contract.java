@@ -153,4 +153,7 @@ public class Contract extends BaseEntity
 
     /** 合同图片 */
     private String imgs;
+
+    /** 部门名 */
+    private String deptName;
 }

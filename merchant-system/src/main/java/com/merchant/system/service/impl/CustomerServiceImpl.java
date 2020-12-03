@@ -19,16 +19,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.Date;
 import java.util.List;
+
 /**
  * 我的客户Service业务层处理
- * 
+ *
  * @author hanke
  * @date 2020-10-28
  */
 @Slf4j
 @Service
-public class CustomerServiceImpl implements ICustomerService 
-{
+public class CustomerServiceImpl implements ICustomerService {
     @Autowired
     private CustomerMapper customerMapper;
 
@@ -37,35 +37,33 @@ public class CustomerServiceImpl implements ICustomerService
 
     @Autowired
     private SysUserMapper sysUserMapper;
+
     /**
      * 查询我的客户
-     * 
+     *
      * @param id 我的客户ID
      * @return 我的客户
      */
     @Override
-    public Customer selectCustomerById(Integer id)
-    {
+    public Customer selectCustomerById(Integer id) {
         return customerMapper.selectCustomerById(id);
     }
 
     @Override
-    public Customer selectXiansuoById(Integer id)
-    {
+    public Customer selectXiansuoById(Integer id) {
         return customerMapper.selectXiansuoById(id);
     }
 
 
     /**
      * 查询我的客户列表
-     * 
+     *
      * @param customerBO 我的客户
      * @return 我的客户
      */
     @Override
     @DataScope(deptAlias = "d", userAlias = "u")
-    public List<Customer> selectCustomerList(@RequestBody CustomerBO customerBO)
-    {
+    public List<Customer> selectCustomerList(@RequestBody CustomerBO customerBO) {
         customerBO.setStatus(CustomerStatus.OK.getCode());
         return customerMapper.selectCustomerList(customerBO);
     }
@@ -86,13 +84,12 @@ public class CustomerServiceImpl implements ICustomerService
 
     /**
      * 新增我的客户
-     * 
+     *
      * @param customer 我的客户
      * @return 结果
      */
     @Override
-    public int insertCustomer(Customer customer)
-    {
+    public int insertCustomer(Customer customer) {
         String customerNum = sid.nextShort();
         customer.setNum(customerNum);
 
@@ -101,13 +98,12 @@ public class CustomerServiceImpl implements ICustomerService
 
     /**
      * 修改我的客户
-     * 
+     *
      * @param customerBO 我的客户
      * @return 结果
      */
     @Override
-    public int updateCustomer(CustomerBO customerBO)
-    {
+    public int updateCustomer(CustomerBO customerBO) {
         return customerMapper.updateCustomer(customerBO);
     }
 
@@ -124,32 +120,29 @@ public class CustomerServiceImpl implements ICustomerService
      * @return 结果
      */
     @Override
-    public int updateCustomerByIds(CustomerBO customerBO)
-    {
+    public int updateCustomerByIds(CustomerBO customerBO) {
         return customerMapper.updateCustomerByIds(customerBO);
     }
 
     /**
      * 批量删除我的客户
-     * 
+     *
      * @param ids 需要删除的我的客户ID
      * @return 结果
      */
     @Override
-    public int deleteCustomerByIds(Integer[] ids)
-    {
+    public int deleteCustomerByIds(Integer[] ids) {
         return customerMapper.deleteCustomerByIds(ids);
     }
 
     /**
      * 删除我的客户信息
-     * 
+     *
      * @param id 我的客户ID
      * @return 结果
      */
     @Override
-    public int deleteCustomerById(Integer id)
-    {
+    public int deleteCustomerById(Integer id) {
         return customerMapper.deleteCustomerById(id);
     }
 
@@ -157,18 +150,17 @@ public class CustomerServiceImpl implements ICustomerService
     public int transferCustomer(CustomerBO customerBO) {
         // 根据负责人phone 查询出负责人id和负责人name
         SysUser sysUser = new SysUser();
-        sysUser.setPhonenumber(customerBO.getManagerPhone());
+//        sysUser.setPhonenumber(customerBO.getManagerPhone());
         sysUser.setId(customerBO.getUserId().longValue());
         // 获取要转移给的人的User信息
-        List<SysUser> sysUsers = sysUserMapper.selectUserList(sysUser);
+        sysUser = sysUserMapper.selectUserById(customerBO.getUserId().longValue());
         List<Customer> customers = customerMapper.selectCustomerByIds(customerBO);
-        if (sysUsers.isEmpty()){
+        if (sysUser == null) {
             return -1;
         }
         if (customers.size() == 0 || customers == null || customers.isEmpty()) {
             return -2;
         }
-        sysUser = sysUsers.get(0);
         customerBO.setUserId(sysUser.getId().intValue());
         customerBO.setUsername(sysUser.getUserName());
         customerBO.setDeptId(sysUser.getDeptId().intValue());
@@ -194,55 +186,42 @@ public class CustomerServiceImpl implements ICustomerService
 
     @Override
     public String importCustomer(List<Customer> customerList, Boolean isUpdateSupport, String operName) {
-        if (StringUtils.isNull(customerList) || customerList.size() == 0)
-        {
+        if (StringUtils.isNull(customerList) || customerList.size() == 0) {
             throw new CustomException("导入用户数据不能为空！");
         }
         int successNum = 0;
         int failureNum = 0;
         StringBuilder successMsg = new StringBuilder();
         StringBuilder failureMsg = new StringBuilder();
-        for (Customer customer : customerList)
-        {
-            try
-            {
+        for (Customer customer : customerList) {
+            try {
                 // 验证是否存在这个用户
                 int res = customerMapper.countCustomerByPhone(customer.getPhone());
-                if (res == 0)
-                {
+                if (res == 0) {
                     customer.setCreateBy(operName);
                     this.insertCustomer(customer);
                     successNum++;
                     successMsg.append("<br/>" + successNum + "、用户： " + customer.getName() + " 导入成功");
-                }
-                else if (isUpdateSupport)
-                {
+                } else if (isUpdateSupport) {
                     customer.setUpdateBy(operName);
-                    this.updateCustomer((CustomerBO)customer);
+                    this.updateCustomer((CustomerBO) customer);
                     successNum++;
                     successMsg.append("<br/>" + successNum + "、账号 " + customer.getName() + " 更新成功");
-                }
-                else
-                {
+                } else {
                     failureNum++;
                     failureMsg.append("<br/>" + failureNum + "、账号 " + customer.getName() + " 已存在");
                 }
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 failureNum++;
                 String msg = "<br/>" + failureNum + "、账号 " + customer.getName() + " 导入失败：";
                 failureMsg.append(msg + e.getMessage());
                 log.error(msg, e);
             }
         }
-        if (failureNum > 0)
-        {
+        if (failureNum > 0) {
             failureMsg.insert(0, "很抱歉，导入失败！共 " + failureNum + " 条数据格式不正确，错误如下：");
             throw new CustomException(failureMsg.toString());
-        }
-        else
-        {
+        } else {
             successMsg.insert(0, "恭喜您，数据已全部导入成功！共 " + successNum + " 条，数据如下：");
         }
         return successMsg.toString();

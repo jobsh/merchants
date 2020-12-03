@@ -26,13 +26,14 @@
         <result property="status" column="status"/>
         <result property="inputDate" column="input_date"/>
         <result property="genjinDate" column="genjin_date"/>
+        <result property="genjinStatus" column="genjin_status"/>
         <result property="updateDate" column="update_date"/>
     </resultMap>
 
     <sql id="selectCustomerVo">
         select biz_customer.id, biz_customer.num, biz_customer.name, biz_customer.phone, biz_customer.level, biz_customer.customer_needs, biz_customer.company_name,
         biz_customer.province, biz_customer.dianmian_address, biz_customer.city, biz_customer.district, biz_customer.resource, biz_customer.user_id, biz_customer.username, biz_customer.luru_name, biz_customer.experience, biz_customer.remark, biz_customer.status, biz_customer.input_date, biz_customer.update_date,
-        biz_customer.genjin_date, biz_customer.dept_id
+        biz_customer.genjin_date, biz_customer.genjin_status, biz_customer.dept_id
         from biz_customer
         left join sys_dept d on biz_customer.dept_id = d.id
         left join sys_user u on biz_customer.user_id = u.id
@@ -57,6 +58,7 @@
             <if test="inputDateStart != null  and inputDateStart != ''">and date_format(biz_customer.input_date,'%y%m%d') &gt;= date_format(#{inputDateStart},'%y%m%d')</if>
             <if test="inputDateEnd != null and inputDateEnd != ''">and date_format(biz_customer.input_date,'%y%m%d')  &lt;= date_format(#{inputDateEnd},'%y%m%d')</if>
             <if test="status != null and status != ''">and biz_customer.status = #{status}</if>
+            <if test="genjinStatus != null and genjinStatus != ''">and biz_customer.genjin_status = #{genjinStatus}</if>
             <if test="keywords != null and keywords != ''">and (
                 instr(biz_customer.company_name, #{keywords}) +
                 instr(biz_customer.name, #{keywords}) +
@@ -124,6 +126,7 @@
             <if test="experience != null and experience != ''">experience,</if>
             <if test="remark != null and remark != ''">remark,</if>
             <if test="status != null and status != ''">status,</if>
+            <if test="genjinStatus != null and genjinStatus != ''">genjin_status,</if>
             input_date,
             update_date,
             genjin_date,
@@ -147,6 +150,8 @@
             <if test="experience != null and experience != ''">#{experience},</if>
             <if test="remark != null and remark != ''">#{remark},</if>
             <if test="status != null and status != ''">#{status},</if>
+            <if test="genjinStatus != null and genjinStatus != ''">#{genjinStatus},</if>
+
             now(),now(),now()
         </trim>
     </insert>
@@ -172,6 +177,8 @@
             <if test="remark != null and remark != ''">remark = #{remark},</if>
             <if test="status != null and status != ''">status = #{status},</if>
             <if test="genjinDate != null">genjin_date = #{genjinDate},</if>
+            <if test="genjinStatus != null and genjinStatus != ''">genjin_status = #{genjinStatus},</if>
+
             update_date = now()
         </trim>
         where id = #{id}
@@ -197,12 +204,14 @@
             <if test="experience != null and experience != ''">experience = #{experience},</if>
             <if test="remark != null and remark != ''">remark = #{remark},</if>
             <if test="status != null and status != ''">status = #{status},</if>
+            <if test="genjinStatus != null and genjinStatus != ''">genjin_status = #{genjinStatus},</if>
             update_date = now()
         </trim>
-        where id in
+        where id = #{id}
+        <!--in
         <foreach item="id" collection="ids" open="(" separator="," close=")">
             #{id}
-        </foreach>
+        </foreach>-->
     </update>
 
     <update id="autoDegradeToXianSuo" parameterType="Integer">
