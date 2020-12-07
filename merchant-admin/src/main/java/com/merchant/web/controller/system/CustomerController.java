@@ -49,7 +49,6 @@ public class CustomerController extends BaseController {
     @PostMapping("/customer/list")
     public TableDataInfo customerList(@RequestBody(required = false) CustomerBO customerBO) {
         startPage();
-        System.out.println("customerBO : " + customerBO) ;
         List<Customer> list = customerService.selectCustomerList(customerBO);
         return getDataTable(list);
     }

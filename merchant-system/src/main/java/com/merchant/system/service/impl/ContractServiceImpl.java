@@ -5,6 +5,7 @@ import com.merchant.common.annotation.ContractLog;
 import com.merchant.common.annotation.DataScope;
 import com.merchant.common.annotation.Excel;
 import com.merchant.common.config.MerchantConfig;
+import com.merchant.common.core.domain.AjaxResult;
 import com.merchant.common.core.domain.entity.SysUser;
 import com.merchant.common.core.domain.model.LoginUser;
 import com.merchant.common.enums.ContractOperType;
@@ -110,9 +111,10 @@ public class ContractServiceImpl implements IContractService
     @Override
     public int insertContract(ContractBO contractBO)
     {
-        if (contractBO.getNum() == null) {
+        if (contractBO.getNum() == null){
             contractBO.setNum(sid.nextShort());
         }
+
         int res = contractMapper.countContractByNum(contractBO.getNum());
         if (res > 0) {
             throw new BaseException("已存在该合同编号");

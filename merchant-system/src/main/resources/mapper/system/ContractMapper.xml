@@ -55,18 +55,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         from
             biz_contract
         left join
-            sys_dept d
-        on
-            biz_contract.dept_id = d.id
-        left join
             sys_user u
         on
             biz_contract.manager_id = u.id
+        left join
+            sys_dept d
+        on
+            u.dept_id = d.id
     </sql>
 
     <select id="selectContractList" parameterType="ContractBO" resultMap="ContractResult">
         <include refid="selectContractVo"/>
-        <where>  
+        <where>
+            <if test="deptId != null and deptId != 0">
+                AND (u.dept_id = #{deptId} OR u.dept_id IN ( SELECT t.id FROM sys_dept t WHERE find_in_set(#{deptId}, ancestors) ))
+            </if>
             <if test="num != null  and num != ''"> and biz_contract.num  like concat('%', #{num}, '%')</if>
             <if test="customerName != null  and customerName != ''"> and biz_contract.customer_name like concat('%', #{customerName}, '%')</if>
             <if test="customerPhone != null  and customerPhone != ''"> and biz_contract.customer_phone = #{customerPhone}</if>

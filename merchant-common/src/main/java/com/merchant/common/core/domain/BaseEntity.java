@@ -6,13 +6,15 @@ import java.util.HashMap;
 import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.merchant.common.core.page.PageDomain;
+
 
 /**
  * Entity基类
- * 
+ *
  * @author hanke
  */
-public class BaseEntity implements Serializable
+public class BaseEntity extends PageDomain implements Serializable
 {
     private static final long serialVersionUID = 1L;
 

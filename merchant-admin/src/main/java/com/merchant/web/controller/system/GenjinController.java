@@ -1,37 +1,31 @@
 package com.merchant.web.controller.system;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.merchant.common.annotation.Log;
 import com.merchant.common.config.MerchantConfig;
-import com.merchant.common.core.domain.entity.SysUser;
+import com.merchant.common.core.controller.BaseController;
+import com.merchant.common.core.domain.AjaxResult;
 import com.merchant.common.core.domain.model.LoginUser;
+import com.merchant.common.core.page.TableDataInfo;
+import com.merchant.common.enums.BusinessType;
 import com.merchant.common.utils.ServletUtils;
+import com.merchant.common.utils.StringUtils;
 import com.merchant.common.utils.file.FileUploadUtils;
 import com.merchant.framework.web.service.TokenService;
+import com.merchant.system.domain.Genjin;
 import com.merchant.system.domain.bo.GenjinBO;
+import com.merchant.system.service.IGenjinService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import io.swagger.models.auth.In;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import com.merchant.common.annotation.Log;
-import com.merchant.common.core.controller.BaseController;
-import com.merchant.common.core.domain.AjaxResult;
-import com.merchant.common.enums.BusinessType;
-import com.merchant.system.domain.Genjin;
-import com.merchant.system.service.IGenjinService;
-import com.merchant.common.utils.poi.ExcelUtil;
-import com.merchant.common.core.page.TableDataInfo;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 客户跟进Controller
@@ -84,7 +78,12 @@ public class GenjinController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody GenjinBO genjinBO)
     {
+
+        if (StringUtils.isBlank(genjinBO.getMethod())) return AjaxResult.error("请选择跟进方式");
+        if (StringUtils.isBlank(genjinBO.getStatus())) return AjaxResult.error("请选择跟进状态");
+
         int res = 0;
+
         try {
              genjinService.insertGenjin(genjinBO);
         } catch (IOException e) {

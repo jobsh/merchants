@@ -24,6 +24,9 @@ public class CustomerBO extends Customer {
     /** 前端传来的客户手机号 */
     @ApiModelProperty(value = "客户手机号，多个手机号用都号分隔", name = "phones")
     private String[] phones;
+    /** 部门id */
+    @ApiModelProperty(value = "负责人部门id", name = "deptId")
+    private Integer deptId;
     /** 前端传来的负责人手机号 */
     @ApiModelProperty(value = "经纪人手机号，多个手机号用逗号分隔", name = "managerPhone")
     private String managerPhone;
