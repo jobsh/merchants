@@ -76,14 +76,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="type != null  and type != ''"> and biz_contract.type = #{type}</if>
             <if test="produce != null  and produce != ''"> and biz_contract.produce = #{produce}</if>
             <if test="operation != null  and operation != ''"> and biz_contract.operation = #{operation}</if>
-            <if test="signDateStart != null  and signDateStart != ''">and biz_contract.date_format(sign_date,'%y%m%d') &gt;= date_format(#{signDateStart},'%y%m%d')</if>
-            <if test="signDateEnd != null  and signDateEnd != ''">and biz_contract.date_format(sign_date,'%y%m%d') &lt;= date_format(#{signDateEnd},'%y%m%d')</if>
-            <if test="beginDateStart != null  and beginDateStart != ''">and biz_contract.date_format(begin_date,'%y%m%d') &gt;= date_format(#{beginDateStart},'%y%m%d')</if>
-            <if test="beginDateEnd != null  and beginDateEnd != ''">and biz_contract.date_format(begin_date,'%y%m%d') &lt;= date_format(#{beginDateEnd},'%y%m%d')</if>
-            <if test="checkDateStart != null  and checkDateStart != ''">and biz_contract.date_format(check_date,'%y%m%d') &gt;= date_format(#{checkDateStart},'%y%m%d')</if>
-            <if test="checkDateEnd != null  and checkDateEnd != ''">and biz_contract.date_format(check_date,'%y%m%d') &lt;= date_format(#{checkDateEnd},'%y%m%d')</if>
-            <if test="endDateStart != null  and endDateStart != ''">and biz_contract.date_format(end_date,'%y%m%d') &gt;= date_format(#{endDateStart},'%y%m%d')</if>
-            <if test="endDateEnd != null  and endDateEnd != ''">and biz_contract.date_format(end_date,'%y%m%d') &lt;= date_format(#{endDateEnd},'%y%m%d')</if>
+            <if test="signDateStart != null  and signDateStart != ''">and biz_contract.sign_date &gt;= #{signDateStart}</if>
+            <if test="signDateEnd != null  and signDateEnd != ''">and biz_contract.sign_date &lt;= #{signDateEnd}</if>
+            <if test="beginDateStart != null  and beginDateStart != ''">and biz_contract.begin_date &gt;= #{beginDateStart}</if>
+            <if test="beginDateEnd != null  and beginDateEnd != ''">and biz_contract.begin_date &lt;= #{beginDateEnd}</if>
+            <if test="checkDateStart != null  and checkDateStart != ''">and biz_contract.check_date &gt;= #{checkDateStart}</if>
+            <if test="checkDateEnd != null  and checkDateEnd != ''">and biz_contract.check_date &lt;= #{checkDateEnd}</if>
+            <if test="endDateStart != null  and endDateStart != ''">and biz_contract.end_date &gt;= #{endDateStart}</if>
+            <if test="endDateEnd != null  and endDateEnd != ''">and biz_contract.end_date &lt;= #{endDateEnd}</if>
             <if test="status != null  and status != ''"> and biz_contract.status = #{status}</if>
             <if test="keywords != null and keywords != ''">and (
                 instr(biz_contract.customer_name, #{keywords}) +

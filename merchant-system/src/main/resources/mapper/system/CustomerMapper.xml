@@ -210,11 +210,10 @@
             <if test="genjinStatus != null and genjinStatus != ''">genjin_status = #{genjinStatus},</if>
             update_date = now()
         </trim>
-        where id = #{id}
-        <!--in
+        where id in
         <foreach item="id" collection="ids" open="(" separator="," close=")">
             #{id}
-        </foreach>-->
+        </foreach>
     </update>
 
     <update id="autoDegradeToXianSuo" parameterType="Integer">
