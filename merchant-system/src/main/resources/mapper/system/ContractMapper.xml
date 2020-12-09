@@ -85,6 +85,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="endDateStart != null  and endDateStart != ''">and biz_contract.end_date &gt;= #{endDateStart}</if>
             <if test="endDateEnd != null  and endDateEnd != ''">and biz_contract.end_date &lt;= #{endDateEnd}</if>
             <if test="status != null  and status != ''"> and biz_contract.status = #{status}</if>
+            <if test="checkStatus != null  and checkStatus != ''"> and biz_contract.check_status = #{checkStatus}</if>
             <if test="keywords != null and keywords != ''">and (
                 instr(biz_contract.customer_name, #{keywords}) +
                 instr(biz_contract.customer_phone, #{keywords}) +
