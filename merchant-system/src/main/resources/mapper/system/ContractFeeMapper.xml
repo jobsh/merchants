@@ -81,7 +81,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="payMethod != null  and payMethod != ''"> and pay_method = #{payMethod}</if>
             <if test="payer != null  and payer != ''"> and payer = #{payer}</if>
             <if test="reciever != null  and reciever != ''"> and reciever = #{reciever}</if>
-            <if test="checkStatus != null  and checkStatus != ''"> and check_status = #{checkStatus}</if>
+            <if test="checkStatus != null  and checkStatus != ''"> and biz_contract_fee.check_status = #{checkStatus}</if>
             <if test="shoukuanDate != null "> and shoukuan_date = #{shoukuanDate}</if>
             <if test="deptName != null and deptName != ''"> and deptName = #{deptName}</if>
             <!-- 数据范围过滤 -->
