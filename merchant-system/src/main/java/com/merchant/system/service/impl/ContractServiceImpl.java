@@ -120,6 +120,7 @@ public class ContractServiceImpl implements IContractService
         if (res > 0) {
             throw new BaseException("已存在该合同编号");
         }
+
         // 新签合同设置pid为0
         contractBO.setPid(0);
         // 新签合同rootNum设置为本合同编号，pid为0
@@ -301,9 +302,10 @@ public class ContractServiceImpl implements IContractService
     }
 
     @Override
-    public int transfer(Integer[] ids, String phone) throws IllegalAccessException {
+    public int transfer(Integer[] ids, Integer id) throws IllegalAccessException {
         // 根据phone查询出负责人 判断系统中是否有此负责人
-        SysUser sysUser = sysUserService.selectUserByPhone(phone);
+//        SysUser sysUser = sysUserService.selectUserByPhone(phone);
+        SysUser sysUser = sysUserService.selectUserById(id.longValue());
         List<Contract> contractList = contractMapper.selectContractByIds(ids);
         int updateNum = 0;
         for (Contract contract : contractList) {

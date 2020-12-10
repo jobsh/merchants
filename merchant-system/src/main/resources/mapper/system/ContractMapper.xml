@@ -37,10 +37,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="terminateDate"    column="terminate_date"    />
         <result property="status"    column="status"    />
         <result property="checkStatus"    column="check_status"    />
+        <result property="checkDate"    column="check_date"    />
         <result property="file"    column="file"    />
         <result property="terminateFile"    column="terminate_file"    />
         <result property="imgs"    column="imgs"    />
-        <result property="create_by"    column="createBy"    />
+        <result property="createBy"    column="create_by"    />
         <result property="remark"    column="remark"    />
         <result property="deptName"    column="dept_name"    />
     </resultMap>
@@ -50,7 +51,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             biz_contract.id, biz_contract.dept_id, biz_contract.pid, biz_contract.root_num, biz_contract.num, customer_name, biz_contract.customer_id, biz_contract.customer_num, biz_contract.customer_phone, biz_contract.type, biz_contract.produce,
             biz_contract.dianmian_name, biz_contract.dianmian_num, biz_contract.dianmian_province, biz_contract.dianmian_city, biz_contract.dianmian_district, biz_contract.dianmian_address, biz_contract.dianmian_longitude, biz_contract.dianmian_latitude,
             biz_contract.guarantee, biz_contract.fee, biz_contract.operation, biz_contract.manager_id, biz_contract.manager, biz_contract.sign_date, biz_contract.sign_user_id,
-            biz_contract.sign_user, biz_contract.begin_date, biz_contract.end_date,biz_contract.terminate_date, biz_contract.status, biz_contract.check_status, biz_contract.create_by, biz_contract.remark, biz_contract.file, biz_contract.terminate_file, biz_contract.imgs,
+            biz_contract.sign_user, biz_contract.begin_date, biz_contract.end_date,biz_contract.terminate_date, biz_contract.status, biz_contract.check_status,biz_contract.check_date, biz_contract.create_by, biz_contract.remark, biz_contract.file, biz_contract.terminate_file, biz_contract.imgs,
             d.dept_name
         from
             biz_contract
@@ -116,8 +117,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select count(1) from biz_contract
         where biz_contract.num = #{num}
     </select>
-    <select id="selectContractByIds" resultType="com.merchant.system.domain.Contract" parameterType="String">
-        select from biz_contract where biz_contract.id in
+    <select id="selectContractByIds" resultType="com.merchant.system.domain.Contract" parameterType="Integer">
+        select * from biz_contract where biz_contract.id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
@@ -219,7 +220,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="managerId != null">manager_id = #{managerId},</if>
             <if test="manager != null and manager != ''">manager = #{manager},</if>
             <if test="signDate != null">sign_date = #{signDate},</if>
-            <if test="signUserId != null">#{signUserId},</if>
+            <if test="signUserId != null">sign_user_id = #{signUserId},</if>
             <if test="signUser != null and signUser != ''">sign_user = #{signUser},</if>
             <if test="checkStatus != null and checkStatus != ''">check_status = #{checkStatus},</if>
             <if test="beginDate != null">begin_date = #{beginDate},</if>
@@ -239,7 +240,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         delete from biz_contract where biz_contract.id = #{id}
     </delete>
 
-    <delete id="deleteContractByIds" parameterType="String">
+    <delete id="deleteContractByIds" parameterType="Integer">
         delete from biz_contract where biz_contract.id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}

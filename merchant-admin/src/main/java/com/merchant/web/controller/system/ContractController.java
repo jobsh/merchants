@@ -216,16 +216,16 @@ public class ContractController extends BaseController
     public AjaxResult transfer(@RequestBody ContractBO contractBO) throws IllegalAccessException {
 
         // 查询合同
-        if (StringUtils.isBlank(contractBO.getManagerPhone())) {
+        if (contractBO.getManagerId() == null) {
             return AjaxResult.error("参数错误");
         }
 
-        SysUser sysUser = userService.selectUserByPhone(contractBO.getManagerPhone());
-        if (sysUser == null) {
-            return AjaxResult.error("无此负责人，请重新输入手机号");
-        }
+//        SysUser sysUser = userService.selectUserByPhone(contractBO.getManagerPhone());
+//        if (sysUser == null) {
+//            return AjaxResult.error("无此负责人，请重新输入手机号");
+//        }
 
-        return toAjax(contractService.transfer(contractBO.getIds(), contractBO.getManagerPhone()));
+        return toAjax(contractService.transfer(contractBO.getIds(), contractBO.getManagerId()));
     }
 
     /**
