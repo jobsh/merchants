@@ -85,6 +85,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="shoukuanDate != null "> and shoukuan_date = #{shoukuanDate}</if>
             <if test="deptName != null and deptName != ''"> and deptName = #{deptName}</if>
             <if test="produce != null  and produce != ''"> and biz_contract.produce = #{produce}</if>
+            <if test="keywords != null and keywords != ''">and (
+                instr(biz_contract.dianmian_name, #{keywords}) +
+                instr(biz_contract_fee.num, #{keywords}) +
+                instr(biz_contract_fee.payer, #{keywords})
+                ) > 0</if>
             <!-- 数据范围过滤 -->
             ${params.dataScope}
         </where>
