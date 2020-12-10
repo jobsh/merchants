@@ -117,18 +117,27 @@ public class ContractFeeController extends BaseController
     /**
      * 费用审核
      */
-    @GetMapping(value = "/check/")
+    @PostMapping(value = "/check/")
     public AjaxResult check(@RequestParam String num,@RequestParam String checkDate)
     {
+        if (num == null) {
+            return AjaxResult.error("费用编号不能为空");
+        }
+        if (StringUtils.isBlank(checkDate)) {
+            return AjaxResult.error("请选择审核日期");
+        }
         return toAjax(contractFeeService.checkContractFeeByNum(num, checkDate));
     }
 
     /**
      * 费用反审核
      */
-    @GetMapping(value = "/uncheck/")
+    @PostMapping(value = "/uncheck/")
     public AjaxResult uncheck(@RequestParam String num)
     {
+        if (StringUtils.isBlank(num)) {
+            return AjaxResult.error("费用编号不能为空");
+        }
         return toAjax(contractFeeService.unCheckContractFeeByNum(num));
     }
 }

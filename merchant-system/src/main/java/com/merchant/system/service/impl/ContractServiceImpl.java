@@ -19,6 +19,7 @@ import com.merchant.common.utils.ip.IpUtils;
 import com.merchant.system.domain.Contract;
 import com.merchant.system.domain.ContractOperLog;
 import com.merchant.system.domain.Dianmian;
+import com.merchant.system.domain.bo.AddContractBO;
 import com.merchant.system.domain.bo.ContractBO;
 import com.merchant.system.mapper.ContractMapper;
 import com.merchant.system.service.IContractLogService;
@@ -109,7 +110,7 @@ public class ContractServiceImpl implements IContractService
      * @return 结果
      */
     @Override
-    public int insertContract(ContractBO contractBO)
+    public int insertContract(AddContractBO contractBO)
     {
         if (contractBO.getNum() == null){
             contractBO.setNum(sid.nextShort());
@@ -249,7 +250,7 @@ public class ContractServiceImpl implements IContractService
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
-    public int renew(Integer id, ContractBO contractBO) {
+    public int renew(Integer id, AddContractBO contractBO) {
 
         // 查询出要续签的合同
         Contract contract = contractMapper.selectContractById(id);
@@ -349,6 +350,9 @@ public class ContractServiceImpl implements IContractService
         }
         if (contractBO.getCheckDate() == null) {
             contractBO.setCheckDate(signDate);
+            if (signDate == null) {
+                contractBO.setCheckDate(DateUtils.dateTimeNow());
+            }
         }
         // 设置状态为已审核
         contractBO.setCheckStatus(ContractStatus.CHECKED.getCode());

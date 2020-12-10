@@ -26,6 +26,9 @@ public class Customer extends BaseEntity
     /** 用户部门id */
     private Integer deptId;
 
+    /** 用户部门id */
+    private String deptName;
+
     private String num;
     /** 客户名称 */
     @Excel(name = "客户名称")

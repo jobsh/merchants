@@ -112,8 +112,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where biz_contract.num = #{num}
     </select>
 
-    <select id="countContractByNum" parameterType="String" resultMap="ContractResult">
-        <include refid="selectContractVo"/>
+    <select id="countContractByNum" parameterType="String" resultType="Integer">
+        select count(1) from biz_contract
         where biz_contract.num = #{num}
     </select>
     <select id="selectContractByIds" resultType="com.merchant.system.domain.Contract" parameterType="String">
@@ -124,7 +124,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
 
-    <insert id="insertContract" parameterType="ContractBO" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insertContract" parameterType="AddContractBO" useGeneratedKeys="true" keyProperty="id">
         insert into biz_contract
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="deptId != null and deptId != ''">dept_id,</if>

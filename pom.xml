@@ -33,12 +33,13 @@
         <velocity.version>1.7</velocity.version>
         <jwt.version>0.9.1</jwt.version>
         <lombok.version>1.18.8</lombok.version>
+        <spring-boot-version>2.1.4.RELEASE</spring-boot-version>
+        <spring-cloud.version>Greenwich.SR1</spring-cloud.version>
     </properties>
 	
     <!-- 依赖声明 -->
     <dependencyManagement>
         <dependencies>
-
             <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
@@ -48,7 +49,7 @@
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
-                <version>2.1.17.RELEASE</version>
+                <version>${spring-boot-version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -59,7 +60,10 @@
                 <artifactId>druid-spring-boot-starter</artifactId>
                 <version>${druid.version}</version>
             </dependency>
-	        
+            <dependency>
+                <groupId>de.codecentric</groupId>
+                <artifactId>spring-boot-admin-starter-client</artifactId>
+            </dependency>
             <!-- 解析客户端操作系统、浏览器等 -->
             <dependency>
                 <groupId>eu.bitwalker</groupId>
@@ -217,6 +221,7 @@
         <module>merchant-quartz</module>
         <module>merchant-generator</module>
         <module>merchant-common</module>
+        <module>merchant-picture</module>
     </modules>
     <packaging>pom</packaging>
 

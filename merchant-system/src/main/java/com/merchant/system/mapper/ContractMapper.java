@@ -2,6 +2,7 @@ package com.merchant.system.mapper;
 
 import java.util.List;
 import com.merchant.system.domain.Contract;
+import com.merchant.system.domain.bo.AddContractBO;
 import com.merchant.system.domain.bo.ContractBO;
 
 /**
@@ -36,7 +37,7 @@ public interface ContractMapper
      * @param contractBO 合同
      * @return 结果
      */
-    public int insertContract(ContractBO contractBO);
+    public int insertContract(AddContractBO contractBO);
 
     /**
      * 修改合同

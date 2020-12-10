@@ -3,6 +3,7 @@ package com.merchant.system.service;
 import java.io.IOException;
 import java.util.List;
 import com.merchant.system.domain.Contract;
+import com.merchant.system.domain.bo.AddContractBO;
 import com.merchant.system.domain.bo.ContractBO;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -43,7 +44,7 @@ public interface IContractService
      * @param contractBO 合同
      * @return 结果
      */
-    public int insertContract(ContractBO contractBO);
+    public int insertContract(AddContractBO contractBO);
 
     /**
      * 修改合同
@@ -90,7 +91,7 @@ public interface IContractService
      * @param contractBO
      * @return
      */
-    int renew(Integer id, ContractBO contractBO);
+    int renew(Integer id, AddContractBO contractBO);
 
     /**
      * 转移给手机号为phone的负责人

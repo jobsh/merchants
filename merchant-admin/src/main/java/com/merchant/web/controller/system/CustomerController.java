@@ -195,6 +195,9 @@ public class CustomerController extends BaseController {
     @PostMapping("/customer/transfer")
     public AjaxResult transferCustomer(@RequestBody CustomerBO customerBO) {
 
+        if (customerBO.getUserId() == null) {
+            return AjaxResult.error("请传入正确负责人");
+        }
         int result = customerService.transferCustomer(customerBO);
         if (result == -1) {
             return AjaxResult.error(HttpStatus.NOT_FIND_SYSUSER, "没有该负责人");

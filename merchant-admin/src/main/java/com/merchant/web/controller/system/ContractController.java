@@ -16,6 +16,7 @@ import com.merchant.common.utils.file.FileUploadUtils;
 import com.merchant.common.utils.poi.ExcelUtil;
 import com.merchant.framework.web.service.TokenService;
 import com.merchant.system.domain.Contract;
+import com.merchant.system.domain.bo.AddContractBO;
 import com.merchant.system.domain.bo.ContractBO;
 import com.merchant.system.service.IContractLogService;
 import com.merchant.system.service.IContractService;
@@ -27,6 +28,7 @@ import io.swagger.annotations.ApiParam;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -121,7 +123,7 @@ public class ContractController extends BaseController
     @PreAuthorize("@ss.hasPermi('contract:contractManager:add')")
     @Log(title = "合同", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody ContractBO contractBO)
+    public AjaxResult add(@Validated @RequestBody AddContractBO contractBO)
     {
         return toAjax(contractService.insertContract(contractBO));
     }
@@ -199,7 +201,7 @@ public class ContractController extends BaseController
     public AjaxResult renew(
             @ApiParam(name = "id", value = "合同id", required = true)
             @PathVariable Integer id,
-            @RequestBody ContractBO contractBO) {
+            @RequestBody AddContractBO contractBO) {
         int res = contractService.renew(id, contractBO);
         return toAjax(res);
     }
