@@ -6,6 +6,7 @@ import com.merchant.common.core.domain.BaseEntity;
 import com.merchant.common.core.domain.entity.SysCompany;
 import com.merchant.system.domain.Contract;
 import com.merchant.system.domain.ContractFee;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -23,5 +24,7 @@ public class ContractFeeBO extends ContractFee {
 
     /** 部门名称 */
     private String deptName;
+    /** 签约产品 */
+    private String produce;
 
 }
