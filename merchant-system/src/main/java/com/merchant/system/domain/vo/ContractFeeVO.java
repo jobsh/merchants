@@ -35,6 +35,8 @@ public class ContractFeeVO extends ContractFee {
 
     /** 部门名称 */
     private String deptName;
+    /** 公司名称 */
+    private String companyName;
 
     /** 公司 */
     private SysCompany sysCompany;

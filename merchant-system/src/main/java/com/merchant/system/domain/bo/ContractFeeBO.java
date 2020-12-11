@@ -24,6 +24,8 @@ public class ContractFeeBO extends ContractFee {
 
     /** 部门名称 */
     private String deptName;
+    /** 公司名称 */
+    private String companyName;
     /** 签约产品 */
     private String produce;
 
