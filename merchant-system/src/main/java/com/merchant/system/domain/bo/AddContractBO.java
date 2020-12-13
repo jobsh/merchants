@@ -39,9 +39,14 @@ public class AddContractBO extends BaseEntity
     private String rootNum;
 
     /** 合同编号 */
-    @ApiModelProperty(value = "合同编号", name = "num")
-    @NotNull(message = "合同编号不能为空")
+    @ApiModelProperty(value = "合同编号", name = "rootNum")
+    @Excel(name = "合同编号")
     private String num;
+
+    /** 合同代码 */
+    @ApiModelProperty(value = "合同代码", name = "code")
+    @NotNull(message = "合同代码不能为空")
+    private String code;
 
     /** 客户姓名 */
     @ApiModelProperty(value = "客户姓名", name = "customerName")

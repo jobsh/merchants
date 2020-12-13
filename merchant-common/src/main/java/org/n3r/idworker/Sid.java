@@ -49,7 +49,7 @@ public class Sid {
     public String nextShort() {
         long id = idWorker.nextId();
         String yyMMdd = new SimpleDateFormat("yyyyMMdd").format(new Date());
-        return yyMMdd + Utils.padLeft(Utils.encode(id), 10, '0');
+        return yyMMdd + Utils.padLeft(Utils.encode(id), 15, '0');
     }
     
     /*public static void main(String[] args) {

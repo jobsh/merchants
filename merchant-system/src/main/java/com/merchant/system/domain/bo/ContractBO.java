@@ -44,6 +44,10 @@ public class ContractBO extends BaseEntity
     @ApiModelProperty(value = "合同编号", name = "num")
     private String num;
 
+    /** 合同代码 */
+    @ApiModelProperty(value = "合同代码", name = "code")
+    private String code;
+
     /** 客户姓名 */
     @ApiModelProperty(value = "客户姓名", name = "customerName")
     private String customerName;

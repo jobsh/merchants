@@ -24,6 +24,7 @@ public class Contract extends BaseEntity
     private Integer id;
 
     /** 部门id */
+    @Excel(name = "部门id")
     private Integer deptId;
 
     private Integer pid;
@@ -33,6 +34,10 @@ public class Contract extends BaseEntity
     /** 合同编号 */
     @Excel(name = "合同编号")
     private String num;
+
+    /** 合同代码 */
+    @Excel(name = "合同代码")
+    private String code;
 
     /** 客户姓名 */
     @Excel(name = "客户姓名")

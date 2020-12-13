@@ -5,12 +5,11 @@ import com.merchant.common.annotation.ContractLog;
 import com.merchant.common.annotation.DataScope;
 import com.merchant.common.annotation.Excel;
 import com.merchant.common.config.MerchantConfig;
-import com.merchant.common.core.domain.AjaxResult;
+import static com.merchant.common.constant.Constants.*;
 import com.merchant.common.core.domain.entity.SysUser;
 import com.merchant.common.core.domain.model.LoginUser;
 import com.merchant.common.enums.ContractOperType;
 import com.merchant.common.enums.ContractStatus;
-import com.merchant.common.enums.DianmianStatus;
 import com.merchant.common.exception.BaseException;
 import com.merchant.common.utils.DateUtils;
 import com.merchant.common.utils.ServletUtils;
@@ -18,7 +17,6 @@ import com.merchant.common.utils.file.FileUploadUtils;
 import com.merchant.common.utils.ip.IpUtils;
 import com.merchant.system.domain.Contract;
 import com.merchant.system.domain.ContractOperLog;
-import com.merchant.system.domain.Dianmian;
 import com.merchant.system.domain.bo.AddContractBO;
 import com.merchant.system.domain.bo.ContractBO;
 import com.merchant.system.mapper.ContractMapper;
@@ -112,10 +110,7 @@ public class ContractServiceImpl implements IContractService
     @Override
     public int insertContract(AddContractBO contractBO)
     {
-        if (contractBO.getNum() == null){
-            contractBO.setNum(sid.nextShort());
-        }
-
+        contractBO.setNum(CONTRACT_PREFIX + sid.nextShort());
         int res = contractMapper.countContractByNum(contractBO.getNum());
         if (res > 0) {
             throw new BaseException("已存在该合同编号");

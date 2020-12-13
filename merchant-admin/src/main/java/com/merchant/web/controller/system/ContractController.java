@@ -9,6 +9,7 @@ import com.merchant.common.core.domain.entity.SysUser;
 import com.merchant.common.core.domain.model.LoginUser;
 import com.merchant.common.core.page.TableDataInfo;
 import com.merchant.common.enums.BusinessType;
+import com.merchant.common.enums.ContractStatus;
 import com.merchant.common.exception.BaseException;
 import com.merchant.common.utils.ServletUtils;
 import com.merchant.common.utils.StringUtils;
@@ -65,6 +66,7 @@ public class ContractController extends BaseController
     @PostMapping("/list")
     public TableDataInfo list(@RequestBody ContractBO contractBO)
     {
+        // 默认查询未失效的,在mapper.xml中控制，已失效状态为2
         startPage();
         List<Contract> list = contractService.selectContractList(contractBO);
         return getDataTable(list);
