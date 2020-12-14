@@ -78,6 +78,7 @@ public class GenjinServiceImpl implements IGenjinService {
         String genjinDateStr =  DateUtils.parseDateToStr(DateUtils.YYYY_MM_DD_HH_MM_SS, genjinDate);
         // 更新customer最新跟进时间
         customerBO.setGenjinDate(genjinDate);
+        customerBO.setGenjinStatus(genjinBO.getStatus());
         customerService.updateCustomer(customerBO);
 
         genjinBO.setGenjinDate(genjinDateStr);

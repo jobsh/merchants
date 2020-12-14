@@ -267,6 +267,8 @@ public class ContractServiceImpl implements IContractService
         contractMapper.updateContract(oldContract);
 
         // 签发新合同
+        contractBO.setNum(CONTRACT_PREFIX + sid.nextShort());
+
         contractBO.setRootNum(contract.getRootNum());
         // 设置新合同pid
         contractBO.setPid(contract.getId());

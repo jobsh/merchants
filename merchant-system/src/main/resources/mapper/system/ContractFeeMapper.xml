@@ -83,7 +83,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <where>  
             <if test="num != null  and num != ''"> and num = #{num}</if>
             <if test="contractNum != null  and contractNum != ''"> and contract_num = #{contractNum}</if>
-            <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="type != null  and type != ''"> and biz_contract_fee.type = #{type}</if>
             <if test="payMethod != null  and payMethod != ''"> and pay_method = #{payMethod}</if>
             <if test="payer != null  and payer != ''"> and payer = #{payer}</if>
             <if test="reciever != null  and reciever != ''"> and reciever = #{reciever}</if>
