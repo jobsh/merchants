@@ -12,6 +12,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="diandongPhone"    column="diandong_phone"    />
         <result property="sysUserId"    column="sys_user_id"    />
         <result property="companyId"    column="company_id"    />
+        <result property="companyName"    column="company_name"    />
         <result property="name"    column="name"    />
         <result property="status"    column="status"    />
         <result property="province"    column="province"    />
@@ -57,7 +58,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectDianmianVo">
-        select dianmian.id, dianmian.dept_id, dianmian.diandong_id, dianmian.diandong_name, dianmian.diandong_phone, dianmian.sys_user_id, dianmian.company_id, dianmian.name, dianmian.status, dianmian.province, dianmian.city, dianmian.district, dianmian.longitude, dianmian.latitude, dianmian.address, dianmian.check_result, dianmian.open_date, dianmian.contract_num, dianmian.type, dianmian.area, dianmian.close_date, dianmian.close_days, dianmian.close_reason, dianmian.check_info, dianmian.remark,
+        select dianmian.id, dianmian.dept_id, dianmian.diandong_id, dianmian.diandong_name, dianmian.diandong_phone, dianmian.sys_user_id, dianmian.company_id, dianmian.name, dianmian.status,pd.dept_name as company_name, dianmian.province, dianmian.city, dianmian.district, dianmian.longitude, dianmian.latitude, dianmian.address, dianmian.check_result, dianmian.open_date, dianmian.contract_num, dianmian.type, dianmian.area, dianmian.close_date, dianmian.close_days, dianmian.close_reason, dianmian.check_info, dianmian.remark,
         c.name as customerName,c.*
         from
             biz_dianmian dianmian
@@ -69,6 +70,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             sys_dept d
         on
             dianmian.dept_id = d.id
+        left join
+            sys_dept pd
+        on
+            d.parent_id = pd.id
         left join
             sys_user u
         on
@@ -87,6 +92,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="diandongName != null  and diandongName != ''"> and dianmian.diandong_name like concat('%', #{diandongName}, '%')</if>
             <if test="diandongPhone != null  and diandongPhone != ''"> and dianmian.diandong_phone = #{diandongPhone}</if>
             <if test="companyId != null "> and dianmian.company_id = #{companyId}</if>
+            <if test="companyName != null  and companyName != ''"> and pd.company_name like concat('%', #{companyName}, '%')</if>
             <if test="name != null  and name != ''"> and dianmian.`name` like concat('%', #{name}, '%')</if>
             <if test="status != null  and status != ''"> and dianmian.status = #{status}</if>
             <if test="province != null  and province != ''"> and dianmian.province = #{province}</if>

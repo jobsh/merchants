@@ -28,6 +28,10 @@ public class DianmianBO extends BaseEntity {
     @ApiModelProperty(value = "所属部门id", name = "deptId")
     private Integer deptId;
 
+    /** 所属公司name */
+
+    private String companyName;
+
     /** 店东id */
     @ApiModelProperty(value = "店东id", name = "diandongId")
     private Integer diandongId;

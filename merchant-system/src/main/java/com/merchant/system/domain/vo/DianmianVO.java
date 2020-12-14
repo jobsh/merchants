@@ -35,6 +35,8 @@ public class DianmianVO extends Dianmian {
 
     /** 所属公司id */
     private Integer companyId;
+    /** 所属公司name */
+    private String companyName;
 
     /** 门店名称 */
     private String name;
