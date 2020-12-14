@@ -344,7 +344,7 @@ public class ContractServiceImpl implements IContractService
         ContractBO contractBO = new ContractBO();
         contractBO.setId(id);
         Contract contract = contractMapper.selectContractById(id);
-        if (ContractStatus.CHECKED.getCode().equals(contract.getCheckDate())) {
+        if (ContractStatus.CHECKED.getCode().equals(contract.getCheckStatus())) {
             return -1;
         }
         if (contractBO.getSignDate() == null) {

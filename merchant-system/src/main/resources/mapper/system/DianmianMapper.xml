@@ -136,7 +136,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="address != null and address != ''">address,</if>
             <if test="checkResult != null and checkResult != ''">check_result,</if>
             <if test="openDate != null">open_date,</if>
-            <if test="contractNum != null and contractNum != ''">contractNum,</if>
+            <if test="contractNum != null and contractNum != ''">contract_num,</if>
             <if test="type != null and type != ''">type,</if>
             <if test="area != null and area != ''">area,</if>
             <if test="closeDate != null">close_date,</if>
