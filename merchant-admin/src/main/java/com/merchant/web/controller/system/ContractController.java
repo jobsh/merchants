@@ -111,10 +111,10 @@ public class ContractController extends BaseController
      * 获取合同详细信息
      */
     @PreAuthorize("@ss.hasPermi('contract:contractManager:query')")
-    @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Integer id)
+    @GetMapping(value = "/{num}")
+    public AjaxResult getInfo(@PathVariable("num") String num)
     {
-        return AjaxResult.success(contractService.selectContractById(id));
+        return AjaxResult.success(contractService.selectContractByNum(num));
     }
 
 

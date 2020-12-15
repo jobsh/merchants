@@ -137,4 +137,6 @@ public interface IContractService
      * @return
      */
     int uploadContractImgs(Integer id, String imgs);
+
+    Contract selectContractByNum(String num);
 }
