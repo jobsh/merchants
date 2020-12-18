@@ -3,6 +3,7 @@ package com.merchant.system.service;
 import java.io.IOException;
 import java.util.List;
 import com.merchant.system.domain.Genjin;
+import com.merchant.system.domain.bo.AddGenjinBO;
 import com.merchant.system.domain.bo.GenjinBO;
 
 /**
@@ -35,7 +36,7 @@ public interface IGenjinService
      * @param genjinBO 客户跟进
      * @return 结果
      */
-    public int insertGenjin(GenjinBO genjinBO) throws IOException;
+    public int insertGenjin(AddGenjinBO genjinBO) throws IOException;
 
     /**
      * 修改客户跟进

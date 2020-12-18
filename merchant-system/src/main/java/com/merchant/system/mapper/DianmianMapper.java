@@ -2,6 +2,7 @@ package com.merchant.system.mapper;
 
 import java.util.List;
 import com.merchant.system.domain.Dianmian;
+import com.merchant.system.domain.bo.AddDianmianBO;
 import com.merchant.system.domain.bo.DianmianBO;
 import com.merchant.system.domain.vo.DianmianVO;
 
@@ -35,7 +36,7 @@ public interface DianmianMapper
      * @param dianmian 店面管理
      * @return 结果
      */
-    public int insertDianmian(Dianmian dianmian);
+    public int insertDianmian(AddDianmianBO dianmian);
 
     /**
      * 修改店面管理

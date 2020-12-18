@@ -4,10 +4,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.merchant.system.mapper.GenjinMapper">
     
-    <resultMap type="Genjin" id="GenjinResult">
+    <resultMap type="GenjinVO" id="GenjinResult">
         <result property="id"    column="id"    />
         <result property="customerId"    column="customer_id"    />
         <result property="customerName"    column="customer_name"    />
+        <result property="username"    column="username"    />
         <result property="sysUserId"    column="sys_user_id"    />
         <result property="content"    column="content"    />
         <result property="method"    column="method"    />
@@ -18,7 +19,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectGenjinVo">
-        select id, customer_id, customer_name, sys_user_id, content, method, status, image, genjin_date, update_date from biz_genjin
+        select
+            biz_genjin.id, biz_genjin.customer_id, biz_genjin.customer_name, biz_genjin.sys_user_id, biz_genjin.content, biz_genjin.method, biz_genjin.status, biz_genjin.image, biz_genjin.genjin_date, biz_genjin.update_date, bc.username
+        from
+            biz_genjin
+        left join biz_customer bc on bc.id = biz_genjin.customer_id
     </sql>
 
     <select id="selectGenjinList" parameterType="Integer" resultMap="GenjinResult">
@@ -34,7 +39,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </select>
         
-    <insert id="insertGenjin" parameterType="GenjinBO" useGeneratedKeys="true">
+    <insert id="insertGenjin" parameterType="AddGenjinBO" useGeneratedKeys="true">
         insert into biz_genjin
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="customerId != null">customer_id,</if>

@@ -8,6 +8,7 @@ import com.merchant.common.config.MerchantConfig;
 import com.merchant.common.utils.DateUtils;
 import com.merchant.common.utils.file.FileUploadUtils;
 import com.merchant.system.domain.Customer;
+import com.merchant.system.domain.bo.AddGenjinBO;
 import com.merchant.system.domain.bo.CustomerBO;
 import com.merchant.system.domain.bo.GenjinBO;
 import com.merchant.system.service.ICustomerService;
@@ -60,7 +61,7 @@ public class GenjinServiceImpl implements IGenjinService {
      * @return 结果
      */
     @Override
-    public int insertGenjin(GenjinBO genjinBO) {
+    public int insertGenjin(AddGenjinBO genjinBO) {
         // 查询出客户信息
         Customer customer = customerService.selectCustomerById(genjinBO.getCustomerId());
         CustomerBO customerBO = new CustomerBO();
@@ -73,11 +74,10 @@ public class GenjinServiceImpl implements IGenjinService {
         if (customer != null) {
             BeanUtils.copyProperties(customer, customerBO);
         }
-        Date genjinDate = new Date();
-
+        Date genjinDate = DateUtils.getNowDate();
         String genjinDateStr =  DateUtils.parseDateToStr(DateUtils.YYYY_MM_DD_HH_MM_SS, genjinDate);
         // 更新customer最新跟进时间
-        customerBO.setGenjinDate(genjinDate);
+        customerBO.setGenjinDate(genjinDateStr);
         customerBO.setGenjinStatus(genjinBO.getStatus());
         customerService.updateCustomer(customerBO);
 

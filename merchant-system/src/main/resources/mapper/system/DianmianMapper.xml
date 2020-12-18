@@ -30,9 +30,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="closeDays"    column="close_days"    />
         <result property="closeReason"    column="close_reason"    />
         <result property="checkInfo"    column="check_info"    />
+        <result property="areaName"    column="area_name"    />
         <result property="remark"    column="remark"    />
         <association property="customer" javaType="com.merchant.system.domain.Customer">
-            <id column="id" property="id"/>
+            <id column="diandong_id" property="id"/>
             <result column="user_id" property="userId"/>
             <result column="phone" property="phone"/>
             <result column="customerName" property="name"/>
@@ -58,8 +59,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectDianmianVo">
-        select dianmian.id, dianmian.dept_id, dianmian.diandong_id, dianmian.diandong_name, dianmian.diandong_phone, dianmian.sys_user_id, dianmian.company_id, dianmian.name, dianmian.status,pd.dept_name as company_name, dianmian.province, dianmian.city, dianmian.district, dianmian.longitude, dianmian.latitude, dianmian.address, dianmian.check_result, dianmian.open_date, dianmian.contract_num, dianmian.type, dianmian.area, dianmian.close_date, dianmian.close_days, dianmian.close_reason, dianmian.check_info, dianmian.remark,
-        c.name as customerName,c.*
+        select dianmian.id, dianmian.dept_id, dianmian.diandong_id, dianmian.diandong_name, dianmian.diandong_phone, dianmian.sys_user_id, dianmian.company_id, dianmian.name, dianmian.status,d.dept_name as company_name, dianmian.province, dianmian.city, dianmian.district, dianmian.longitude, dianmian.latitude, dianmian.address, dianmian.check_result, dianmian.open_date, dianmian.contract_num, dianmian.type, dianmian.area, dianmian.close_date, dianmian.close_days, dianmian.close_reason, dianmian.check_info, dianmian.remark,
+        c.name as customerName, c.*, biz_contract.dianmian_name area_name
         from
             biz_dianmian dianmian
         left join
@@ -67,17 +68,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         on
             dianmian.diandong_id = c.id
         left join
-            sys_dept d
+            biz_contract
         on
-            dianmian.dept_id = d.id
-        left join
-            sys_dept pd
-        on
-            d.parent_id = pd.id
+            biz_contract.num = dianmian.contract_num
         left join
             sys_user u
         on
             dianmian.sys_user_id = u.id
+        left join
+            sys_dept d
+        on
+            u.dept_id = d.id
     </sql>
 
     <select id="selectCustomerById" parameterType="Integer" resultType="Customer">
@@ -88,11 +89,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectDianmianList" parameterType="com.merchant.system.domain.bo.DianmianBO" resultMap="DianmianResult">
         <include refid="selectDianmianVo"/>
         <where>
+            <if test="deptId != null and deptId != 0">
+                AND (u.dept_id = #{deptId} OR u.dept_id IN ( SELECT t.id FROM sys_dept t WHERE find_in_set(#{deptId}, ancestors) ))
+            </if>
             <if test="diandongId != null "> and dianmian.diandong_id = #{diandongId}</if>
             <if test="diandongName != null  and diandongName != ''"> and dianmian.diandong_name like concat('%', #{diandongName}, '%')</if>
             <if test="diandongPhone != null  and diandongPhone != ''"> and dianmian.diandong_phone = #{diandongPhone}</if>
             <if test="companyId != null "> and dianmian.company_id = #{companyId}</if>
-            <if test="companyName != null  and companyName != ''"> and pd.company_name like concat('%', #{companyName}, '%')</if>
+            <if test="companyName != null  and companyName != ''"> and d.company_name like concat('%', #{companyName}, '%')</if>
             <if test="name != null  and name != ''"> and dianmian.`name` like concat('%', #{name}, '%')</if>
             <if test="status != null  and status != ''"> and dianmian.status = #{status}</if>
             <if test="province != null  and province != ''"> and dianmian.province = #{province}</if>
@@ -104,10 +108,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="contractNum != null  and contractNum != ''"> and dianmian.contract_num = #{contractNum}</if>
             <if test="type != null  and type != ''"> and dianmian.`type` = #{type}</if>
             <if test="area != null  and area != ''"> and dianmian.area = #{area}</if>
+            <if test="username != null  and username != ''"> and c.username like concat('%', #{username}, '%')</if>
             <if test="keywords != null and keywords != ''">and (
                 instr(dianmian.name, #{keywords}) +
                 instr(dianmian.area, #{keywords}) +
-                instr(dianmian.address, #{keywords})
+                instr(dianmian.province, #{keywords})+
+                instr(dianmian.city, #{keywords})+
+                instr(dianmian.district, #{keywords})+
+                instr(dianmian.area, #{keywords})
                 ) > 0</if>
             <!-- 数据范围过滤 -->
             ${params.dataScope}
@@ -124,7 +132,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where dianmian.contract_num = #{contractNum}
     </select>
 
-    <insert id="insertDianmian" parameterType="Dianmian" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insertDianmian" parameterType="AddDianmianBO" useGeneratedKeys="true" keyProperty="id">
         insert into biz_dianmian
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="deptId != null">dept_id,</if>

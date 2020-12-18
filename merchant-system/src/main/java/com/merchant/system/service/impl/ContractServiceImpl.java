@@ -212,7 +212,7 @@ public class ContractServiceImpl implements IContractService
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
-    public int terminate(MultipartFile file, ContractBO contractBO) throws IOException {
+    public int terminate(ContractBO contractBO) {
         Contract contract = contractMapper.selectContractById(contractBO.getId());
         ContractOperLog contractOperLog = new ContractOperLog();
         if (contract.getEndDate().after(DateUtils.getNowDate())) {
@@ -222,7 +222,7 @@ public class ContractServiceImpl implements IContractService
             contractBO.setStatus(ContractStatus.UNEXPIRED_TERMINATION.getCode());
             contractOperLog.setTitle("未到期解约");
         }
-        this.addSave(file, contractBO);
+//        this.addSave(file, contractBO); 改为七牛云
         int res = contractMapper.updateContract(contractBO);
         if (res > 0) {
             // 请求的地址
@@ -451,6 +451,11 @@ public class ContractServiceImpl implements IContractService
     @Override
     public Contract selectContractByNum(String num) {
         return contractMapper.selectContractByNum(num);
+    }
+
+    @Override
+    public void autoExpire(ContractBO contractBO) {
+        contractMapper.autoExpire(contractBO);
     }
 
 

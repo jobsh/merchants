@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.merchant.common.core.domain.entity.SysUser;
 import com.merchant.system.domain.Customer;
+import com.merchant.system.domain.bo.AddCustomerBO;
 import com.merchant.system.domain.bo.CustomerBO;
 import org.apache.ibatis.annotations.Param;
 
@@ -61,7 +62,7 @@ public interface ICustomerService
      * @param customerBO 我的客户
      * @return 结果
      */
-    public int updateCustomer(CustomerBO customerBO);
+    public int updateCustomer(Customer customerBO);
 
     public int updateGenjinDate(Integer id);
 

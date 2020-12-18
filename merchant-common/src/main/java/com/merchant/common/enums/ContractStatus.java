@@ -16,6 +16,7 @@ public enum ContractStatus
     EXPIRED_TERMINATION("2", "到期解约"),
     EXPIRED_RENEW("3", "到期续约"),
     UNEXPIRED_TERMINATION("4", "未到期解约"),
+    EXPIRED("5", "合同到期"),
 
     SIGN_NEW("0", "新签"),
     SIGN_RENEW("1", "续签");

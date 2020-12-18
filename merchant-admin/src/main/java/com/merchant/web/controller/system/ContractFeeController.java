@@ -2,10 +2,12 @@ package com.merchant.web.controller.system;
 
 import java.util.List;
 
+import com.merchant.system.domain.bo.AddContractFeeBO;
 import com.merchant.system.domain.bo.ContractFeeBO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import com.merchant.common.annotation.Log;
 import com.merchant.common.core.controller.BaseController;
@@ -70,7 +72,7 @@ public class ContractFeeController extends BaseController
     @PreAuthorize("@ss.hasPermi('fee:feeManager:add')")
     @Log(title = "费用管理", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody ContractFee contractFee)
+    public AjaxResult add(@Validated @RequestBody AddContractFeeBO contractFee)
     {
         return toAjax(contractFeeService.insertContractFee(contractFee));
     }
@@ -81,7 +83,7 @@ public class ContractFeeController extends BaseController
     @PreAuthorize("@ss.hasPermi('fee:feeManager:edit')")
     @Log(title = "费用管理", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody ContractFee contractFee)
+    public AjaxResult edit(@RequestBody AddContractFeeBO contractFee)
     {
         int res = contractFeeService.updateContractFee(contractFee);
         if (res == -1) {

@@ -1,5 +1,8 @@
 package com.merchant.quartz.task;
 
+import com.merchant.common.enums.ContractStatus;
+import com.merchant.system.domain.bo.ContractBO;
+import com.merchant.system.service.IContractService;
 import com.merchant.system.service.ICustomerService;
 import com.merchant.system.service.ISysConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +22,9 @@ public class RyTask {
 
     @Autowired
     private ISysConfigService configService;
+
+    @Autowired
+    private IContractService contractService;
 
 
     public void ryMultipleParams(String s, Boolean b, Long l, Double d, Integer i)
@@ -41,6 +47,19 @@ public class RyTask {
         Integer intervalDays = Integer.valueOf(configService.selectConfigByKey("sys.customer.autoDegrade"));
 
         customerService.degradeToXiansuo(intervalDays);
+    }
+
+    /**
+     * 合同到期后自动设置合同状态为合同到期状态到期
+     */
+    public void contractExpire() {
+        ContractBO contractBO = new ContractBO();
+        contractBO.setStatus(ContractStatus.EXPIRED.getCode());
+        try {
+            contractService.autoExpire(contractBO);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

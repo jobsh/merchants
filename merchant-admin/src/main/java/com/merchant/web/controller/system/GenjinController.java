@@ -13,6 +13,7 @@ import com.merchant.common.utils.StringUtils;
 import com.merchant.common.utils.file.FileUploadUtils;
 import com.merchant.framework.web.service.TokenService;
 import com.merchant.system.domain.Genjin;
+import com.merchant.system.domain.bo.AddGenjinBO;
 import com.merchant.system.domain.bo.GenjinBO;
 import com.merchant.system.service.IGenjinService;
 import io.swagger.annotations.Api;
@@ -20,6 +21,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -76,9 +78,8 @@ public class GenjinController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:genjin:add')")
     @Log(title = "客户跟进", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody GenjinBO genjinBO)
+    public AjaxResult add(@Validated @RequestBody AddGenjinBO genjinBO)
     {
-
         if (StringUtils.isBlank(genjinBO.getMethod())) return AjaxResult.error("请选择跟进方式");
         if (StringUtils.isBlank(genjinBO.getStatus())) return AjaxResult.error("请选择跟进状态");
 

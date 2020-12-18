@@ -6,6 +6,7 @@ import com.merchant.common.annotation.DataScope;
 import com.merchant.common.enums.DianmianStatus;
 import com.merchant.common.utils.StringUtils;
 import com.merchant.system.domain.DianmianLog;
+import com.merchant.system.domain.bo.AddDianmianBO;
 import com.merchant.system.domain.bo.DianmianBO;
 import com.merchant.system.domain.vo.DianmianVO;
 import com.merchant.system.mapper.DianmianLogMapper;
@@ -64,7 +65,7 @@ public class DianmianServiceImpl implements IDianmianService
      * @return 结果
      */
     @Override
-    public int insertDianmian(Dianmian dianmian)
+    public int insertDianmian(AddDianmianBO dianmian)
     {
         return dianmianMapper.insertDianmian(dianmian);
     }

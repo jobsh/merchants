@@ -174,10 +174,7 @@ public class ContractController extends BaseController
     @PreAuthorize("@ss.hasPermi('contract:contractManager:edit')")
     @Log(title = "合同", businessType = BusinessType.UPDATE)
     @PostMapping("/terminate")
-    public AjaxResult
-    terminate(
-            @ApiParam(name = "file", value = "解约附件")
-            @RequestParam(name = "file", required = false) MultipartFile file,@RequestBody ContractBO contractBO) {
+    public AjaxResult terminate(@RequestBody ContractBO contractBO) {
 
         if (contractBO.getId() == null) {
             return AjaxResult.error("id错误");
@@ -185,7 +182,7 @@ public class ContractController extends BaseController
 
         int res;
         try {
-            res = contractService.terminate(file, contractBO);
+            res = contractService.terminate(contractBO);
         } catch (IOException e) {
             throw new BaseException("附件上传异常");
         }

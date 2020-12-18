@@ -2,6 +2,7 @@ package com.merchant.system.service;
 
 import java.util.List;
 import com.merchant.system.domain.ContractFee;
+import com.merchant.system.domain.bo.AddContractFeeBO;
 import com.merchant.system.domain.bo.ContractFeeBO;
 import com.merchant.system.domain.vo.ContractFeeVO;
 
@@ -35,7 +36,7 @@ public interface IContractFeeService
      * @param contractFee 费用管理
      * @return 结果
      */
-    public int insertContractFee(ContractFee contractFee);
+    public int insertContractFee(AddContractFeeBO contractFee);
 
     /**
      * 修改费用管理
@@ -43,7 +44,7 @@ public interface IContractFeeService
      * @param contractFee 费用管理
      * @return 结果
      */
-    public int updateContractFee(ContractFee contractFee);
+    public int updateContractFee(AddContractFeeBO contractFee);
 
     /**
      * 批量删除费用管理

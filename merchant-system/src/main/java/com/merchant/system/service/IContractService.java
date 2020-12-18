@@ -84,7 +84,7 @@ public interface IContractService
      * @param contractBO
      * @return
      */
-    int terminate(MultipartFile file, ContractBO contractBO) throws IOException;
+    int terminate(ContractBO contractBO) throws IOException;
 
     /**
      * 续签合同
@@ -139,4 +139,10 @@ public interface IContractService
     int uploadContractImgs(Integer id, String imgs);
 
     Contract selectContractByNum(String num);
+
+    /**
+     * 合同自动到期
+     * @param contractBO
+     */
+    void autoExpire(ContractBO contractBO);
 }

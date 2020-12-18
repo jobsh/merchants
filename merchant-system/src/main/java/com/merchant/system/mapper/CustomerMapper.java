@@ -2,6 +2,7 @@ package com.merchant.system.mapper;
 
 import java.util.List;
 import com.merchant.system.domain.Customer;
+import com.merchant.system.domain.bo.AddCustomerBO;
 import com.merchant.system.domain.bo.CustomerBO;
 
 /**
@@ -66,7 +67,7 @@ public interface CustomerMapper
      * @param customerBO 我的客户
      * @return 结果
      */
-    public int updateCustomer(CustomerBO customerBO);
+    public int updateCustomer(Customer customerBO);
 
     /**
      * 批量修改客户信息

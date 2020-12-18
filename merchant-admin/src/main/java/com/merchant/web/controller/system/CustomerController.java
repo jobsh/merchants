@@ -9,12 +9,14 @@ import com.merchant.common.enums.CustomerStatus;
 import com.merchant.common.utils.DateUtils;
 import com.merchant.common.utils.ServletUtils;
 import com.merchant.framework.web.service.TokenService;
+import com.merchant.system.domain.bo.AddCustomerBO;
 import com.merchant.system.domain.bo.CustomerBO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import com.merchant.common.annotation.Log;
 import com.merchant.common.core.controller.BaseController;
@@ -139,7 +141,7 @@ public class CustomerController extends BaseController {
     @PreAuthorize("@ss.hasPermi('system:customer:add')")
     @Log(title = "我的客户", businessType = BusinessType.INSERT)
     @PostMapping("/customer")
-    public AjaxResult add(@RequestBody Customer customer) {
+    public AjaxResult add(@Validated @RequestBody AddCustomerBO customer) {
         // 根据手机号判断用户是否存在
         int result = customerService.existCustomer(customer.getPhone());
         if (result > 0) {
@@ -156,9 +158,8 @@ public class CustomerController extends BaseController {
     @PreAuthorize("@ss.hasPermi('system:customer:edit')")
     @Log(title = "我的客户", businessType = BusinessType.UPDATE)
     @PutMapping("/customer")
-    public AjaxResult edit(@RequestBody CustomerBO customerBO) {
-        Date genjinDate = DateUtils.parseDate(customerBO.getGenjinDate());
-        customerBO.setGenjinDate(genjinDate);
+    public AjaxResult edit(@Validated @RequestBody AddCustomerBO customerBO) {
+        customerBO.setGenjinDate(customerBO.getGenjinDate());
         return toAjax(customerService.updateCustomer(customerBO));
     }
 

@@ -21,6 +21,9 @@ public class DianmianVO extends Dianmian {
     /** 店面表主键id */
     private Integer id;
 
+    /** 授权区域 */
+    private String areaName;
+
     /** 店东id */
     private Integer diandongId;
 

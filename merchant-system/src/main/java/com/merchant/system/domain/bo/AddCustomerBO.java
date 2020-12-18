@@ -1,13 +1,12 @@
 package com.merchant.system.domain.bo;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.merchant.common.annotation.Excel;
-import com.merchant.common.core.domain.BaseEntity;
 import com.merchant.system.domain.Customer;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import java.util.Date;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  * @Classname CustomerBO
@@ -16,14 +15,8 @@ import java.util.Date;
  * @Created by hanke
  */
 @Data
-public class CustomerBO extends Customer {
+public class AddCustomerBO extends Customer {
 
-    /** 前端传来的客户ids */
-    @ApiModelProperty(value = "客户ids数组", name = "ids", example = "[1,2,3]")
-    private Integer[] ids;
-    /** 前端传来的客户手机号 */
-    @ApiModelProperty(value = "客户手机号，多个手机号用都号分隔", name = "phones")
-    private String[] phones;
     /** 部门id */
     @ApiModelProperty(value = "负责人部门id", name = "deptId")
     private Integer deptId;
@@ -31,14 +24,6 @@ public class CustomerBO extends Customer {
     @ApiModelProperty(value = "经纪人手机号，多个手机号用逗号分隔", name = "managerPhone")
     private String managerPhone;
 
-    @ApiModelProperty(value = "最早录入时间", name = "inputDateStart")
-    private String inputDateStart;
-
-    @ApiModelProperty(value = "最近录入时间", name = "inputDateEnd")
-    private String inputDateEnd;
-
-    @ApiModelProperty(value = "关键字（公司、姓名、手机号）模糊搜索", name = "keywords")
-    private String keywords;
     /** 客户表主键id */
     @ApiModelProperty(value = "客户表主键id", name = "id")
     private Integer id;
@@ -47,9 +32,12 @@ public class CustomerBO extends Customer {
     private String num;
     /** 客户名称 */
     @ApiModelProperty(value = "客户名称", name = "name")
+    @NotNull(message = "客户姓名不能为空")
     private String name;
 
     /** 客户电话 */
+    @NotNull(message = "客户手机号不能为空")
+    @Size(min = 0, max = 11, message = "手机号码长度不能超过11个字符")
     @ApiModelProperty(value = "客户电话", name = "phone")
     private String phone;
 
@@ -83,7 +71,7 @@ public class CustomerBO extends Customer {
 
     /** 客户来源 */
     @Excel(name = "客户来源")
-    @ApiModelProperty(value = "客户名称", name = "name")
+    @ApiModelProperty(value = "客户来源", name = "name")
     private String resource;
 
     /** 负责人id */
@@ -105,25 +93,5 @@ public class CustomerBO extends Customer {
     /** 客户状态（0：线索，1：客户）  */
     @ApiModelProperty(value = "客户状态", name = "status")
     private String status;
-
-    /** 未跟进天数 */
-    @ApiModelProperty(value = "未跟进天数", name = "daysFirst")
-    private Integer daysFirst;
-
-    /** 未跟进天数 */
-    @ApiModelProperty(value = "未跟进天数", name = "daysSecond")
-    private Integer daysSecond;
-
-//    /** 最新跟进时间 */
-//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-//    private String genjinDate;
-//    /** 创建时间 */
-//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-//    @Excel(name = "创建时间", width = 30, dateFormat = "yyyy-MM-dd")
-//    private String inputDate;
-//
-//    /** 更新时间 */
-//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-//    private String updateDate;
 
 }

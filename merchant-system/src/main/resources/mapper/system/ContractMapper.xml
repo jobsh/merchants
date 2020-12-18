@@ -239,6 +239,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </trim>
         where biz_contract.id = #{id}
     </update>
+    <update id="autoExpire" parameterType="ContractBO">
+        update
+            biz_contract bc
+        set
+            bc.status = #{status}
+        where
+            bc.end_date &lt;= now()
+    </update>
 
     <delete id="deleteContractById" parameterType="Integer">
         delete from biz_contract where biz_contract.id = #{id}

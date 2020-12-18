@@ -78,4 +78,6 @@ public interface ContractMapper
     int countContractByNum(String num);
 
     List<Contract> selectContractByIds(Integer[] ids);
+
+    int autoExpire(ContractBO contractBO);
 }

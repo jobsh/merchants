@@ -111,7 +111,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where biz_contract_fee.contract_num = #{contractNum}
     </select>
         
-    <insert id="insertContractFee" parameterType="ContractFee" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insertContractFee" parameterType="AddContractFeeBO" useGeneratedKeys="true" keyProperty="id">
         insert into biz_contract_fee
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="num != null and num != ''">num,</if>
@@ -141,7 +141,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
     </insert>
 
-    <update id="updateContractFee" parameterType="ContractFee">
+    <update id="updateContractFee" parameterType="AddContractFeeBO">
         update biz_contract_fee
         <trim prefix="SET" suffixOverrides=",">
             <if test="num != null and num != ''">num = #{num},</if>

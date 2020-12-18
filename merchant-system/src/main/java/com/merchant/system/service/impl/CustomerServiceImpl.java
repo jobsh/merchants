@@ -7,6 +7,7 @@ import com.merchant.common.exception.CustomException;
 import com.merchant.common.utils.DateUtils;
 import com.merchant.common.utils.StringUtils;
 import com.merchant.system.domain.Customer;
+import com.merchant.system.domain.bo.AddCustomerBO;
 import com.merchant.system.domain.bo.CustomerBO;
 import com.merchant.system.mapper.CustomerMapper;
 import com.merchant.system.mapper.SysUserMapper;
@@ -103,7 +104,7 @@ public class CustomerServiceImpl implements ICustomerService {
      * @return 结果
      */
     @Override
-    public int updateCustomer(CustomerBO customerBO) {
+    public int updateCustomer(Customer customerBO) {
         return customerMapper.updateCustomer(customerBO);
     }
 

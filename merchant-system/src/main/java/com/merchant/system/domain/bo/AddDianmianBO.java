@@ -1,15 +1,13 @@
 package com.merchant.system.domain.bo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.ser.Serializers;
 import com.merchant.common.annotation.Excel;
 import com.merchant.common.core.domain.BaseEntity;
+import com.merchant.system.domain.Dianmian;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
-import java.util.Date;
+import javax.validation.constraints.NotNull;
 
 /**
  * 店面管理对象 biz_dianmian
@@ -18,26 +16,27 @@ import java.util.Date;
  * @date 2020-11-02
  */
 @Data
-public class DianmianBO extends BaseEntity {
+public class AddDianmianBO extends BaseEntity {
 
     /** 店面表主键id */
     @ApiModelProperty(value = "店面表主键id", name = "id")
     private Integer id;
 
     /** 所属部门id */
-    @ApiModelProperty(value = "所属部门id", name = "deptId")
+    @NotNull(message = "没有上传部门id")
     private Integer deptId;
 
     /** 所属公司name */
-
     private String companyName;
 
     /** 店东id */
     @ApiModelProperty(value = "店东id", name = "diandongId")
+    @NotNull(message = "没有上传店东id")
     private Integer diandongId;
 
     /** 管理人id */
     @ApiModelProperty(value = "负责人id", name = "sysUserId")
+    @NotNull(message = "没有上传负责人id")
     private Long sysUserId;
 
     /** 所属公司id */
@@ -47,14 +46,17 @@ public class DianmianBO extends BaseEntity {
 
     /** 店东姓名 */
     @ApiModelProperty(value = "店东姓名", name = "diandongName")
+    @NotNull(message = "没有上传店东姓名")
     private String diandongName;
 
     /** 店东电话 */
-    @ApiModelProperty(value = "店东姓名", name = "diandongPhone")
+    @ApiModelProperty(value = "店东手机号", name = "diandongPhone")
+    @NotNull(message = "没有上传店东手机号")
     private String diandongPhone;
 
     /** 门店名称 */
     @ApiModelProperty(value = "门店名称", name = "name")
+    @NotNull(message = "没有上传店面名称")
     private String name;
 
     /** 门店状态 */
@@ -63,26 +65,32 @@ public class DianmianBO extends BaseEntity {
 
     /** 所属省 */
     @ApiModelProperty(value = "所属省", name = "province")
+    @NotNull(message = "没有上传所属省")
     private String province;
 
     /** 所属市 */
     @ApiModelProperty(value = "所属市", name = "city")
+    @NotNull(message = "没有上传所属市")
     private String city;
 
     /** 所属区 */
     @ApiModelProperty(value = "所属区", name = "district")
+    @NotNull(message = "没有上传所属区")
     private String district;
 
     /** 经度 */
     @ApiModelProperty(value = "经度", name = "longitude")
+    @NotNull(message = "没有上传经度坐标")
     private String longitude;
 
     /** 纬度 */
     @ApiModelProperty(value = "纬度", name = "latitude")
+    @NotNull(message = "没有上传纬度坐标")
     private String latitude;
 
     /** 店面详细地址 */
     @ApiModelProperty(value = "店面详细地址", name = "address")
+    @NotNull(message = "没有上传店面详细地址")
     private String address;
 
     /** 验收结果 */
@@ -91,10 +99,12 @@ public class DianmianBO extends BaseEntity {
 
     /** 合同编号 */
     @ApiModelProperty(value = "合同编号", name = "contractNum")
+    @NotNull(message = "没有上传店面关联的合同编号")
     private String contractNum;
 
     /** 店面类型（0：单店加盟，1：区域加盟） */
     @ApiModelProperty(value = "店面类型（0：单店加盟，1：区域加盟）", name = "type")
+    @NotNull(message = "没有上传店面type")
     private String type;
 
     /** 授权区域 */
@@ -104,14 +114,6 @@ public class DianmianBO extends BaseEntity {
     /** 负责人 */
     @ApiModelProperty(value = "负责人名称", name = "username")
     private String username;
-
-    /** 授权区域 */
-    @ApiModelProperty(value = "关键字", name = "keywords")
-    private String keywords;
-
-    /** 验收信息 */
-    @ApiModelProperty(value = "验收信息", name = "checkInfo")
-    private String checkInfo;
 
     /** 开店时间*/
     @ApiModelProperty(value = "开店时间", name = "openDate")

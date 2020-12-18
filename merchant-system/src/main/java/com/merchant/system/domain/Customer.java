@@ -90,13 +90,14 @@ public class Customer extends BaseEntity
 
     /** 最新跟进时间 */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date genjinDate;
+    @Excel(name = "最新跟进时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
+    private String genjinDate;
 
     /** 最新跟进状态 */
     private String genjinStatus;
     /** 创建时间 */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @Excel(name = "创建时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @Excel(name = "创建时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date inputDate;
 
     /** 更新时间 */

@@ -63,15 +63,17 @@
             <if test="inputDateEnd != null and inputDateEnd != ''">and date_format(biz_customer.input_date,'%y%m%d')  &lt;= date_format(#{inputDateEnd},'%y%m%d')</if>
             <if test="status != null and status != ''">and biz_customer.status = #{status}</if>
             <if test="genjinStatus != null and genjinStatus != ''">and biz_customer.genjin_status = #{genjinStatus}</if>
+            <if test="daysFirst != null and daysFirst != ''">and biz_customer.genjin_date &lt;= DATE_SUB(NOW(),INTERVAL #{daysFirst} DAY) </if>
+            <if test="daysSecond != null and daysSecond != ''">and biz_customer.genjin_date &gt;= DATE_SUB(NOW(),INTERVAL #{daysSecond} DAY)</if>
             <if test="keywords != null and keywords != ''">and (
-                instr(biz_customer.company_name, #{keywords}) +
+                instr(d.dept_name, #{keywords}) +
                 instr(biz_customer.name, #{keywords}) +
                 instr(biz_customer.phone, #{keywords})
                 ) > 0</if>
             <!-- 数据范围过滤 -->
             ${params.dataScope}
         </where>
-        order by biz_customer.genjin_date desc
+        order by biz_customer.genjin_date desc, biz_customer.input_date desc
     </select>
 
     <select id="selectCustomerById" parameterType="Integer" resultMap="CustomerResult">

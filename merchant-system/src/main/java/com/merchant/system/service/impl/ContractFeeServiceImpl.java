@@ -5,6 +5,7 @@ import java.util.List;
 import com.merchant.common.annotation.DataScope;
 import com.merchant.common.enums.ContractFeeStatus;
 import com.merchant.common.utils.DateUtils;
+import com.merchant.system.domain.bo.AddContractFeeBO;
 import com.merchant.system.domain.bo.ContractFeeBO;
 import com.merchant.system.domain.vo.ContractFeeVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,7 +59,7 @@ public class ContractFeeServiceImpl implements IContractFeeService
      * @return 结果
      */
     @Override
-    public int insertContractFee(ContractFee contractFee)
+    public int insertContractFee(AddContractFeeBO contractFee)
     {
         return contractFeeMapper.insertContractFee(contractFee);
     }
@@ -70,7 +71,7 @@ public class ContractFeeServiceImpl implements IContractFeeService
      * @return 结果
      */
     @Override
-    public int updateContractFee(ContractFee contractFee)
+    public int updateContractFee(AddContractFeeBO contractFee)
     {
         ContractFee contractFee1 = contractFeeMapper.selectContractFeeById(contractFee.getId());
         // 如果是已审核状态，则不可编辑

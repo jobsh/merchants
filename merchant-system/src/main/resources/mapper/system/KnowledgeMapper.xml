@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.merchant.system.mapper.KnowledgeMapper">
+    
+    <resultMap type="Knowledge" id="KnowledgeResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="type"    column="type"    />
+        <result property="discription"    column="discription"    />
+        <result property="url"    column="url"    />
+        <result property="remark"    column="remark"    />
+        <result property="inputDate"    column="input_date"    />
+        <result property="updateDate"    column="update_date"    />
+    </resultMap>
+
+    <sql id="selectKnowledgeVo">
+        select id, name, type, discription, url, remark, input_date, update_date from biz_knowledge
+    </sql>
+
+    <select id="selectKnowledgeList" parameterType="Knowledge" resultMap="KnowledgeResult">
+        <include refid="selectKnowledgeVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="discription != null  and discription != ''"> and discription = #{discription}</if>
+            <if test="inputDate != null "> and input_date = #{inputDate}</if>
+        </where>
+    </select>
+    
+    <select id="selectKnowledgeById" parameterType="Long" resultMap="KnowledgeResult">
+        <include refid="selectKnowledgeVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertKnowledge" parameterType="Knowledge">
+        insert into biz_knowledge
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="name != null and name != ''">name,</if>
+            <if test="type != null and type != ''">type,</if>
+            <if test="discription != null and discription != ''">discription,</if>
+            <if test="url != null and url != ''">url,</if>
+            <if test="remark != null and remark != ''">remark,</if>
+            <if test="inputDate != null">input_date,</if>
+            <if test="updateDate != null">update_date,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="type != null and type != ''">#{type},</if>
+            <if test="discription != null and discription != ''">#{discription},</if>
+            <if test="url != null and url != ''">#{url},</if>
+            <if test="remark != null and remark != ''">#{remark},</if>
+            <if test="inputDate != null">#{inputDate},</if>
+            <if test="updateDate != null">#{updateDate},</if>
+         </trim>
+    </insert>
+
+    <update id="updateKnowledge" parameterType="Knowledge">
+        update biz_knowledge
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="type != null and type != ''">type = #{type},</if>
+            <if test="discription != null and discription != ''">discription = #{discription},</if>
+            <if test="url != null and url != ''">url = #{url},</if>
+            <if test="remark != null and remark != ''">remark = #{remark},</if>
+            <if test="inputDate != null">input_date = #{inputDate},</if>
+            <if test="updateDate != null">update_date = #{updateDate},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteKnowledgeById" parameterType="Long">
+        delete from biz_knowledge where id = #{id}
+    </delete>
+
+    <delete id="deleteKnowledgeByIds" parameterType="String">
+        delete from biz_knowledge where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>
