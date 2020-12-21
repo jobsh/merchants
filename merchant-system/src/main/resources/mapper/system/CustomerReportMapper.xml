@@ -177,13 +177,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         (
             select
                 fee.receiver_id uid,
-                SUM(case when fee.type = '履约保证金' then fee.amount else 0 end) lvyue_fee,
-                SUM(case when fee.type = '经营管理费' then fee.amount else 0 end) jingying_manager_fee,
-                SUM(case when fee.type = '运营管理费' then fee.amount else 0 end) yunying_manager_fee,
-                SUM(case when fee.type = '系统使用费' then fee.amount else 0 end) system_use_fee,
-                SUM(case when fee.type = '系统维护费' then fee.amount else 0 end) system_maintenance_fee,
-                SUM(case when fee.type = '代办费' then fee.amount else 0 end) daiban_fee,
-                SUM(case when fee.type = '过户费' then fee.amount else 0 end) guohuo_fee
+                SUM(case when fee.type = '0' then fee.amount else 0 end) lvyue_fee,
+                SUM(case when fee.type = '1' then fee.amount else 0 end) jingying_manager_fee,
+                SUM(case when fee.type = '2' then fee.amount else 0 end) yunying_manager_fee,
+                SUM(case when fee.type = '3' then fee.amount else 0 end) system_use_fee,
+                SUM(case when fee.type = '4' then fee.amount else 0 end) system_maintenance_fee,
+                SUM(case when fee.type = '6' then fee.amount else 0 end) daiban_fee,
+                SUM(case when fee.type = '5' then fee.amount else 0 end) guohuo_fee
             FROM
                 biz_contract_fee fee
             <where>
