@@ -14,10 +14,12 @@ import lombok.Data;
 public class CustomerReportBO extends BaseEntity {
 
     /** 前端传来的时间 */
-    private String inputDate;
+    private String inputDateStart;
+    /** 前端传来的时间 */
+    private String inputDateEnd;
     /** 前端传来的部门/公司id */
     private Integer deptId;
     /** 前端传来的用户id */
-    private Integer userId;
+    private String username;
 
 }

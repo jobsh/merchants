@@ -10,7 +10,6 @@ import com.merchant.common.utils.ServletUtils;
 import com.merchant.common.utils.StringUtils;
 
 /**
- * RuoYi首创 自定义权限实现，ss取自SpringSecurity首字母
  * 
  * @author hanke
  */

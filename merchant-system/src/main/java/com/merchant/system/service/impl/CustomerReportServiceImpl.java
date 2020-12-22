@@ -3,6 +3,7 @@ package com.merchant.system.service.impl;
 import com.merchant.system.domain.bo.CustomerReportBO;
 import com.merchant.system.domain.vo.CustomerFeeReportVO;
 import com.merchant.system.domain.vo.CustomerReportVO;
+import com.merchant.system.domain.vo.JingyingManagerFeeReportVO;
 import com.merchant.system.mapper.CustomerReportMapper;
 import com.merchant.system.service.ICustomerReportService;
 import org.springframework.stereotype.Service;
@@ -30,5 +31,10 @@ public class CustomerReportServiceImpl implements ICustomerReportService {
     @Override
     public List<CustomerFeeReportVO> selectCustomerFeeReportList(CustomerReportBO customerReportBO) {
         return customerReportMapper.selectCustomerFeeReportList(customerReportBO);
+    }
+
+    @Override
+    public List<JingyingManagerFeeReportVO> selectJingyingMannagerFeeReportList(CustomerReportBO customerReportBO) {
+        return customerReportMapper.selectJingyingMannagerFeeReportList(customerReportBO);
     }
 }

@@ -1,5 +1,6 @@
 package com.merchant.system.domain.vo;
 
+import com.merchant.common.core.domain.BaseEntity;
 import lombok.Data;
 
 /**
@@ -9,7 +10,7 @@ import lombok.Data;
  * @Created by hanke
  */
 @Data
-public class CustomerFeeReportVO {
+public class CustomerFeeReportVO extends BaseEntity {
 
     private String userName;
     private String phonenumber;

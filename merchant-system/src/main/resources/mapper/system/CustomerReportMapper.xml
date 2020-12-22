@@ -35,6 +35,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result column="total_fee" property="totalFee" />
     </resultMap>
 
+    <resultMap type="com.merchant.system.domain.vo.JingyingManagerFeeReportVO" id="JingyingManagerFeeReportVO">
+        <result column="dept_name" property="deptName" />
+        <result column="user_name" property="userName" />
+        <result column="post_name" property="postName" />
+        <result column="num" property="contractNum" />
+        <result column="customerName" property="customerName" />
+        <result column="dianmian_name" property="dianmianName" />
+        <result column="customerPhone" property="customerPhone" />
+        <result column="jingying_manager_fee_yingshou" property="jingyingManagerFeeYingshou" />
+        <result column="jingying_manager_fee_yishou" property="jingyingManagerFeeYishou" />
+    </resultMap>
+
     <select id="selectCustomerReportList" resultMap="CustomerReportVO" parameterType="com.merchant.system.domain.bo.CustomerReportBO">
         select
             u.user_name,
@@ -49,7 +61,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             IFNULL(dandian_contract_num, 0) dandian_contract_num,
             IFNULL(quyu_contract_num, 0) quyu_contract_num,
             IFNULL(quyu_dianmian_num, 0) quyu_dianmian_num,
-            IFNULL(dandian_contract_num + quyu_dianmian_num, 0) as dianmian_num
+            IFNULL(dandian_contract_num,0) + IFNULL(quyu_dianmian_num,0) as dianmian_num
         from
             sys_user u
         left join
@@ -78,7 +90,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             biz_customer c
             WHERE
             c.resource &lt;= '6'
-            <if test="inputDate !=  null  and inputDate != ''">and c.input_date &gt; #{inputDate}</if>
+            <if test="inputDateStart !=  null">and date_format(c.input_date,'%y%m%d') &gt;= date_format(#{inputDateStart},'%y%m%d')</if>
+            <if test="inputDateEnd !=  null">and date_format(c.input_date,'%y%m%d') &lt;= date_format(#{inputDateEnd},'%y%m%d')</if>
             GROUP BY
             uid
             ) as xiansuo_num
@@ -92,7 +105,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             from
             biz_genjin gj
             where 1=1
-            <if test="inputDate !=  null  and inputDate != ''">and gj.genjin_date &gt; #{inputDate}</if>
+            <if test="inputDateStart !=  null">and date_format(gj.genjin_date,'%y%m%d') &gt;= date_format(#{inputDateStart},'%y%m%d')</if>
+            <if test="inputDateEnd !=  null">and date_format(gj.genjin_date,'%y%m%d') &lt;= date_format(#{inputDateEnd},'%y%m%d')</if>
             GROUP BY
             gj.sys_user_id
             ) as gj_num
@@ -109,7 +123,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             FROM
             biz_contract contract
             where 1=1
-            <if test="inputDate !=  null  and inputDate != ''">and contract.sign_date &gt; #{inputDate}</if>
+            <if test="inputDateStart !=  null">and date_format(contract.sign_date,'%y%m%d') &gt;= date_format(#{inputDateStart},'%y%m%d')</if>
+            <if test="inputDateEnd !=  null">and date_format(contract.sign_date,'%y%m%d') &lt;= date_format(#{inputDateEnd},'%y%m%d')</if>
             GROUP BY
             contract.manager_id
             ) contract_num
@@ -125,15 +140,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                 biz_dianmian dianmian
             WHERE
                 dianmian.type = 1 -- 区域加盟
-                <if test="inputDate !=  null  and inputDate != ''">and dianmian.open_date &gt; #{inputDate}</if>
+                and dianmian.status BETWEEN 1 and 3 -- 闭店状态为0 需要排除出去，这里使用BETWEEN 1 and 3
+                <if test="inputDateStart !=  null">and date_format(dianmian.open_date,'%y%m%d') &gt;= date_format(#{inputDateStart},'%y%m%d')</if>
+                <if test="inputDateEnd !=  null">and date_format(dianmian.open_date,'%y%m%d') &lt;= date_format(#{inputDateEnd},'%y%m%d')</if>
             GROUP BY
                 dianmian.sys_user_id
             ) dianmian
         ON
             dianmian.uid = u.id
         <where>
-            <if test="deptId !=  null">and d.id = #{deptId}</if>
-            <if test="userId !=  null">and u.id = #{userId}</if>
+            <if test="deptId != null and deptId != 0">
+                AND (u.dept_id = #{deptId} OR u.dept_id IN ( SELECT t.id FROM sys_dept t WHERE find_in_set(#{deptId}, ancestors) ))
+            </if>
+            <if test="username != null  and username != ''"> and u.user_name like concat('%', #{username}, '%')</if>
         </where>
     </select>
 
@@ -147,14 +166,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             d.dept_name,
             cm.`name` company_name,
             p.post_name,
-            lvyue_fee,
-            jingying_manager_fee,
-            yunying_manager_fee,
-            system_use_fee,
-            system_maintenance_fee,
-            daiban_fee,
-            guohuo_fee,
-            lvyue_fee + jingying_manager_fee + yunying_manager_fee + system_use_fee + system_maintenance_fee + daiban_fee + guohuo_fee as total_fee
+            IFNULL(lvyue_fee, 0) lvyue_fee,lvyue_fee,
+            IFNULL(jingying_manager_fee, 0) jingying_manager_fee,
+            IFNULL(yunying_manager_fee, 0) yunying_manager_fee,
+            IFNULL(system_use_fee, 0) system_use_fee,
+            IFNULL(system_maintenance_fee, 0) system_maintenance_fee,
+            IFNULL(daiban_fee, 0) daiban_fee,
+            IFNULL(guohuo_fee, 0) guohuo_fee,
+            IFNULL(lvyue_fee, 0) +  IFNULL(jingying_manager_fee, 0) +
+            IFNULL(yunying_manager_fee, 0) + IFNULL(system_use_fee, 0) + IFNULL(system_maintenance_fee, 0) + IFNULL(daiban_fee, 0)
+            + IFNULL(guohuo_fee, 0) as total_fee
         from
             sys_user u
         left join
@@ -187,7 +208,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             FROM
                 biz_contract_fee fee
             <where>
-                <if test="inputDate !=  null  and inputDate != ''">and fee.shoukuan_date &gt; #{inputDate}</if>
+                <if test="inputDateStart !=  null ">and date_format(fee.shoukuan_date,'%y%m%d') &gt;= date_format(#{inputDateStart},'%y%m%d')</if>
+                <if test="inputDateEnd !=  null ">and date_format(fee.shoukuan_date,'%y%m%d') &lt;= date_format(#{inputDateEnd},'%y%m%d')</if>
             </where>
         GROUP BY
                 fee.receiver_id
@@ -195,34 +217,38 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         ON fee.uid = u.id
         -- 查询条件
         <where>
-            <if test="deptId !=  null">and d.id = #{deptId}</if>
-            <if test="userId !=  null">and u.id = #{userId}</if>
+            <if test="deptId != null and deptId != 0">
+                AND (u.dept_id = #{deptId} OR u.dept_id IN ( SELECT t.id FROM sys_dept t WHERE find_in_set(#{deptId}, ancestors) ))
+            </if>
+            <if test="username != null  and username != ''"> and u.user_name like concat('%', #{username}, '%')</if>
         </where>
     </select>
 
-    <select id="">
+    <select id="selectJingyingMannagerFeeReportList" parameterType="CustomerReportBO" resultMap="JingyingManagerFeeReportVO">
         select
-            u.id,
-            u.user_name,
-            u.phonenumber,
-            dept_id,
-          dept_name,
-            cm.`name` company_name,
-            p.post_name,
-          contract.contract_num,
-            jingying_manager_fee_yingshou,
-        jingying_manager_fee_yishou
-
+            d.dept_name, -- 公司部门
+            u.user_name, -- 姓名
+            p.post_name, -- 职务
+            contract.num, -- 合同
+            contract.dianmian_name, -- 区域/店面
+            c.`name` customerName,  -- 客户名
+            c.phone customerPhone ,-- 客户电话
+            contract.fee -> '$.jingyingManagerFee.total' as jingying_manager_fee_yingshou, -- 应收经营管理费
+            jingying_manager_fee_yishou -- 已收经营管理费
         from
+            biz_contract contract
+        left JOIN
             sys_user u
+        ON
+            u.id = contract.manager_id
+        left JOIN
+            biz_customer c
+        ON
+            c.id = contract.customer_id
         left join
             sys_dept d
         ON
             u.dept_id = d.id
-        left JOIN
-            sys_company cm
-        ON
-            cm.id = u.company_id
         left JOIN
             sys_user_post up
         ON
@@ -231,36 +257,33 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             sys_post p
         ON
             p.post_id = up.post_id
-        -- 合同
-        LEFT JOIN
-        (
-        select
-        contract.manager_id,
-        contract.num contract_num,
-        contract.fee -> '$.jingyingManagerFee.total' as 	jingying_manager_fee_yingshou
-
-        from
-        biz_contract contract
-        ) contract
-        ON
-        contract.manager_id = u.id
         -- contract_fee
         left JOIN
         (
             select
+                fee.shoukuan_date shoukuan_date,
                 fee.contract_num contract_num,
-                SUM(case when fee.type = '经营管理费' then fee.amount else 0 end) jingying_manager_fee_yishou
+                SUM(case when fee.type = '1' then fee.amount else 0 end) jingying_manager_fee_yishou
             FROM
                 biz_contract_fee fee
             GROUP BY
                 fee.contract_num
+            <where>
+                <if test="inputDateStart !=  null">and date_format(fee.shoukuan_date,'%y%m%d') &gt;= date_format(#{inputDateStart},'%y%m%d')</if>
+                <if test="inputDateEnd !=  null">and date_format(fee.shoukuan_date,'%y%m%d') &lt;= date_format(#{inputDateStart},'%y%m%d')</if>
+            </where>
         ) fee
-        ON fee.contract_num = contract.contract_num
+        ON fee.contract_num = contract.num
         -- 查询条件
-        where
-            d.id = 103 AND
-            u.id = 1
+        <where>
+            1=1
+            <if test="deptId != null and deptId != 0">
+                AND (u.dept_id = #{deptId} OR u.dept_id IN ( SELECT t.id FROM sys_dept t WHERE find_in_set(#{deptId}, ancestors) ))
+            </if>
+            <if test="username != null  and username != ''"> and u.user_name like concat('%', #{username}, '%')</if>
+            <if test="inputDateStart =  null and inputDateEnd = null">and DATE_FORMAT( contract.sign_date, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )</if>
+            <if test="inputDateStart !=  null and inputDateStart !=''">and date_format(contract.sign_date,'%y%m%d') &gt;= date_format(#{inputDateStart},'%y%m%d')</if>
+            <if test="inputDateEnd !=  null and inputDateEnd !=''">and date_format(contract.sign_date,'%y%m%d') &lt;= date_format(#{inputDateEnd},'%y%m%d')</if>
+        </where>
     </select>
-
-
 </mapper>

@@ -147,8 +147,10 @@ public class CustomerController extends BaseController {
         if (result > 0) {
             return AjaxResult.error(HttpStatus.EXIST_CUSTOMER,"该客户已存在");
         }
-        customerService.insertCustomer(customer);
-        return AjaxResult.success("新增成功");
+        int i = customerService.insertCustomer(customer);
+        if (i>0)
+            return AjaxResult.success("新增成功");
+        return AjaxResult.error("新增失败");
     }
 
     /**
@@ -206,7 +208,7 @@ public class CustomerController extends BaseController {
             return AjaxResult.error(HttpStatus.ERROR, "该客户在您操作前被删除或转为线索");
         }
         else if (result == 0) {
-            AjaxResult.error(HttpStatus.ERROR, "更新失败");
+            AjaxResult.error(HttpStatus.ERROR, "转移失败");
 
         }
         return AjaxResult.success("转移客户成功");

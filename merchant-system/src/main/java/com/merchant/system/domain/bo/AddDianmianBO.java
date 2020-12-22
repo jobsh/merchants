@@ -97,6 +97,10 @@ public class AddDianmianBO extends BaseEntity {
     @ApiModelProperty(value = "验收结果", name = "checkResult")
     private String checkResult;
 
+    /** 验收结果 */
+    @ApiModelProperty(value = "验收信息", name = "checkInfo")
+    private String checkInfo;
+
     /** 合同编号 */
     @ApiModelProperty(value = "合同编号", name = "contractNum")
     @NotNull(message = "没有上传店面关联的合同编号")
@@ -119,6 +123,17 @@ public class AddDianmianBO extends BaseEntity {
     @ApiModelProperty(value = "开店时间", name = "openDate")
     private String openDate;
 
+    /** 闭店时间*/
+    @ApiModelProperty(value = "开店时间", name = "openDate")
+    private String closeDate;
+
+    /** 闭店时间*/
+    @ApiModelProperty(value = "闭店原因", name = "closeReason")
+    private String closeReason;
+
+    /** 闭店时间*/
+    @ApiModelProperty(value = "闭店天数", name = "closeDays")
+    private Integer closeDays;
 
     @ApiModelProperty(value = "最早录入时间", name = "inputDateStart")
     private String inputDateStart;
