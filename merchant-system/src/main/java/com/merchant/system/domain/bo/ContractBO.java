@@ -87,32 +87,41 @@ public class ContractBO extends BaseEntity
     private Integer dianmianNum;
 
     /** 店面所在省份 */
+    @Excel(name = "店面省份")
     private String dianmianProvince;
 
     /** 店面所在城市 */
+    @Excel(name = "店面城市")
     private String dianmianCity;
 
     /** 店面所在区 */
+    @Excel(name = "店面区")
     private String dianmianDistrict;
 
     /** 店面详细地址 */
+    @Excel(name = "店面详细地址")
     private String dianmianAddress;
 
     /** 店面经度 */
+    @Excel(name = "店面经度")
     private String dianmianLongitude;
 
     /** 店面纬度 */
+    @Excel(name = "店面纬度")
     private String dianmianLatitude;
 
     /** 保证金 */
     @ApiModelProperty(value = "保证金,单位分显示时需要转化为元", name = "guarantee")
+    @Excel(name = "保证金")
     private Integer guarantee;
 
     /** 各种费用 */
     @ApiModelProperty(value = "各种费用", name = "fee")
+    @Excel(name = "各种费用")
     private String fee;
 
     /** 操作 */
+    @Excel(name = "操作")
     @ApiModelProperty(value = "对合同的操作", name = "operation")
     private String operation;
 
@@ -122,8 +131,10 @@ public class ContractBO extends BaseEntity
     private String status;
 
     /** 审核状态（0:未审核  1:已审核） */
+    @Excel(name = "审核状态")
     private String checkStatus;
 
+    @Excel(name = "负责人id")
     private Integer managerId;
 
     /** 负责人 */
@@ -131,6 +142,7 @@ public class ContractBO extends BaseEntity
     @ApiModelProperty(value = "负责人姓名", name = "manager")
     private String manager;
 
+    @Excel(name = "签约人id")
     private Integer signUserId;
 
     /** 签约人员 */
@@ -141,38 +153,46 @@ public class ContractBO extends BaseEntity
     /** 签约日期 */
     @JsonFormat(pattern = "yyyy-MM-dd")
     @ApiModelProperty(value = "签约日期", name = "signDate")
+    @Excel(name = "签约日期")
     private String signDate;
 
     /** 审核时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "审核时间")
     @ApiModelProperty(value = "审核时间", name = "checkDate")
     private String checkDate;
 
     /** 合同开始日期 */
     @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "合同开始日期")
     @ApiModelProperty(value = "合同开始日期", name = "beginDate")
     private String beginDate;
 
     /** 合同结束日期 */
     @JsonFormat(pattern = "yyyy-MM-dd")
     @ApiModelProperty(value = "合同结束日期", name = "endDate")
+    @Excel(name = "合同结束日期")
     private String endDate;
 
     /** 合同附件 */
     @ApiModelProperty(value = "合同附件", name = "file")
+    @Excel(name = "合同附件")
     private String file;
 
     /** 合同附件 */
     @ApiModelProperty(value = "合同附件", name = "file")
+    @Excel(name = "解约附件")
     private String terminateFile;
 
     /** 合同图片 */
     @ApiModelProperty(value = "合同图片", name = "imgs")
+    @Excel(name = "合同图片")
     private String imgs;
 
     /** 合同解约日期 */
     @JsonFormat(pattern = "yyyy-MM-dd")
     @ApiModelProperty(value = "合同解约日期", name = "terminateDate")
+    @Excel(name = "合同解约日期")
     private String terminateDate;
 
     /** 签约日期 */

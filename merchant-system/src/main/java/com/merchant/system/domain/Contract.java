@@ -151,14 +151,18 @@ public class Contract extends BaseEntity
     private String checkStatus;
 
     /** 合同附件 */
+    @Excel(name = "合同附件")
     private String file;
 
     /** 合同附件 */
+    @Excel(name = "解约附件")
     private String terminateFile;
 
     /** 合同图片 */
+    @Excel(name = "合同图片附件")
     private String imgs;
 
     /** 部门名 */
+    @Excel(name = "部门名")
     private String deptName;
 }

@@ -80,4 +80,6 @@ public interface ContractMapper
     List<Contract> selectContractByIds(Integer[] ids);
 
     int autoExpire(ContractBO contractBO);
+
+    int autoBegin(ContractBO contractBO);
 }

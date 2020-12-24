@@ -27,7 +27,7 @@ import com.merchant.common.core.page.TableDataInfo;
  * @date 2020-11-18
  */
 @RestController
-@RequestMapping("/system/file")
+@RequestMapping("/contract/file")
 public class ContractFileController extends BaseController
 {
     @Autowired
@@ -74,7 +74,7 @@ public class ContractFileController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:file:add')")
     @Log(title = "【请填写功能名称】", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody ContractFile contractFile)
+    public AjaxResult add(@RequestBody(required = false) ContractFile contractFile)
     {
         return toAjax(contractFileService.insertContractFile(contractFile));
     }

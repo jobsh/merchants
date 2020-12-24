@@ -20,7 +20,7 @@ public interface ContractFeeMapper
      * @param id 费用管理ID
      * @return 费用管理
      */
-    public ContractFee selectContractFeeById(Long id);
+    public ContractFee selectContractFeeById(Integer id);
 
     /**
      * 查询费用管理列表
@@ -46,7 +46,7 @@ public interface ContractFeeMapper
      */
     public int updateContractFee(AddContractFeeBO contractFee);
 
-    int updateContractFeeByNum(ContractFeeBO contractFeeBO);
+    int updateContractFeeById(ContractFeeBO contractFeeBO);
 
     /**
      * 删除费用管理
@@ -54,7 +54,7 @@ public interface ContractFeeMapper
      * @param id 费用管理ID
      * @return 结果
      */
-    public int deleteContractFeeById(Long id);
+    public int deleteContractFeeById(Integer id);
 
     /**
      * 批量删除费用管理
@@ -62,7 +62,7 @@ public interface ContractFeeMapper
      * @param ids 需要删除的数据ID
      * @return 结果
      */
-    public int deleteContractFeeByIds(Long[] ids);
+    public int deleteContractFeeByIds(Integer[] ids);
 
     List<ContractFeeVO> selectContractFeeByContractNum(String contractNum);
 }

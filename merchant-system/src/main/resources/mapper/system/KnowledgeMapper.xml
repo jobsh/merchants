@@ -29,7 +29,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </where>
     </select>
     
-    <select id="selectKnowledgeById" parameterType="Long" resultMap="KnowledgeResult">
+    <select id="selectKnowledgeById" parameterType="Integer" resultMap="KnowledgeResult">
         <include refid="selectKnowledgeVo"/>
         where id = #{id}
     </select>
@@ -71,8 +71,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </trim>
         where id = #{id}
     </update>
+    <update id="logicDeleteKnowledgeById">
+        update
+            biz_knowledge
+        set
+            biz_knowledge.is_delete = #{isDelete}
+        where
+            biz_knowledge.id = #{id}
+    </update>
 
-    <delete id="deleteKnowledgeById" parameterType="Long">
+    <delete id="deleteKnowledgeById" parameterType="Integer">
         delete from biz_knowledge where id = #{id}
     </delete>
 

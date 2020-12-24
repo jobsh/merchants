@@ -19,8 +19,8 @@ public class  ContractFee extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
-    /** 合同费用表id */
-    private Long id;
+    /** 费用表id */
+    private Integer id;
 
     private Integer receiverId;
 

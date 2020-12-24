@@ -145,4 +145,6 @@ public interface IContractService
      * @param contractBO
      */
     void autoExpire(ContractBO contractBO);
+
+    void autoBegin(ContractBO contractBO);
 }

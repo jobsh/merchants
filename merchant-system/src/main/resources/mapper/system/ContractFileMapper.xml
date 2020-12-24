@@ -28,8 +28,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="file != null  and file != ''"> and file = #{file}</if>
             <if test="image != null  and image != ''"> and image = #{image}</if>
             <if test="description != null  and description != ''"> and description = #{description}</if>
-            <if test="inputDate != null "> and input_date = #{inputDate}</if>
-            <if test="updateDate != null "> and update_date = #{updateDate}</if>
+            <if test="inputDate != null and inputDate != ''"> and input_date = #{inputDate}</if>
+            <if test="updateDate != null and updateDate!= ''"> and update_date = #{updateDate}</if>
         </where>
     </select>
     
@@ -41,26 +41,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <insert id="insertContractFile" parameterType="ContractFile">
         insert into biz_contract_file
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="id != null">id,</if>
             <if test="contractNum != null and contractNum != ''">contract_num,</if>
-            <if test="file != null">file,</if>
-            <if test="image != null">image,</if>
-            <if test="createBy != null">create_by,</if>
-            <if test="description != null">description,</if>
-            <if test="inputDate != null">input_date,</if>
-            <if test="updateDate != null">update_date,</if>
-            <if test="remark != null">remark,</if>
+            <if test="name != null and name != ''">name,</if>
+            <if test="file != null and file != ''">file,</if>
+            <if test="image != null and image != ''">image,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="description != null and description != ''">description,</if>
+            <if test="remark != null and remark != ''">remark,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="id != null">#{id},</if>
             <if test="contractNum != null and contractNum != ''">#{contractNum},</if>
-            <if test="file != null">#{file},</if>
-            <if test="image != null">#{image},</if>
-            <if test="createBy != null">#{createBy},</if>
-            <if test="description != null">#{description},</if>
-            <if test="inputDate != null">#{inputDate},</if>
-            <if test="updateDate != null">#{updateDate},</if>
-            <if test="remark != null">#{remark},</if>
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="file != null and file != ''">#{file},</if>
+            <if test="image != null and image != ''">#{image},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="description != null and description != ''">#{description},</if>
+            <if test="remark != null and remark != ''">#{remark},</if>
          </trim>
     </insert>
 
@@ -68,13 +64,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         update biz_contract_file
         <trim prefix="SET" suffixOverrides=",">
             <if test="contractNum != null and contractNum != ''">contract_num = #{contractNum},</if>
-            <if test="file != null">file = #{file},</if>
-            <if test="image != null">image = #{image},</if>
-            <if test="createBy != null">create_by = #{createBy},</if>
-            <if test="description != null">description = #{description},</if>
-            <if test="inputDate != null">input_date = #{inputDate},</if>
-            <if test="updateDate != null">update_date = #{updateDate},</if>
-            <if test="remark != null">remark = #{remark},</if>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="file != null and file != ''">file = #{file},</if>
+            <if test="image != null  and image != ''">image = #{image},</if>
+            <if test="createBy != null and createBy != ''">create_by = #{createBy},</if>
+            <if test="description != null  and description != ''">description = #{description},</if>
+            <if test="remark != null and remark != ''">remark = #{remark},</if>
         </trim>
         where id = #{id}
     </update>

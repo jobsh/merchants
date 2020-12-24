@@ -1,15 +1,17 @@
 package com.merchant.system.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.merchant.common.annotation.ContractLog;
 import com.merchant.common.annotation.DataScope;
 import com.merchant.common.annotation.Excel;
 import com.merchant.common.config.MerchantConfig;
-import static com.merchant.common.constant.Constants.*;
 import com.merchant.common.core.domain.entity.SysUser;
 import com.merchant.common.core.domain.model.LoginUser;
 import com.merchant.common.enums.ContractOperType;
 import com.merchant.common.enums.ContractStatus;
+import com.merchant.common.enums.GenjinStatus;
 import com.merchant.common.exception.BaseException;
 import com.merchant.common.utils.DateUtils;
 import com.merchant.common.utils.ServletUtils;
@@ -17,16 +19,16 @@ import com.merchant.common.utils.file.FileUploadUtils;
 import com.merchant.common.utils.ip.IpUtils;
 import com.merchant.system.domain.Contract;
 import com.merchant.system.domain.ContractOperLog;
+import com.merchant.system.domain.Fee;
 import com.merchant.system.domain.bo.AddContractBO;
 import com.merchant.system.domain.bo.ContractBO;
+import com.merchant.system.domain.bo.CustomerBO;
 import com.merchant.system.mapper.ContractMapper;
-import com.merchant.system.service.IContractLogService;
-import com.merchant.system.service.IContractService;
-import com.merchant.system.service.IDianmianService;
-import com.merchant.system.service.ISysUserService;
+import com.merchant.system.service.*;
 import org.n3r.idworker.Sid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.datasource.lookup.JndiDataSourceLookup;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,6 +46,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.BiPredicate;
 
+import static com.merchant.common.constant.Constants.CONTRACT_PREFIX;
+
 /**
  * 合同Service业务层处理
  * 
@@ -58,6 +62,9 @@ public class ContractServiceImpl implements IContractService
 
     @Autowired
     private ISysUserService sysUserService;
+
+    @Autowired
+    private ICustomerService customerService;
 
     @Autowired
     private IContractLogService contractLogService;
@@ -108,6 +115,7 @@ public class ContractServiceImpl implements IContractService
      * @return 结果
      */
     @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public int insertContract(AddContractBO contractBO)
     {
         contractBO.setNum(CONTRACT_PREFIX + sid.nextShort());
@@ -120,16 +128,34 @@ public class ContractServiceImpl implements IContractService
         contractBO.setPid(0);
         // 新签合同rootNum设置为本合同编号，pid为0
         contractBO.setRootNum(contractBO.getNum());
-        // 设置合同默认状态为有效执行中
-        if (contractBO.getStatus() == null) {
+        if (DateUtils.getNowDate().before(DateUtils.parseDate(contractBO.getBeginDate()))) {
+            // 如果当前时间在合同开始时间之前，设置合同状态为有效未执行
+            contractBO.setStatus(ContractStatus.EFFECTIVE_NOT_EXECUTE.getCode());
+        } else {
+            // 否则设置合同状态为有效执行中
             contractBO.setStatus(ContractStatus.EFFECTIVE_EXECUTING.getCode());
         }
         // type为新签合同
         contractBO.setType(ContractStatus.SIGN_NEW.getCode());
         // 审核状态为未审核
         contractBO.setCheckStatus(ContractStatus.UNCHECK.getCode());
+        Fee fee = JSONObject.parseObject(contractBO.getFee(), Fee.class);
+        Fee.JingyingManagerFee jingyingManagerFee = fee.getJingyingManagerFee();
+        Integer total = jingyingManagerFee.getDetail().stream().mapToInt(item -> Integer.parseInt(item.get("money"))).sum();
+        jingyingManagerFee.setTotal(total.toString());
+        fee.setJingyingManagerFee(jingyingManagerFee);
+        System.out.println("---------------fee:" + JSONObject.toJSONString(fee));
+        contractBO.setFee(JSONObject.toJSONString(fee));
         int result = contractMapper.insertContract(contractBO);
         if (result > 0) {
+            // 客户录入合同后自动变为成交状态
+            CustomerBO customerBO = new CustomerBO();
+            customerBO.setId(contractBO.getCustomerId());
+            // 跟进状态改为成交状态
+            customerBO.setGenjinStatus(GenjinStatus.DEAL.getCode());
+            customerBO.setGenjinDate(DateUtils.getDate());
+            customerService.updateCustomer(customerBO);
+
             // 添加合同日志
             ContractOperLog contractOperLog = new ContractOperLog();
             contractOperLog.setBusinessType(ContractOperType.ADD.ordinal());
@@ -166,7 +192,7 @@ public class ContractServiceImpl implements IContractService
             ContractOperLog contractOperLog = new ContractOperLog();
             this.setContractOperLog(contractOperLog);
             // 添加合同日志
-            contractOperLog.setRequestMethod("POST");
+            contractOperLog.setRequestMethod("PUT");
             contractOperLog.setContractNum(oldContract.getNum());
             contractOperLog.setBusinessType(ContractOperType.MODIFY.ordinal());
             contractOperLog.setTitle("修改合同");
@@ -215,7 +241,7 @@ public class ContractServiceImpl implements IContractService
     public int terminate(ContractBO contractBO) {
         Contract contract = contractMapper.selectContractById(contractBO.getId());
         ContractOperLog contractOperLog = new ContractOperLog();
-        if (contract.getEndDate().after(DateUtils.getNowDate())) {
+        if (contract.getEndDate().after(DateUtils.parseDate(contractBO.getTerminateDate()))) {
             contractBO.setStatus(ContractStatus.EXPIRED_TERMINATION.getCode());
             contractOperLog.setTitle("到期解约");
         } else {
@@ -256,32 +282,32 @@ public class ContractServiceImpl implements IContractService
         ContractBO oldContract = new ContractBO();
 
         BeanUtils.copyProperties(contract,oldContract);
-        if (contract.getEndDate().after(DateUtils.getNowDate())) {
-            // 设置旧合同为到期解约
-            oldContract.setStatus(ContractStatus.EXPIRED_TERMINATION.getCode());
-        } else {
-            // 设为未到期解约
-            oldContract.setStatus(ContractStatus.UNEXPIRED_TERMINATION.getCode());
-        }
+        // 无论旧合同此时是否到期，只要续约旧合同都改为到期续约
+        oldContract.setStatus(ContractStatus.EXPIRED_RENEW.getCode());
         // 更新旧合同
         contractMapper.updateContract(oldContract);
 
         // 签发新合同
         contractBO.setNum(CONTRACT_PREFIX + sid.nextShort());
-
         contractBO.setRootNum(contract.getRootNum());
         // 设置新合同pid
         contractBO.setPid(contract.getId());
         // 设置新合同类型为续签
         contractBO.setType(ContractStatus.SIGN_RENEW.getCode());
         // 设置新合同状态为有效执行中
-        contractBO.setStatus(ContractStatus.EFFECTIVE_EXECUTING.getCode());
+        // 如果续约时间和合同开始时间相同则直接变为有效执行中，如果合同开始时间在续约时间之后为有效未执行，
+        // TODO 当续约的新合同到了合同开始日期时要自动变成有效执行中状态
+        if (DateUtils.getDate().equals(contractBO.getBeginDate())) {
+            // 如果续约时间和合同开始时间相同则直接变为有效执行中
+            contractBO.setStatus(ContractStatus.EFFECTIVE_EXECUTING.getCode());
+        } else {
+            contractBO.setStatus(ContractStatus.EFFECTIVE_NOT_EXECUTE.getCode());
+        }
         // 设置新合同审核状态为未审核
         contractBO.setCheckStatus(ContractStatus.UNCHECK.getCode());
-        // 根据新合同编号查询是否存在该合同
+        // 增加新合同记录
         int res = contractMapper.insertContract(contractBO);
         if (res > 0) {
-            // 请求的地址
             ContractOperLog contractOperLog = new ContractOperLog();
             this.setContractOperLog(contractOperLog);
             // 添加合同日志
@@ -290,8 +316,6 @@ public class ContractServiceImpl implements IContractService
             contractOperLog.setBusinessType(ContractOperType.RENEW.ordinal());
             contractOperLog.setTitle("合同续约");
             contractOperLog.setDescription("原合同：" + oldContract.getNum() + ";新合同：" + contractBO.getNum());
-//            memberValues.put("description", compareRes);
-
             contractLogService.insertOperlog(contractOperLog);
         }
 
@@ -456,6 +480,11 @@ public class ContractServiceImpl implements IContractService
     @Override
     public void autoExpire(ContractBO contractBO) {
         contractMapper.autoExpire(contractBO);
+    }
+
+    @Override
+    public void autoBegin(ContractBO contractBO) {
+        contractMapper.autoBegin(contractBO);
     }
 
 

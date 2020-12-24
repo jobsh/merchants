@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.merchant.system.mapper.WorkspaceMapper">
+
+    <resultMap type="com.merchant.system.domain.vo.DianmianNumVO" id="dianmianNumVO">
+        <result column="dianmian_num" property="value" />
+        <result column="city" property="name" />
+    </resultMap>
+    <resultMap type="com.merchant.system.domain.vo.DianmianAndContractAllVO" id="dianmianAndContractAllVO">
+        <result column="yingye_dianmian" property="yingyeDianmian" />
+        <result column="all_dianmian" property="allDianmian" />
+        <result column="new_contract" property="newContract" />
+        <result column="renew_contract" property="renewContract" />
+    </resultMap>
+    <resultMap type="com.merchant.system.domain.vo.ContractDandianAndQuyuVO" id="contractDandianAndQuyuVO">
+        <result column="dept_name" property="deptName" />
+        <result column="dandian_contract_num" property="dandianContractNum" />
+        <result column="quyu_contract_num" property="quyuContractNum" />
+    </resultMap>
+    <select id="selectDianmianNumList" resultMap="dianmianNumVO" parameterType="String">
+        -- 工作台
+        select
+            dm.city as city,COUNT(1) as dianmian_num
+        FROM
+            biz_dianmian dm
+        <where>
+            <choose>
+                <when test="type == 'month'">
+                    AND  DATE_FORMAT( dm.input_date, '%Y%m' ) = DATE_FORMAT( CURDATE() , '%Y%m' )
+                </when>
+                <when test="type == 'year'">
+                    AND YEAR(dm.input_date) = YEAR(NOW())
+                </when>
+            </choose>
+        </where>
+        GROUP BY
+            dm.city
+    </select>
+    <select id="dianmianAndContractAllList" resultMap="dianmianAndContractAllVO" parameterType="String">
+        SELECT
+            (
+                SELECT
+                    count(1)
+                FROM
+                    biz_dianmian dm
+                WHERE
+                    dm.`status` = 1
+                    <if test="type == 'month'">and DATE_FORMAT( dm.input_date, '%Y%m' ) = DATE_FORMAT( CURDATE() , '%Y%m' )</if>
+                    <if test="type == 'year'">and YEAR(dm.input_date) = YEAR(NOW())</if>
+            ) as yingye_dianmian,
+            (
+                SELECT
+                    count(1)
+                FROM
+                    biz_dianmian dm
+                <where>
+                    <if test="type == 'month'">and DATE_FORMAT( dm.input_date, '%Y%m' ) = DATE_FORMAT( CURDATE() , '%Y%m' )</if>
+                    <if test="type == 'year'">and YEAR(dm.input_date) = YEAR(NOW())</if>
+                </where>
+            ) as all_dianmian,
+            (
+                SELECT
+                    COUNT(1)
+                FROM
+                    biz_contract bc
+                WHERE
+                    bc.type = '0' -- 新签
+                    <if test="type == 'month'">and DATE_FORMAT( bc.sign_date, '%Y%m' ) = DATE_FORMAT( CURDATE() , '%Y%m' )</if>
+                    <if test="type == 'year'">and YEAR(bc.sign_date) = YEAR(NOW())</if>
+            ) as new_contract,
+            (
+                SELECT
+                    COUNT(1)
+                FROM
+                    biz_contract bc
+                WHERE
+                    bc.type = '1' -- 续签
+                    <if test="type =='month'">and DATE_FORMAT( bc.sign_date, '%Y%m' ) = DATE_FORMAT( CURDATE() , '%Y%m' )</if>
+                    <if test="type == 'year'">and YEAR(bc.sign_date) = YEAR(NOW())</if>
+            ) as renew_contract
+    </select>
+    <select id="selectContractDandianAndQuyuVO" resultMap="contractDandianAndQuyuVO" parameterType="String">
+        SELECT
+            dandian_contract.dept_name, IFNULL(dandian_contract_num,0) dandian_contract_num, IFNULL(quyu_contract_num,0) quyu_contract_num
+        FROM
+        (
+            SELECT
+                d.id dept_id,d.dept_name, temp.dandian_contract_num
+            FROM
+                (
+                    SELECT
+                        bc.dept_id as dept_id,
+                        COUNT(1) as dandian_contract_num
+                    FROM
+                        biz_contract bc
+                    WHERE
+                        bc.produce = '0' -- 单店加盟
+                        <if test="type == 'month'">and DATE_FORMAT( bc.sign_date, '%Y%m' ) = DATE_FORMAT( CURDATE() , '%Y%m' )</if>
+                        <if test="type == 'year'">and YEAR(bc.sign_date) = YEAR(NOW())</if>
+                    GROUP BY
+                        bc.dept_id
+                ) as temp
+                    LEFT JOIN
+                sys_dept d
+                ON
+                    d.id = temp.dept_id
+        ) as dandian_contract
+        LEFT JOIN
+        (
+            SELECT
+                d.id dept_id, d.dept_name, temp.quyu_contract_num
+            FROM
+                (
+                    SELECT
+                        bc.dept_id as dept_id,
+                        COUNT(1) as quyu_contract_num
+                    FROM
+                        biz_contract bc
+                    WHERE
+                        bc.produce = '1' -- 区域加盟
+                        <if test="type == 'month'">and DATE_FORMAT( bc.sign_date, '%Y%m' ) = DATE_FORMAT( CURDATE() , '%Y%m' )</if>
+                        <if test="type == 'year'">and YEAR(bc.sign_date) = YEAR(NOW())</if>
+                    GROUP BY
+                        bc.dept_id
+                ) as temp
+                    LEFT JOIN
+                sys_dept d
+                ON
+                    d.id = temp.dept_id
+        ) as quyu_contract
+        ON
+            dandian_contract.dept_id = quyu_contract.dept_id
+    </select>
+
+</mapper>

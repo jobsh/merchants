@@ -72,6 +72,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="deptId != null and deptId != 0">
                 AND (u.dept_id = #{deptId} OR u.dept_id IN ( SELECT t.id FROM sys_dept t WHERE find_in_set(#{deptId}, ancestors) ))
             </if>
+            <if test="managerId !=  null  and managerId != ''">and manager_id = #{managerId}</if>
             <if test="num != null  and num != ''"> and biz_contract.num  like concat('%', #{num}, '%')</if>
             <if test="customerName != null  and customerName != ''"> and biz_contract.customer_name like concat('%', #{customerName}, '%')</if>
             <if test="customerPhone != null  and customerPhone != ''"> and biz_contract.customer_phone = #{customerPhone}</if>
@@ -245,7 +246,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         set
             bc.status = #{status}
         where
-            bc.end_date &lt;= now()
+            bc.end_date &lt;= now() and bc.status = '0' -- 有效执行中
+    </update>
+    <update id="autoBegin" parameterType="ContractBO">
+        update
+            biz_contract bc
+        set
+            bc.status = #{status}
+        where
+            bc.begin_date &lt;= now() and bc.end_date &gt;= now() and bc.status = '1' -- 有效未执行
     </update>
 
     <delete id="deleteContractById" parameterType="Integer">

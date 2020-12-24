@@ -61,7 +61,7 @@ public class ContractFeeController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('fee:feeManager:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
+    public AjaxResult getInfo(@PathVariable("id") Integer id)
     {
         return AjaxResult.success(contractFeeService.selectContractFeeById(id));
     }
@@ -98,7 +98,7 @@ public class ContractFeeController extends BaseController
     @PreAuthorize("@ss.hasPermi('fee:feeManager:remove')")
     @Log(title = "费用管理", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
+    public AjaxResult remove(@PathVariable Integer[] ids)
     {
         return toAjax(contractFeeService.deleteContractFeeByIds(ids));
     }
@@ -119,27 +119,27 @@ public class ContractFeeController extends BaseController
     /**
      * 费用审核
      */
-    @PostMapping(value = "/check/")
-    public AjaxResult check(@RequestParam String num,@RequestParam String checkDate)
+    @GetMapping(value = "/check")
+    public AjaxResult check(@RequestParam Integer id,@RequestParam String checkDate)
     {
-        if (num == null) {
-            return AjaxResult.error("费用编号不能为空");
+        if (id == null) {
+            return AjaxResult.error("费用id不能为空");
         }
         if (StringUtils.isBlank(checkDate)) {
             return AjaxResult.error("请选择审核日期");
         }
-        return toAjax(contractFeeService.checkContractFeeByNum(num, checkDate));
+        return toAjax(contractFeeService.checkContractFeeByNum(id, checkDate));
     }
 
     /**
      * 费用反审核
      */
-    @PostMapping(value = "/uncheck/")
-    public AjaxResult uncheck(@RequestParam String num)
+    @GetMapping(value = "/uncheck/{id}")
+    public AjaxResult uncheck(@PathVariable Integer id)
     {
-        if (StringUtils.isBlank(num)) {
-            return AjaxResult.error("费用编号不能为空");
+        if (id == null) {
+            return AjaxResult.error("费用id不能为空");
         }
-        return toAjax(contractFeeService.unCheckContractFeeByNum(num));
+        return toAjax(contractFeeService.unCheckContractFeeById(id));
     }
 }

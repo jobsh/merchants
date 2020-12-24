@@ -25,6 +25,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="manager"    column="manager"    />
         <result property="deptName"    column="dept_name"    />
         <result property="companyName"    column="company_name"    />
+        <result property="remark"    column="remark"    />
         <association property="sysCompany"    column="company_id" javaType="SysCompany" resultMap="companyResult" />
     </resultMap>
 
@@ -48,7 +49,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <sql id="selectContractFeeVo">
         select
             biz_contract_fee.id, biz_contract_fee.num, biz_contract_fee.contract_num, biz_contract_fee.type, biz_contract_fee.amount,biz_contract_fee.pay_method, biz_contract_fee.payer,biz_contract_fee.reciever, biz_contract_fee.receiver_id, biz_contract_fee.check_status, biz_contract_fee.shoukuan_date,
-            biz_contract.customer_name, biz_contract.customer_id, biz_contract.produce, biz_contract.dianmian_name, biz_contract.dianmian_num, biz_contract.manager,
+            biz_contract.customer_name, biz_contract.customer_id, biz_contract.produce, biz_contract.dianmian_name, biz_contract.dianmian_num, biz_contract.manager,biz_contract.remark,
             d.dept_name as dept_name,
             pd.dept_name as company_name,
             u.company_id as company_id,
@@ -80,7 +81,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectContractFeeList" parameterType="ContractFeeBO" resultMap="ContractFeeResult">
         <include refid="selectContractFeeVo"></include>
-        <where>  
+        <where>
+            <if test="deptId != null and deptId != 0">
+                AND (u.dept_id = #{deptId} OR u.dept_id IN ( SELECT t.id FROM sys_dept t WHERE find_in_set(#{deptId}, ancestors) ))
+            </if>
+            <if test="receiverId !=  null  and receiverId != ''">and receiver_id = #{receiverId}</if>
             <if test="num != null  and num != ''"> and num = #{num}</if>
             <if test="contractNum != null  and contractNum != ''"> and contract_num = #{contractNum}</if>
             <if test="type != null  and type != ''"> and biz_contract_fee.type = #{type}</if>
@@ -88,7 +93,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="payer != null  and payer != ''"> and payer = #{payer}</if>
             <if test="reciever != null  and reciever != ''"> and reciever = #{reciever}</if>
             <if test="checkStatus != null  and checkStatus != ''"> and biz_contract_fee.check_status = #{checkStatus}</if>
-            <if test="shoukuanDate != null "> and shoukuan_date = #{shoukuanDate}</if>
+            <if test="shoukuanDateStart != null "> and shoukuan_date &gt;= #{shoukuanDateStart}</if>
+            <if test="shoukuanDateEnd != null "> and shoukuan_date &lt;= #{shoukuanDateEnd}</if>
             <if test="deptName != null and deptName != ''"> and deptName = #{deptName}</if>
             <if test="produce != null  and produce != ''"> and biz_contract.produce = #{produce}</if>
             <if test="keywords != null and keywords != ''">and (
@@ -99,9 +105,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <!-- 数据范围过滤 -->
             ${params.dataScope}
         </where>
+        order by biz_contract_fee.input_date desc
     </select>
     
-    <select id="selectContractFeeById" parameterType="Long" resultMap="ContractFeeResult">
+    <select id="selectContractFeeById" parameterType="Integer" resultMap="ContractFeeResult">
         <include refid="selectContractFeeVo"/>
         where biz_contract_fee.id = #{id}
     </select>
@@ -124,6 +131,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="receiverId != null">receiver_id,</if>
             <if test="checkStatus != null and checkStatus != ''">check_status,</if>
             <if test="shoukuanDate != null">shoukuan_date,</if>
+            <if test="shoukuanDate != null">remark,</if>
             update_date,
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -137,6 +145,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="receiverId != null">#{receiverId},</if>
             <if test="checkStatus != null and checkStatus != ''">#{checkStatus},</if>
             <if test="shoukuanDate != null">#{shoukuanDate},</if>
+            <if test="shoukuanDate != null">#{remark},</if>
             now()
          </trim>
     </insert>
@@ -155,11 +164,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="checkStatus != null and checkStatus != ''">check_status = #{checkStatus},</if>
             <if test="shoukuanDate != null">shoukuan_date = #{shoukuanDate},</if>
             <if test="updateDate != null">update_date = #{updateDate},</if>
+            <if test="remark != null">remark = #{remark},</if>
         </trim>
         where biz_contract_fee.id = #{id}
     </update>
 
-    <update id="updateContractFeeByNum" parameterType="ContractFeeBO">
+    <update id="updateContractFeeById" parameterType="ContractFeeBO">
         update biz_contract_fee
         <trim prefix="SET" suffixOverrides=",">
             <if test="contractNum != null and contractNum != ''">contract_num = #{contractNum},</if>
@@ -172,11 +182,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="checkStatus != null and checkStatus != ''">check_status = #{checkStatus},</if>
             <if test="shoukuanDate != null">shoukuan_date = #{shoukuanDate},</if>
             <if test="updateDate != null">update_date = #{updateDate},</if>
+            <if test="remark != null">remark = #{remark},</if>
         </trim>
-        where biz_contract_fee.num = #{num}
+        where biz_contract_fee.id = #{id}
     </update>
 
-    <delete id="deleteContractFeeById" parameterType="Long">
+    <delete id="deleteContractFeeById" parameterType="Integer">
         delete from biz_contract_fee where biz_contract_fee.id = #{id}
     </delete>
 

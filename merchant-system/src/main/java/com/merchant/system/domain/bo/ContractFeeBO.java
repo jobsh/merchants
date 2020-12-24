@@ -22,11 +22,21 @@ import java.util.Date;
 @Data
 public class ContractFeeBO extends ContractFee {
 
+    /** 部门id */
+    private Integer deptId;
     /** 部门名称 */
     private String deptName;
     /** 公司名称 */
     private String companyName;
     /** 签约产品 */
     private String produce;
+    /** 收款时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "收款时间开始", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date shoukuanDateStart;
+    /** 收款时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "收款时间截止", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date shoukuanDateEnd;
 
 }

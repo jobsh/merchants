@@ -17,7 +17,7 @@ public interface IKnowledgeService
      * @param id 知识库ID
      * @return 知识库
      */
-    public Knowledge selectKnowledgeById(Long id);
+    public Knowledge selectKnowledgeById(Integer id);
 
     /**
      * 查询知识库列表
@@ -49,7 +49,7 @@ public interface IKnowledgeService
      * @param ids 需要删除的知识库ID
      * @return 结果
      */
-    public int deleteKnowledgeByIds(Long[] ids);
+    public int deleteKnowledgeByIds(Integer[] ids);
 
     /**
      * 删除知识库信息
@@ -57,5 +57,13 @@ public interface IKnowledgeService
      * @param id 知识库ID
      * @return 结果
      */
-    public int deleteKnowledgeById(Long id);
+    public int deleteKnowledgeById(Integer id);
+
+    /**
+     * 逻辑删除与否
+     * @param isDelete
+     * @param id
+     * @return
+     */
+    int logicDeleteKnowledgeById(String isDelete, Integer id);
 }

@@ -2,6 +2,7 @@ package com.merchant.system.mapper;
 
 import java.util.List;
 import com.merchant.system.domain.Knowledge;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 知识库Mapper接口
@@ -17,7 +18,7 @@ public interface KnowledgeMapper
      * @param id 知识库ID
      * @return 知识库
      */
-    public Knowledge selectKnowledgeById(Long id);
+    public Knowledge selectKnowledgeById(Integer id);
 
     /**
      * 查询知识库列表
@@ -49,7 +50,7 @@ public interface KnowledgeMapper
      * @param id 知识库ID
      * @return 结果
      */
-    public int deleteKnowledgeById(Long id);
+    public int deleteKnowledgeById(Integer id);
 
     /**
      * 批量删除知识库
@@ -57,5 +58,7 @@ public interface KnowledgeMapper
      * @param ids 需要删除的数据ID
      * @return 结果
      */
-    public int deleteKnowledgeByIds(Long[] ids);
+    public int deleteKnowledgeByIds(Integer[] ids);
+
+    int logicDeleteKnowledgeById(@Param("isDelete") String isDelete, @Param("id") Integer id);
 }

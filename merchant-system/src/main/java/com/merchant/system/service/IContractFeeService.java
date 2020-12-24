@@ -5,6 +5,7 @@ import com.merchant.system.domain.ContractFee;
 import com.merchant.system.domain.bo.AddContractFeeBO;
 import com.merchant.system.domain.bo.ContractFeeBO;
 import com.merchant.system.domain.vo.ContractFeeVO;
+import org.omg.PortableInterceptor.INACTIVE;
 
 /**
  * 费用管理Service接口
@@ -20,7 +21,7 @@ public interface IContractFeeService
      * @param id 费用管理ID
      * @return 费用管理
      */
-    public ContractFee selectContractFeeById(Long id);
+    public ContractFee selectContractFeeById(Integer id);
 
     /**
      * 查询费用管理列表
@@ -52,7 +53,7 @@ public interface IContractFeeService
      * @param ids 需要删除的费用管理ID
      * @return 结果
      */
-    public int deleteContractFeeByIds(Long[] ids);
+    public int deleteContractFeeByIds(Integer[] ids);
 
     /**
      * 删除费用管理信息
@@ -60,7 +61,7 @@ public interface IContractFeeService
      * @param id 费用管理ID
      * @return 结果
      */
-    public int deleteContractFeeById(Long id);
+    public int deleteContractFeeById(Integer id);
 
     /**
      * 根据合同编号查询合同费用信息
@@ -71,15 +72,15 @@ public interface IContractFeeService
 
     /**
      * 根据费用编号审核费用
-     * @param num
+     * @param id
      * @return
      */
-    int checkContractFeeByNum(String num, String checkDate);
+    int checkContractFeeByNum(Integer id, String checkDate);
 
     /**
      * 根据费用编号反审核费用
-     * @param num
+     * @param id
      * @return
      */
-    int unCheckContractFeeByNum(String num);
+    int unCheckContractFeeById(Integer id);
 }

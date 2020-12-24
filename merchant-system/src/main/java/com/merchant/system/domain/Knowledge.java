@@ -18,7 +18,7 @@ public class Knowledge extends BaseEntity
     private static final long serialVersionUID = 1L;
 
     /** 主键id */
-    private Long id;
+    private Integer id;
 
     /** 名称 */
     @Excel(name = "名称")
@@ -42,12 +42,12 @@ public class Knowledge extends BaseEntity
     /** 更新时间 */
     private Date updateDate;
 
-    public void setId(Long id) 
+    public void setId(Integer id)
     {
         this.id = id;
     }
 
-    public Long getId() 
+    public Integer getId()
     {
         return id;
     }

@@ -26,7 +26,7 @@ public class KnowledgeServiceImpl implements IKnowledgeService
      * @return 知识库
      */
     @Override
-    public Knowledge selectKnowledgeById(Long id)
+    public Knowledge selectKnowledgeById(Integer id)
     {
         return knowledgeMapper.selectKnowledgeById(id);
     }
@@ -74,7 +74,7 @@ public class KnowledgeServiceImpl implements IKnowledgeService
      * @return 结果
      */
     @Override
-    public int deleteKnowledgeByIds(Long[] ids)
+    public int deleteKnowledgeByIds(Integer[] ids)
     {
         return knowledgeMapper.deleteKnowledgeByIds(ids);
     }
@@ -86,8 +86,14 @@ public class KnowledgeServiceImpl implements IKnowledgeService
      * @return 结果
      */
     @Override
-    public int deleteKnowledgeById(Long id)
+    public int deleteKnowledgeById(Integer id)
     {
         return knowledgeMapper.deleteKnowledgeById(id);
+    }
+
+    @Override
+    public int logicDeleteKnowledgeById(String isDelete,Integer id) {
+
+        return knowledgeMapper.logicDeleteKnowledgeById(isDelete,id);
     }
 }

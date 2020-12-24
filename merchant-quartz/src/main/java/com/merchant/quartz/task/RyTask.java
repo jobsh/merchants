@@ -62,4 +62,16 @@ public class RyTask {
         }
     }
 
+    /**
+     *  当续约的新合同到了合同开始日期时要自动变成有效执行中状态
+     */
+    public void contractBegin() {
+        ContractBO contractBO = new ContractBO();
+        contractBO.setStatus(ContractStatus.EFFECTIVE_EXECUTING.getCode());
+        try {
+            contractService.autoBegin(contractBO);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

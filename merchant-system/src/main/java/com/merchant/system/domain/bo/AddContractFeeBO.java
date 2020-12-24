@@ -20,7 +20,7 @@ public class AddContractFeeBO extends BaseEntity
     private static final long serialVersionUID = 1L;
 
     /** 合同费用表id */
-    private Long id;
+    private Integer id;
 
     @NotNull(message = "没有上传收款人id")
     private Integer receiverId;

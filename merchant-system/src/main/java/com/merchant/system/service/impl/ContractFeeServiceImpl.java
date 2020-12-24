@@ -34,7 +34,7 @@ public class ContractFeeServiceImpl implements IContractFeeService
      */
     @Override
     @DataScope(deptAlias = "d", userAlias = "u")
-    public ContractFee selectContractFeeById(Long id)
+    public ContractFee selectContractFeeById(Integer id)
     {
         return contractFeeMapper.selectContractFeeById(id);
     }
@@ -88,7 +88,7 @@ public class ContractFeeServiceImpl implements IContractFeeService
      * @return 结果
      */
     @Override
-    public int deleteContractFeeByIds(Long[] ids)
+    public int deleteContractFeeByIds(Integer[] ids)
     {
         return contractFeeMapper.deleteContractFeeByIds(ids);
     }
@@ -100,7 +100,7 @@ public class ContractFeeServiceImpl implements IContractFeeService
      * @return 结果
      */
     @Override
-    public int deleteContractFeeById(Long id)
+    public int deleteContractFeeById(Integer id)
     {
         return contractFeeMapper.deleteContractFeeById(id);
     }
@@ -114,21 +114,21 @@ public class ContractFeeServiceImpl implements IContractFeeService
     }
 
     @Override
-    public int checkContractFeeByNum(String num, String checkDate) {
+    public int checkContractFeeByNum(Integer id, String checkDate) {
         ContractFeeBO contractFeeBO = new ContractFeeBO();
-        contractFeeBO.setNum(num);
+        contractFeeBO.setId(id);
         contractFeeBO.setCheckStatus(ContractFeeStatus.CHECKED.getCode());
         contractFeeBO.setCheckDate(DateUtils.parseDate(checkDate));
 
-        return contractFeeMapper.updateContractFeeByNum(contractFeeBO);
+        return contractFeeMapper.updateContractFeeById(contractFeeBO);
     }
 
     @Override
-    public int unCheckContractFeeByNum(String num) {
+    public int unCheckContractFeeById(Integer id) {
         ContractFeeBO contractFeeBO = new ContractFeeBO();
-        contractFeeBO.setNum(num);
+        contractFeeBO.setId(id);
         contractFeeBO.setCheckStatus(ContractFeeStatus.UNCHECK.getCode());
 
-        return contractFeeMapper.updateContractFeeByNum(contractFeeBO);
+        return contractFeeMapper.updateContractFeeById(contractFeeBO);
     }
 }
