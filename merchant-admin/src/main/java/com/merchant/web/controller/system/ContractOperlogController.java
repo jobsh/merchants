@@ -27,8 +27,8 @@ public class ContractOperlogController extends BaseController
     private IContractLogService operLogService;
 
     @PreAuthorize("@ss.hasPermi('monitor:operlog:list')")
-    @GetMapping("/list")
-    public TableDataInfo list(ContractOperLog operLog)
+    @PostMapping("/list")
+    public TableDataInfo list(@RequestBody ContractOperLog operLog)
     {
         startPage();
         List<ContractOperLog> list = operLogService.selectOperLogList(operLog);

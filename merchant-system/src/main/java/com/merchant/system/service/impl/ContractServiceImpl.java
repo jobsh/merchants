@@ -187,7 +187,9 @@ public class ContractServiceImpl implements IContractService
 
         if (res > 0) {
             Contract newContract = contractMapper.selectContractById(contractBO.getId());
-            Map<String, String> compareRes = compareTwoObject(oldContract, newContract);
+            Map<String, String> compareRes = compareTwoObject(oldContract, newContract,"fee");
+            Map<String, String> compareFee = compareTwoObject(JSONObject.parseObject(oldContract.getFee(),Fee.class), JSONObject.parseObject(newContract.getFee(),Fee.class));
+            compareRes.put("费用详情:",compareFee.toString());
             // 请求的地址
             ContractOperLog contractOperLog = new ContractOperLog();
             this.setContractOperLog(contractOperLog);
@@ -196,9 +198,9 @@ public class ContractServiceImpl implements IContractService
             contractOperLog.setContractNum(oldContract.getNum());
             contractOperLog.setBusinessType(ContractOperType.MODIFY.ordinal());
             contractOperLog.setTitle("修改合同");
+            System.out.println(JSONObject.toJSONString(compareRes));
             contractOperLog.setDescription(JSONObject.toJSONString(compareRes));
 //            memberValues.put("description", compareRes);
-
             contractLogService.insertOperlog(contractOperLog);
         }
         return res;
@@ -529,8 +531,8 @@ public class ContractServiceImpl implements IContractService
                     field2.setAccessible(true);
                     if (!biPredicate.test(field1.get(obj1), field2.get(obj2))) {
 //                        diffMap.put("compare_object: ", obj1 + " vs " + obj2);
-                        diffMap.put("修改前合同" + field1.getAnnotation(Excel.class).name(), field1.get(obj1).toString());
-                        diffMap.put("修改后合同" + field2.getAnnotation(Excel.class).name(), field2.get(obj2).toString());
+                        diffMap.put(field1.getAnnotation(Excel.class).name(), field1.get(obj1).toString() + "=>" + field2.get(obj2).toString());
+//                        diffMap.put("修改后合同" + field2.getAnnotation(Excel.class).name(), field2.get(obj2).toString());
                     }
                 }
             }

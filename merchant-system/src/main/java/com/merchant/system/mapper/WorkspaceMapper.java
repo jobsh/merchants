@@ -1,8 +1,6 @@
 package com.merchant.system.mapper;
 
-import com.merchant.system.domain.vo.ContractDandianAndQuyuVO;
-import com.merchant.system.domain.vo.DianmianAndContractAllVO;
-import com.merchant.system.domain.vo.DianmianNumVO;
+import com.merchant.system.domain.vo.*;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -20,4 +18,8 @@ public interface WorkspaceMapper {
     List<DianmianAndContractAllVO> dianmianAndContractAllList(@Param("type") String type);
 
     List<ContractDandianAndQuyuVO> selectContractDandianAndQuyuVO(@Param("type") String type);
+
+    List<CustomerWorkSpaceVO> selectCustomerWorkspaceList(@Param("type") String type);
+
+    List<CustomerFeeWorkSpaceVO> selectCustomerFeeWorkspaceList(@Param("type") String type);
 }

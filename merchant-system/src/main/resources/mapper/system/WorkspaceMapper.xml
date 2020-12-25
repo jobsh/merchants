@@ -19,6 +19,24 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result column="dandian_contract_num" property="dandianContractNum" />
         <result column="quyu_contract_num" property="quyuContractNum" />
     </resultMap>
+    <resultMap type="com.merchant.system.domain.vo.CustomerWorkSpaceVO" id="CustomerWorkSpaceVO">
+        <result column="xiansuo_num" property="xiansuoNum" />
+        <result column="customer_num" property="customerNum" />
+        <result column="dandian_contract_num" property="dandianContractNum" />
+        <result column="quyu_contract_num" property="quyuContractNum" />
+        <result column="quyu_dianmian_num" property="quyuDianmianNum" />
+        <result column="dianmian_num" property="dianmianNum" />
+    </resultMap>
+    <resultMap type="com.merchant.system.domain.vo.CustomerFeeWorkSpaceVO" id="CustomerFeeWorkSpaceVO">
+        <result column="lvyue_fee" property="lvyueFee" />
+        <result column="jingying_manager_fee" property="jingyingManagerFee" />
+        <result column="yunying_manager_fee" property="yunyingManagerFee" />
+        <result column="system_use_fee" property="systemUseFee" />
+        <result column="system_maintenance_fee" property="systemMaintenanceFee" />
+        <result column="daiban_fee" property="daibanFee" />
+        <result column="guohuo_fee" property="guohuoFee" />
+        <result column="total_fee" property="totalFee" />
+    </resultMap>
     <select id="selectDianmianNumList" resultMap="dianmianNumVO" parameterType="String">
         -- 工作台
         select
@@ -133,5 +151,116 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         ON
             dandian_contract.dept_id = quyu_contract.dept_id
     </select>
+    <select id="selectCustomerWorkspaceList" resultType="com.merchant.system.domain.vo.CustomerWorkSpaceVO">
+        SELECT
+        sum(xiansuo_num) xiansuo_num,
+        sum(customer_num) customer_num,
+        sum(dandian_contract_num) dandian_contract_num,
+        sum(quyu_contract_num) quyu_contract_num,
+        sum(quyu_dianmian_num) quyu_dianmian_num,
+        sum(dianmian_num) dianmian_num
+        FROM
+
+        (select
+        d.id,
+        d.parent_id,
+        d.dept_name,
+        IFNULL(xiansuo_num,0) xiansuo_num,
+        IFNULL(customer_num,0) customer_num,
+        IFNULL(dandian_contract_num,0) dandian_contract_num,
+        IFNULL(quyu_contract_num,0) quyu_contract_num,
+        IFNULL(quyu_dianmian_num,0) quyu_dianmian_num,
+        IFNULL(dandian_contract_num,0) + IFNULL(quyu_dianmian_num,0) as dianmian_num
+        FROM
+        sys_dept d
+        -- 线索和客户
+        left JOIN
+        (SELECT
+        c.dept_id dept_id,
+        count(case when c.`status` = 0 then 1 else null end) xiansuo_num, -- 线索状态为0
+        count(case when c.`status` = 1 then 1 else null end) customer_num -- 客户状态为1
+        FROM
+        biz_customer c
+        WHERE
+        c.resource &lt;= '6'
+        GROUP BY
+        dept_id
+        ) as xiansuo_num
+        on xiansuo_num.dept_id = d.id
+        -- 合同
+        LEFT JOIN
+        (
+        SELECT
+        contract.dept_id dept_id,
+        count(case when contract.produce = 0 then 1 else null end) dandian_contract_num,
+        count(case when contract.produce = 1 then 1 else null end) quyu_contract_num
+        FROM
+        biz_contract contract
+        GROUP BY
+        dept_id
+        ) contract_num
+        ON
+        contract_num.dept_id = d.id
+        -- 店面
+        LEFT JOIN
+        (
+        SELECT
+        dianmian.dept_id,
+        COUNT(dianmian.id) quyu_dianmian_num
+        FROM
+        biz_dianmian dianmian
+        WHERE
+        dianmian.type = 1 -- 区域加盟
+        GROUP BY
+        dianmian.dept_id
+        ) dianmian
+        ON
+        dianmian.dept_id = d.id
+        WHERE
+        d.id = 101 OR d.id IN ( SELECT t.id FROM sys_dept t WHERE find_in_set(101, ancestors) )
+        ) t
+    </select>
+    <select id="selectCustomerFeeWorkspaceList" resultType="com.merchant.system.domain.vo.CustomerFeeWorkSpaceVO">
+        select
+            sum(lvyue_fee) lvyue_fee,
+            sum(jingying_manager_fee) jingying_manager_fee,
+            sum(yunying_manager_fee) yunying_manager_fee,
+            sum(system_use_fee) system_use_fee,
+            sum(system_maintenance_fee) system_maintenance_fee,
+            sum(daiban_fee) daiban_fee,
+            sum(guohuo_fee) guohuo_fee,
+            IFNULL(sum(lvyue_fee), 0) +  IFNULL(sum(jingying_manager_fee), 0) + IFNULL(sum(yunying_manager_fee), 0) + IFNULL(sum(system_use_fee), 0) + IFNULL(sum(system_maintenance_fee), 0) + IFNULL(sum(daiban_fee), 0)
+                + IFNULL(sum(guohuo_fee), 0) as total_fee
+        FROM
+            (
+                select
+                    d.id dept_id,
+                    d.parent_id parent_id,
+                    d.dept_name,
+                    SUM(case when fee.type = '0' then fee.amount else 0 end) lvyue_fee,
+                    SUM(case when fee.type = '1' then fee.amount else 0 end) jingying_manager_fee,
+                    SUM(case when fee.type = '2' then fee.amount else 0 end) yunying_manager_fee,
+                    SUM(case when fee.type = '3' then fee.amount else 0 end) system_use_fee,
+                    SUM(case when fee.type = '4' then fee.amount else 0 end) system_maintenance_fee,
+                    SUM(case when fee.type = '6' then fee.amount else 0 end) daiban_fee,
+                    SUM(case when fee.type = '5' then fee.amount else 0 end) guohuo_fee
+                FROM
+                    biz_contract_fee fee
+                        LEFT JOIN
+                    sys_user u
+                    ON
+                        u.id = fee.receiver_id
+                        LEFT JOIN
+                    sys_dept d
+                    on
+                        d.id = u.dept_id
+                WHERE
+                    d.id = 101 OR d.id IN ( SELECT t.id FROM sys_dept t WHERE find_in_set(101, ancestors) )
+                GROUP BY
+                    u.dept_id
+
+            ) fee
+    </select>
+
 
 </mapper>
