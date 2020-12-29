@@ -51,9 +51,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             biz_contract_fee.id, biz_contract_fee.num, biz_contract_fee.contract_num, biz_contract_fee.type, biz_contract_fee.amount,biz_contract_fee.pay_method, biz_contract_fee.payer,biz_contract_fee.reciever, biz_contract_fee.receiver_id, biz_contract_fee.check_status, biz_contract_fee.shoukuan_date,
             biz_contract.customer_name, biz_contract.customer_id, biz_contract.produce, biz_contract.dianmian_name, biz_contract.dianmian_num, biz_contract.manager,biz_contract.remark,
             d.dept_name as dept_name,
-            pd.dept_name as company_name,
-            u.company_id as company_id,
-            sys_company.name, sys_company.simple_name, sys_company.source_name, sys_company.sign, sys_company.type company_type, sys_company.contact_person, sys_company.address, sys_company.image, sys_company.phone, sys_company.introduce, sys_company.city_id, sys_company.status
+            company.id as company_id,
+            company.name company_name
         from
             biz_contract_fee
         left join
@@ -65,17 +64,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         on
             biz_contract.dept_id = d.id
         left join
-            sys_dept pd
-        on
-            d.parent_id = pd.id
-        left join
             sys_user u
         on
             biz_contract.manager_id = u.id
         left join
-            sys_company
+            sys_company company
         on
-            u.company_id = sys_company.id
+            d.company_id = company.id
 
     </sql>
 

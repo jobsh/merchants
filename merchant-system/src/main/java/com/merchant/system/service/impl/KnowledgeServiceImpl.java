@@ -80,20 +80,26 @@ public class KnowledgeServiceImpl implements IKnowledgeService
     }
 
     /**
-     * 删除知识库信息
+     * 逻辑删除知识库信息
      * 
      * @param id 知识库ID
      * @return 结果
      */
     @Override
-    public int deleteKnowledgeById(Integer id)
-    {
-        return knowledgeMapper.deleteKnowledgeById(id);
+    public int logicDeleteKnowledgeById(Integer id) {
+
+        return knowledgeMapper.logicDeleteKnowledgeById(id);
     }
 
+    /**
+     * 逻辑删除知识库信息
+     *
+     * @param id 知识库ID
+     * @return 结果
+     */
     @Override
-    public int logicDeleteKnowledgeById(String isDelete,Integer id) {
+    public int forbiddenKnowledgeById(String status,Integer id) {
 
-        return knowledgeMapper.logicDeleteKnowledgeById(isDelete,id);
+        return knowledgeMapper.forbiddenKnowledgeById(status,id);
     }
 }

@@ -144,7 +144,7 @@ public class AddContractBO extends BaseEntity
     private String signUser;
 
     /** 签约日期 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
     @ApiModelProperty(value = "签约日期", name = "signDate")
     private String signDate;
 

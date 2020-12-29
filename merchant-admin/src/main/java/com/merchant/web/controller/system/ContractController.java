@@ -292,6 +292,28 @@ public class ContractController extends BaseController
     }
 
     /**
+     * 手动输入的合同编号判重
+     */
+    @ApiOperation(value = "合同失效", notes = "合同失效", httpMethod = "GET")
+    @PreAuthorize("@ss.hasPermi('contract:contractManager:edit')")
+    @Log(title = "合同", businessType = BusinessType.UPDATE)
+    @GetMapping("/existCode/{code}")
+    public AjaxResult existCode(@ApiParam(name = "id", value = "手输入合同code", required = true) @PathVariable("code") String code) {
+
+        // 查询合同
+        if (code == null) {
+            return AjaxResult.error("请输入合同编号");
+        }
+        int res = contractService.existCode(code);
+
+        if (res > 0) {
+            return AjaxResult.error("合同编号已存在，请重新输入");
+        }
+
+        return AjaxResult.success();
+    }
+
+    /**
      * 上传合同图片
      */
     @PostMapping("/contractImg")

@@ -45,20 +45,14 @@ public interface KnowledgeMapper
     public int updateKnowledge(Knowledge knowledge);
 
     /**
-     * 删除知识库
-     * 
-     * @param id 知识库ID
-     * @return 结果
-     */
-    public int deleteKnowledgeById(Integer id);
-
-    /**
-     * 批量删除知识库
+     * 批量逻辑删除知识库
      * 
      * @param ids 需要删除的数据ID
      * @return 结果
      */
     public int deleteKnowledgeByIds(Integer[] ids);
 
-    int logicDeleteKnowledgeById(@Param("isDelete") String isDelete, @Param("id") Integer id);
+    int logicDeleteKnowledgeById(@Param("id") Integer id);
+
+    int forbiddenKnowledgeById(@Param("status") String status, @Param("id") Integer id);
 }

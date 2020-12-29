@@ -79,11 +79,6 @@ public class Dianmian extends BaseEntity
     @Excel(name = "验收结果")
     private String checkResult;
 
-    /** 开店日期 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "开店日期", width = 30, dateFormat = "yyyy-MM-dd")
-    private Date openDate;
-
     /** 合同编号 */
     @Excel(name = "合同编号")
     private String contractNum;
@@ -96,7 +91,22 @@ public class Dianmian extends BaseEntity
     @Excel(name = "授权区域")
     private String area;
 
-    /** 闭店/停业时间 */
+    /** 开店日期 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "开店日期", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date setDate;
+
+    /** 营业日期 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "营业日期", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date openDate;
+
+    /** 停业时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "闭店/停业时间", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date restDate;
+
+    /** 闭店时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "闭店/停业时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date closeDate;

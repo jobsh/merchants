@@ -165,4 +165,12 @@ public class Contract extends BaseEntity
     /** 部门名 */
     @Excel(name = "部门名")
     private String deptName;
+
+    /** 部门名 */
+    @Excel(name = "公司名")
+    private String companyName;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "合同录入时间")
+    private Date inputDate;
 }

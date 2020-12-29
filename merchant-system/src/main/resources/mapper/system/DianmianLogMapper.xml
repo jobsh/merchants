@@ -41,9 +41,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="oper != null">oper,</if>
             <if test="discription != null">discription,</if>
             <if test="status != null">status,</if>
+            <if test="setDate != null">set_date,</if>
             <if test="openDate != null">open_date,</if>
             <if test="closeDate != null">close_date,</if>
-            <if test="inputDate != null">input_date,</if>
+            <if test="resetDate != null">close_date,</if>
+
             <if test="remark != null">remark,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -52,9 +54,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="oper != null">#{oper},</if>
             <if test="discription != null">#{discription},</if>
             <if test="status != null">#{status},</if>
+            <if test="setDate != null">#{setDate},</if>
             <if test="openDate != null">#{openDate},</if>
             <if test="closeDate != null">#{closeDate},</if>
-            <if test="inputDate != null">#{inputDate},</if>
             <if test="remark != null">#{remark},</if>
          </trim>
     </insert>
@@ -66,6 +68,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="oper != null">oper = #{oper},</if>
             <if test="discription != null">discription = #{discription},</if>
             <if test="status != null">status = #{status},</if>
+            <if test="kaidianDate != null">kaidian_date = #{kaidianDate},</if>
             <if test="openDate != null">open_date = #{openDate},</if>
             <if test="closeDate != null">close_date = #{closeDate},</if>
             <if test="inputDate != null">input_date = #{inputDate},</if>

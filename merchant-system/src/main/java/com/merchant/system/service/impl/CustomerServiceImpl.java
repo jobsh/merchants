@@ -39,6 +39,9 @@ public class CustomerServiceImpl implements ICustomerService {
     @Autowired
     private SysUserMapper sysUserMapper;
 
+    @Autowired
+    private TokenService tokenService;
+
     /**
      * 查询我的客户
      *
@@ -91,6 +94,7 @@ public class CustomerServiceImpl implements ICustomerService {
      */
     @Override
     public int insertCustomer(Customer customer) {
+
         String customerNum = sid.nextShort();
         customer.setNum(customerNum);
 

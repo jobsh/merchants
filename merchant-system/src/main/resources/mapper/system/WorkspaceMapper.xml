@@ -1,52 +1,52 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.merchant.system.mapper.WorkspaceMapper">
 
     <resultMap type="com.merchant.system.domain.vo.DianmianNumVO" id="dianmianNumVO">
-        <result column="dianmian_num" property="value" />
-        <result column="city" property="name" />
+        <result column="dianmian_num" property="value"/>
+        <result column="city" property="name"/>
     </resultMap>
     <resultMap type="com.merchant.system.domain.vo.DianmianAndContractAllVO" id="dianmianAndContractAllVO">
-        <result column="yingye_dianmian" property="yingyeDianmian" />
-        <result column="all_dianmian" property="allDianmian" />
-        <result column="new_contract" property="newContract" />
-        <result column="renew_contract" property="renewContract" />
+        <result column="yingye_dianmian" property="yingyeDianmian"/>
+        <result column="all_dianmian" property="allDianmian"/>
+        <result column="new_contract" property="newContract"/>
+        <result column="renew_contract" property="renewContract"/>
     </resultMap>
     <resultMap type="com.merchant.system.domain.vo.ContractDandianAndQuyuVO" id="contractDandianAndQuyuVO">
-        <result column="dept_name" property="deptName" />
-        <result column="dandian_contract_num" property="dandianContractNum" />
-        <result column="quyu_contract_num" property="quyuContractNum" />
+        <result column="dept_name" property="deptName"/>
+        <result column="dandian_contract_num" property="dandianContractNum"/>
+        <result column="quyu_contract_num" property="quyuContractNum"/>
     </resultMap>
     <resultMap type="com.merchant.system.domain.vo.CustomerWorkSpaceVO" id="CustomerWorkSpaceVO">
-        <result column="xiansuo_num" property="xiansuoNum" />
-        <result column="customer_num" property="customerNum" />
-        <result column="dandian_contract_num" property="dandianContractNum" />
-        <result column="quyu_contract_num" property="quyuContractNum" />
-        <result column="quyu_dianmian_num" property="quyuDianmianNum" />
-        <result column="dianmian_num" property="dianmianNum" />
+        <result column="xiansuo_num" property="xiansuoNum"/>
+        <result column="customer_num" property="customerNum"/>
+        <result column="dandian_contract_num" property="dandianContractNum"/>
+        <result column="quyu_contract_num" property="quyuContractNum"/>
+        <result column="quyu_dianmian_num" property="quyuDianmianNum"/>
+        <result column="dianmian_num" property="dianmianNum"/>
     </resultMap>
     <resultMap type="com.merchant.system.domain.vo.CustomerFeeWorkSpaceVO" id="CustomerFeeWorkSpaceVO">
-        <result column="lvyue_fee" property="lvyueFee" />
-        <result column="jingying_manager_fee" property="jingyingManagerFee" />
-        <result column="yunying_manager_fee" property="yunyingManagerFee" />
-        <result column="system_use_fee" property="systemUseFee" />
-        <result column="system_maintenance_fee" property="systemMaintenanceFee" />
-        <result column="daiban_fee" property="daibanFee" />
-        <result column="guohuo_fee" property="guohuoFee" />
-        <result column="total_fee" property="totalFee" />
+        <result column="lvyue_fee" property="lvyueFee"/>
+        <result column="jingying_manager_fee" property="jingyingManagerFee"/>
+        <result column="yunying_manager_fee" property="yunyingManagerFee"/>
+        <result column="system_use_fee" property="systemUseFee"/>
+        <result column="system_maintenance_fee" property="systemMaintenanceFee"/>
+        <result column="daiban_fee" property="daibanFee"/>
+        <result column="guohuo_fee" property="guohuoFee"/>
+        <result column="total_fee" property="totalFee"/>
     </resultMap>
     <select id="selectDianmianNumList" resultMap="dianmianNumVO" parameterType="String">
         -- 工作台
         select
-            dm.city as city,COUNT(1) as dianmian_num
+        dm.city as city,COUNT(1) as dianmian_num
         FROM
-            biz_dianmian dm
+        biz_dianmian dm
         <where>
             <choose>
                 <when test="type == 'month'">
-                    AND  DATE_FORMAT( dm.input_date, '%Y%m' ) = DATE_FORMAT( CURDATE() , '%Y%m' )
+                    AND DATE_FORMAT( dm.input_date, '%Y%m' ) = DATE_FORMAT( CURDATE() , '%Y%m' )
                 </when>
                 <when test="type == 'year'">
                     AND YEAR(dm.input_date) = YEAR(NOW())
@@ -54,104 +54,105 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             </choose>
         </where>
         GROUP BY
-            dm.city
+        dm.city
     </select>
     <select id="dianmianAndContractAllList" resultMap="dianmianAndContractAllVO" parameterType="String">
         SELECT
-            (
-                SELECT
-                    count(1)
-                FROM
-                    biz_dianmian dm
-                WHERE
-                    dm.`status` = 1
-                    <if test="type == 'month'">and DATE_FORMAT( dm.input_date, '%Y%m' ) = DATE_FORMAT( CURDATE() , '%Y%m' )</if>
-                    <if test="type == 'year'">and YEAR(dm.input_date) = YEAR(NOW())</if>
-            ) as yingye_dianmian,
-            (
-                SELECT
-                    count(1)
-                FROM
-                    biz_dianmian dm
-                <where>
-                    <if test="type == 'month'">and DATE_FORMAT( dm.input_date, '%Y%m' ) = DATE_FORMAT( CURDATE() , '%Y%m' )</if>
-                    <if test="type == 'year'">and YEAR(dm.input_date) = YEAR(NOW())</if>
-                </where>
-            ) as all_dianmian,
-            (
-                SELECT
-                    COUNT(1)
-                FROM
-                    biz_contract bc
-                WHERE
-                    bc.type = '0' -- 新签
-                    <if test="type == 'month'">and DATE_FORMAT( bc.sign_date, '%Y%m' ) = DATE_FORMAT( CURDATE() , '%Y%m' )</if>
-                    <if test="type == 'year'">and YEAR(bc.sign_date) = YEAR(NOW())</if>
-            ) as new_contract,
-            (
-                SELECT
-                    COUNT(1)
-                FROM
-                    biz_contract bc
-                WHERE
-                    bc.type = '1' -- 续签
-                    <if test="type =='month'">and DATE_FORMAT( bc.sign_date, '%Y%m' ) = DATE_FORMAT( CURDATE() , '%Y%m' )</if>
-                    <if test="type == 'year'">and YEAR(bc.sign_date) = YEAR(NOW())</if>
-            ) as renew_contract
+        (
+        SELECT
+        count(1)
+        FROM
+        biz_dianmian dm
+        WHERE
+        dm.`status` = 1
+        <if test="type == 'month'">and DATE_FORMAT( dm.input_date, '%Y%m' ) = DATE_FORMAT( CURDATE() , '%Y%m' )</if>
+        <if test="type == 'year'">and YEAR(dm.input_date) = YEAR(NOW())</if>
+        ) as yingye_dianmian,
+        (
+        SELECT
+        count(1)
+        FROM
+        biz_dianmian dm
+        <where>
+            <if test="type == 'month'">and DATE_FORMAT( dm.input_date, '%Y%m' ) = DATE_FORMAT( CURDATE() , '%Y%m' )</if>
+            <if test="type == 'year'">and YEAR(dm.input_date) = YEAR(NOW())</if>
+        </where>
+        ) as all_dianmian,
+        (
+        SELECT
+        COUNT(1)
+        FROM
+        biz_contract bc
+        WHERE
+        bc.type = '0' -- 新签
+        <if test="type == 'month'">and DATE_FORMAT( bc.sign_date, '%Y%m' ) = DATE_FORMAT( CURDATE() , '%Y%m' )</if>
+        <if test="type == 'year'">and YEAR(bc.sign_date) = YEAR(NOW())</if>
+        ) as new_contract,
+        (
+        SELECT
+        COUNT(1)
+        FROM
+        biz_contract bc
+        WHERE
+        bc.type = '1' -- 续签
+        <if test="type =='month'">and DATE_FORMAT( bc.sign_date, '%Y%m' ) = DATE_FORMAT( CURDATE() , '%Y%m' )</if>
+        <if test="type == 'year'">and YEAR(bc.sign_date) = YEAR(NOW())</if>
+        ) as renew_contract
     </select>
     <select id="selectContractDandianAndQuyuVO" resultMap="contractDandianAndQuyuVO" parameterType="String">
         SELECT
-            dandian_contract.dept_name, IFNULL(dandian_contract_num,0) dandian_contract_num, IFNULL(quyu_contract_num,0) quyu_contract_num
+        dandian_contract.dept_name, IFNULL(dandian_contract_num,0) dandian_contract_num, IFNULL(quyu_contract_num,0)
+        quyu_contract_num
         FROM
         (
-            SELECT
-                d.id dept_id,d.dept_name, temp.dandian_contract_num
-            FROM
-                (
-                    SELECT
-                        bc.dept_id as dept_id,
-                        COUNT(1) as dandian_contract_num
-                    FROM
-                        biz_contract bc
-                    WHERE
-                        bc.produce = '0' -- 单店加盟
-                        <if test="type == 'month'">and DATE_FORMAT( bc.sign_date, '%Y%m' ) = DATE_FORMAT( CURDATE() , '%Y%m' )</if>
-                        <if test="type == 'year'">and YEAR(bc.sign_date) = YEAR(NOW())</if>
-                    GROUP BY
-                        bc.dept_id
-                ) as temp
-                    LEFT JOIN
-                sys_dept d
-                ON
-                    d.id = temp.dept_id
+        SELECT
+        d.id dept_id,d.dept_name, temp.dandian_contract_num
+        FROM
+        (
+        SELECT
+        bc.dept_id as dept_id,
+        COUNT(1) as dandian_contract_num
+        FROM
+        biz_contract bc
+        WHERE
+        bc.produce = '0' -- 单店加盟
+        <if test="type == 'month'">and DATE_FORMAT( bc.sign_date, '%Y%m' ) = DATE_FORMAT( CURDATE() , '%Y%m' )</if>
+        <if test="type == 'year'">and YEAR(bc.sign_date) = YEAR(NOW())</if>
+        GROUP BY
+        bc.dept_id
+        ) as temp
+        LEFT JOIN
+        sys_dept d
+        ON
+        d.id = temp.dept_id
         ) as dandian_contract
         LEFT JOIN
         (
-            SELECT
-                d.id dept_id, d.dept_name, temp.quyu_contract_num
-            FROM
-                (
-                    SELECT
-                        bc.dept_id as dept_id,
-                        COUNT(1) as quyu_contract_num
-                    FROM
-                        biz_contract bc
-                    WHERE
-                        bc.produce = '1' -- 区域加盟
-                        <if test="type == 'month'">and DATE_FORMAT( bc.sign_date, '%Y%m' ) = DATE_FORMAT( CURDATE() , '%Y%m' )</if>
-                        <if test="type == 'year'">and YEAR(bc.sign_date) = YEAR(NOW())</if>
-                    GROUP BY
-                        bc.dept_id
-                ) as temp
-                    LEFT JOIN
-                sys_dept d
-                ON
-                    d.id = temp.dept_id
+        SELECT
+        d.id dept_id, d.dept_name, temp.quyu_contract_num
+        FROM
+        (
+        SELECT
+        bc.dept_id as dept_id,
+        COUNT(1) as quyu_contract_num
+        FROM
+        biz_contract bc
+        WHERE
+        bc.produce = '1' -- 区域加盟
+        <if test="type == 'month'">and DATE_FORMAT( bc.sign_date, '%Y%m' ) = DATE_FORMAT( CURDATE() , '%Y%m' )</if>
+        <if test="type == 'year'">and YEAR(bc.sign_date) = YEAR(NOW())</if>
+        GROUP BY
+        bc.dept_id
+        ) as temp
+        LEFT JOIN
+        sys_dept d
+        ON
+        d.id = temp.dept_id
         ) as quyu_contract
         ON
-            dandian_contract.dept_id = quyu_contract.dept_id
+        dandian_contract.dept_id = quyu_contract.dept_id
     </select>
-    <select id="selectCustomerWorkspaceList" resultType="com.merchant.system.domain.vo.CustomerWorkSpaceVO">
+    <select id="selectCustomerWorkspaceList" resultMap="CustomerWorkSpaceVO">
         SELECT
         sum(xiansuo_num) xiansuo_num,
         sum(customer_num) customer_num,
@@ -160,11 +161,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         sum(quyu_dianmian_num) quyu_dianmian_num,
         sum(dianmian_num) dianmian_num
         FROM
-
         (select
-        d.id,
-        d.parent_id,
-        d.dept_name,
         IFNULL(xiansuo_num,0) xiansuo_num,
         IFNULL(customer_num,0) customer_num,
         IFNULL(dandian_contract_num,0) dandian_contract_num,
@@ -177,25 +174,37 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         left JOIN
         (SELECT
         c.dept_id dept_id,
-        count(case when c.`status` = 0 then 1 else null end) xiansuo_num, -- 线索状态为0
-        count(case when c.`status` = 1 then 1 else null end) customer_num -- 客户状态为1
+        count(case when c.`status` = 0 then 1 end) xiansuo_num, -- 线索状态为0
+        count(case when c.`status` = 1 then 1 end) customer_num -- 客户状态为1
         FROM
         biz_customer c
         WHERE
         c.resource &lt;= '6'
+        <if test="type == '0'">and to_days(c.input_date) = to_days(now())</if>
+        <if test="type == '1'">and TO_DAYS(NOW()) - TO_DAYS(c.input_date) &lt;= 1</if>
+        <if test="type == '2'">and YEARWEEK(date_format(c.input_date,'%Y-%m-%d')) = YEARWEEK(now());</if>
+        <if test="type == '3'">and YEAR(c.input_date) = YEAR(NOW())</if>
         GROUP BY
         dept_id
         ) as xiansuo_num
-        on xiansuo_num.dept_id = d.id
+        on
+        xiansuo_num.dept_id = d.id
         -- 合同
         LEFT JOIN
         (
         SELECT
         contract.dept_id dept_id,
-        count(case when contract.produce = 0 then 1 else null end) dandian_contract_num,
-        count(case when contract.produce = 1 then 1 else null end) quyu_contract_num
+        count(case when contract.produce = 0 then 1 end) dandian_contract_num,
+        count(case when contract.produce = 1 then 1 end) quyu_contract_num
         FROM
         biz_contract contract
+        <where>
+            1=1
+            <if test="type == '0'">and to_days(contract.sign_date) = to_days(now())</if>
+            <if test="type == '1'">and TO_DAYS(NOW()) - TO_DAYS(contract.sign_date) &lt;= 1</if>
+            <if test="type == '2'">and YEARWEEK(date_format(contract.sign_date,'%Y-%m-%d')) = YEARWEEK(now());</if>
+            <if test="type == '3'">and YEAR(contract.sign_date) = YEAR(NOW())</if>
+        </where>
         GROUP BY
         dept_id
         ) contract_num
@@ -211,55 +220,67 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         biz_dianmian dianmian
         WHERE
         dianmian.type = 1 -- 区域加盟
+        <if test="type == '0'">and to_days(dianmian.input_date) = to_days(now())</if>
+        <if test="type == '1'">and TO_DAYS(NOW()) - TO_DAYS(dianmian.input_date) &lt;= 1</if>
+        <if test="type == '2'">and YEARWEEK(date_format(dianmian.input_date,'%Y-%m-%d')) = YEARWEEK(now());</if>
+        <if test="type == '3'">and YEAR(dianmian.input_date) = YEAR(NOW())</if>
         GROUP BY
         dianmian.dept_id
         ) dianmian
         ON
         dianmian.dept_id = d.id
-        WHERE
-        d.id = 101 OR d.id IN ( SELECT t.id FROM sys_dept t WHERE find_in_set(101, ancestors) )
+        <where>
+            <if test="deptId != null and deptId != 0">
+                AND (d.id = #{deptId} OR d.id IN ( SELECT t.id FROM sys_dept t WHERE find_in_set(#{deptId}, ancestors)))
+            </if>
+        </where>
         ) t
     </select>
-    <select id="selectCustomerFeeWorkspaceList" resultType="com.merchant.system.domain.vo.CustomerFeeWorkSpaceVO">
-        select
-            sum(lvyue_fee) lvyue_fee,
-            sum(jingying_manager_fee) jingying_manager_fee,
-            sum(yunying_manager_fee) yunying_manager_fee,
-            sum(system_use_fee) system_use_fee,
-            sum(system_maintenance_fee) system_maintenance_fee,
-            sum(daiban_fee) daiban_fee,
-            sum(guohuo_fee) guohuo_fee,
-            IFNULL(sum(lvyue_fee), 0) +  IFNULL(sum(jingying_manager_fee), 0) + IFNULL(sum(yunying_manager_fee), 0) + IFNULL(sum(system_use_fee), 0) + IFNULL(sum(system_maintenance_fee), 0) + IFNULL(sum(daiban_fee), 0)
-                + IFNULL(sum(guohuo_fee), 0) as total_fee
-        FROM
-            (
-                select
-                    d.id dept_id,
-                    d.parent_id parent_id,
-                    d.dept_name,
-                    SUM(case when fee.type = '0' then fee.amount else 0 end) lvyue_fee,
-                    SUM(case when fee.type = '1' then fee.amount else 0 end) jingying_manager_fee,
-                    SUM(case when fee.type = '2' then fee.amount else 0 end) yunying_manager_fee,
-                    SUM(case when fee.type = '3' then fee.amount else 0 end) system_use_fee,
-                    SUM(case when fee.type = '4' then fee.amount else 0 end) system_maintenance_fee,
-                    SUM(case when fee.type = '6' then fee.amount else 0 end) daiban_fee,
-                    SUM(case when fee.type = '5' then fee.amount else 0 end) guohuo_fee
-                FROM
-                    biz_contract_fee fee
-                        LEFT JOIN
-                    sys_user u
-                    ON
-                        u.id = fee.receiver_id
-                        LEFT JOIN
-                    sys_dept d
-                    on
-                        d.id = u.dept_id
-                WHERE
-                    d.id = 101 OR d.id IN ( SELECT t.id FROM sys_dept t WHERE find_in_set(101, ancestors) )
-                GROUP BY
-                    u.dept_id
 
-            ) fee
+    <select id="selectCustomerFeeWorkspaceList" resultMap="CustomerFeeWorkSpaceVO">
+        select
+        sum(lvyue_fee) lvyue_fee,
+        sum(jingying_manager_fee) jingying_manager_fee,
+        sum(yunying_manager_fee) yunying_manager_fee,
+        sum(system_use_fee) system_use_fee,
+        sum(system_maintenance_fee) system_maintenance_fee,
+        sum(daiban_fee) daiban_fee,
+        sum(guohuo_fee) guohuo_fee,
+        IFNULL(sum(lvyue_fee), 0) + IFNULL(sum(jingying_manager_fee), 0) + IFNULL(sum(yunying_manager_fee), 0) +
+        IFNULL(sum(system_use_fee), 0) + IFNULL(sum(system_maintenance_fee), 0) + IFNULL(sum(daiban_fee), 0)
+        + IFNULL(sum(guohuo_fee), 0) as total_fee
+        FROM
+        (
+        select
+        SUM(case when fee.type = '0' then fee.amount else 0 end) lvyue_fee,
+        SUM(case when fee.type = '1' then fee.amount else 0 end) jingying_manager_fee,
+        SUM(case when fee.type = '2' then fee.amount else 0 end) yunying_manager_fee,
+        SUM(case when fee.type = '3' then fee.amount else 0 end) system_use_fee,
+        SUM(case when fee.type = '4' then fee.amount else 0 end) system_maintenance_fee,
+        SUM(case when fee.type = '6' then fee.amount else 0 end) daiban_fee,
+        SUM(case when fee.type = '5' then fee.amount else 0 end) guohuo_fee
+        FROM
+        biz_contract_fee fee
+        LEFT JOIN
+        sys_user u
+        ON
+        u.id = fee.receiver_id
+        LEFT JOIN
+        sys_dept d
+        on
+        d.id = u.dept_id
+        <where>
+            <if test="type == '0'">and to_days(fee.input_date) = to_days(now())</if>
+            <if test="type == '1'">and TO_DAYS(NOW()) - TO_DAYS(fee.input_date) &lt;= 1</if>
+            <if test="type == '2'">and YEARWEEK(date_format(fee.input_date,'%Y-%m-%d')) = YEARWEEK(now());</if>
+            <if test="type == '3'">and YEAR(fee.input_date) = YEAR(NOW())</if>
+            <if test="deptId != null and deptId != 0">
+                AND (d.id = #{deptId} OR d.id IN ( SELECT t.id FROM sys_dept t WHERE find_in_set(#{deptId}, ancestors)))
+            </if>
+        </where>
+        GROUP BY
+            u.dept_id
+        ) fee
     </select>
 
 

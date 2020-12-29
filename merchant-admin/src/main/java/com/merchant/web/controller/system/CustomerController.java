@@ -147,6 +147,8 @@ public class CustomerController extends BaseController {
         if (result > 0) {
             return AjaxResult.error(HttpStatus.EXIST_CUSTOMER,"该客户已存在");
         }
+        String username = tokenService.getLoginUser(ServletUtils.getRequest()).getUsername();
+        customer.setLuruName(username);
         int i = customerService.insertCustomer(customer);
         if (i>0)
             return AjaxResult.success("新增成功");

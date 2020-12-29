@@ -7,6 +7,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <resultMap type="com.merchant.system.domain.vo.DianmianVO" id="DianmianResult">
         <result property="id"    column="id"    />
         <result property="deptId"    column="dept_id"    />
+        <result column="dept_name" property="deptName"/>
         <result property="diandongId"    column="diandong_id"    />
         <result property="diandongName"    column="diandong_name"    />
         <result property="diandongPhone"    column="diandong_phone"    />
@@ -22,12 +23,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="latitude"    column="latitude"    />
         <result property="address"    column="address"    />
         <result property="checkResult"    column="check_result"    />
+        <result property="setDate"    column="set_date"    />
         <result property="openDate"    column="open_date"    />
+        <result property="restDate"    column="rest_date"    />
+        <result property="closeDate"    column="close_date"    />
         <result property="contractNum"    column="contract_num"    />
         <result property="type"    column="type"    />
         <result property="area"    column="area"    />
-        <result property="closeDate"    column="close_date"    />
-        <result property="closeDays"    column="close_days"    />
         <result property="closeReason"    column="close_reason"    />
         <result property="checkInfo"    column="check_info"    />
         <result property="areaName"    column="area_name"    />
@@ -41,7 +43,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <result column="num" property="num"/>
             <result column="level" property="level"/>
             <result column="customer_needs" property="customerNeeds"/>
-            <result column="company_name" property="companyName"/>
             <result column="province" property="province"/>
             <result column="city" property="city"/>
             <result column="district" property="district"/>
@@ -53,14 +54,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <result column="remark" property="remark"/>
             <result column="genjin_date" property="genjinDate"/>
             <result column="remark" property="remark"/>
-            <result column="input_date" property="inputDate"/>
-            <result column="update_date" property="updateDate"/>
         </association>
     </resultMap>
 
     <sql id="selectDianmianVo">
-        select dianmian.id, dianmian.dept_id, dianmian.diandong_id, dianmian.diandong_name, dianmian.diandong_phone, dianmian.sys_user_id, dianmian.company_id, dianmian.name, dianmian.status,d.dept_name as company_name, dianmian.province, dianmian.city, dianmian.district, dianmian.longitude, dianmian.latitude, dianmian.address, dianmian.check_result, dianmian.open_date, dianmian.contract_num, dianmian.type, dianmian.area, dianmian.close_date, dianmian.close_days, dianmian.close_reason, dianmian.check_info, dianmian.remark,
-        c.name as customerName, c.*, biz_contract.dianmian_name area_name
+        select dianmian.id, dianmian.dept_id, dianmian.diandong_id, dianmian.diandong_name, dianmian.diandong_phone, dianmian.sys_user_id, dianmian.company_id, dianmian.name, dianmian.status, dianmian.province, dianmian.city, dianmian.district, dianmian.longitude, dianmian.latitude, dianmian.address, dianmian.check_result, dianmian.contract_num, dianmian.type, dianmian.area, dianmian.close_date, dianmian.close_reason, dianmian.check_info, dianmian.remark,
+               dianmian.rest_date, dianmian.open_date, dianmian.rest_date, dianmian.close_date,
+        c.name as customerName, c.*, biz_contract.dianmian_name area_name,company.`name` company_name,d.dept_name dept_name
         from
             biz_dianmian dianmian
         left join
@@ -79,6 +79,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             sys_dept d
         on
             u.dept_id = d.id
+        left join
+            sys_company company
+        on
+            d.company_id = company.id
     </sql>
 
     <select id="selectCustomerById" parameterType="Integer" resultType="Customer">
@@ -97,7 +101,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="diandongName != null  and diandongName != ''"> and dianmian.diandong_name like concat('%', #{diandongName}, '%')</if>
             <if test="diandongPhone != null  and diandongPhone != ''"> and dianmian.diandong_phone = #{diandongPhone}</if>
             <if test="companyId != null "> and dianmian.company_id = #{companyId}</if>
-            <if test="companyName != null  and companyName != ''"> and d.company_name like concat('%', #{companyName}, '%')</if>
+            <if test="deptName != null  and deptName != ''"> and d.dept_name like concat('%', #{deptName}, '%')</if>
             <if test="name != null  and name != ''"> and dianmian.`name` like concat('%', #{name}, '%')</if>
             <if test="status != null  and status != ''"> and dianmian.status = #{status}</if>
             <if test="province != null  and province != ''"> and dianmian.province = #{province}</if>
@@ -151,12 +155,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="latitude != null and latitude != ''">latitude,</if>
             <if test="address != null and address != ''">address,</if>
             <if test="checkResult != null and checkResult != ''">check_result,</if>
+            <if test="setDate != null">set_date,</if>
             <if test="openDate != null">open_date,</if>
+            <if test="restDate != null">rest_date,</if>
+            <if test="closeDate != null">close_date,</if>
             <if test="contractNum != null and contractNum != ''">contract_num,</if>
             <if test="type != null and type != ''">type,</if>
             <if test="area != null and area != ''">area,</if>
-            <if test="closeDate != null">close_date,</if>
-            <if test="closeDays != null">close_days,</if>
             <if test="closeReason != null and closeReason != ''">close_reason,</if>
             <if test="checkInfo != null and checkInfo != ''">check_info,</if>
             <if test="remark != null and remark != ''">remark,</if>
@@ -177,12 +182,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="latitude != null and latitude != ''">#{latitude},</if>
             <if test="address != null and address != ''">#{address},</if>
             <if test="checkResult != null and checkResult != ''">#{checkResult},</if>
+            <if test="setDate != null">#{setDate},</if>
             <if test="openDate != null">#{openDate},</if>
+            <if test="restDate != null">#{restDate},</if>
+            <if test="closeDate != null">#{closeDate},</if>
             <if test="contractNum != null and contractNum != ''">#{contractNum},</if>
             <if test="type != null and type != ''">#{type},</if>
             <if test="area != null and area != ''">#{area},</if>
-            <if test="closeDate != null">#{closeDate},</if>
-            <if test="closeDays != null">#{closeDays},</if>
             <if test="closeReason != null and closeReason !=''">#{closeReason},</if>
             <if test="checkInfo != null and checkInfo != ''">#{checkInfo},</if>
             <if test="remark != null and remark != ''">#{remark},</if>
@@ -206,13 +212,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="latitude != null and latitude != ''">latitude = #{latitude},</if>
             <if test="address != null and address != ''">address = #{address},</if>
             <if test="checkResult != null and checkResult != ''">check_result = #{checkResult},</if>
+            <if test="setDate != null">set_date = #{setDate},</if>
             <if test="openDate != null">open_date = #{openDate},</if>
+            <if test="restDate != null">rest_date = #{restDate},</if>
+            <if test="closeDate != null">close_date = #{closeDate},</if>
             <if test="contractNum != null and contractNum != ''">contract_num = #{contractNum},</if>
             <if test="type != null and type != ''">type = #{type},</if>
             <if test="area != null and area != ''">area = #{area},</if>
-            <if test="closeDate != null">close_date = #{closeDate},</if>
-            <if test="closeDays != null">close_days = #{closeDays},</if>
-            <if test="closeReason != null">close_reason = #{closeReason},</if>
             <if test="checkInfo != null">check_info = #{checkInfo},</if>
             <if test="remark != null and remark != ''">remark = #{remark},</if>
         </trim>
@@ -236,13 +242,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="latitude != null and latitude != ''">latitude = #{latitude},</if>
             <if test="address != null and address != ''">address = #{address},</if>
             <if test="checkResult != null and checkResult != ''">check_result = #{checkResult},</if>
+            <if test="setDate != null">set_date = #{setDate},</if>
             <if test="openDate != null">open_date = #{openDate},</if>
+            <if test="restDate != null">rest_date = #{restDate},</if>
+            <if test="closeDate != null">close_date = #{closeDate},</if>
             <if test="contractNum != null and contractNum != ''">contract_num = #{contractNum},</if>
             <if test="type != null and type != ''">type = #{type},</if>
             <if test="area != null and area != ''">area = #{area},</if>
-            <if test="closeDate != null">close_date = #{closeDate},</if>
-            <if test="closeDays != null">close_days = #{closeDays},</if>
-            <if test="closeReason != null">close_reason = #{closeReason},</if>
             <if test="checkInfo != null">check_info = #{checkInfo},</if>
             <if test="remark != null and remark != ''">remark = #{remark},</if>
         </trim>

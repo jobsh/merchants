@@ -9,7 +9,8 @@ public enum DianmianStatus
 {
     ClOSED("0", "闭店"),
     OPEN("1", "营业中"),
-    REST("2", "暂时停业");
+    REST("2", "暂时停业"),
+    SET("3", "开店");
 
     private final String code;
     private final String info;

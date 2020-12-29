@@ -38,6 +38,10 @@ public class DianmianVO extends Dianmian {
 
     /** 所属公司id */
     private Integer companyId;
+
+    /** 部门name */
+    private String deptName;
+
     /** 所属公司name */
     private String companyName;
 
@@ -70,7 +74,19 @@ public class DianmianVO extends Dianmian {
 
     /** 开店日期 */
     @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date setDate;
+
+    /** 营业日期 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date openDate;
+
+    /** 闭店/停业时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date restDate;
+
+    /** 闭店/停业时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date closeDate;
 
     /** 合同编号 */
     private String contractnum;
@@ -80,10 +96,6 @@ public class DianmianVO extends Dianmian {
 
     /** 授权区域 */
     private String area;
-
-    /** 闭店/停业时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date closeDate;
 
     /** 暂停营业时长 */
     private Integer closeDays;

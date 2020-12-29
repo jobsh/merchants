@@ -1,7 +1,8 @@
 package com.merchant.system.service;
 
-import java.util.List;
 import com.merchant.system.domain.Knowledge;
+
+import java.util.List;
 
 /**
  * 知识库Service接口
@@ -52,18 +53,17 @@ public interface IKnowledgeService
     public int deleteKnowledgeByIds(Integer[] ids);
 
     /**
-     * 删除知识库信息
-     * 
-     * @param id 知识库ID
-     * @return 结果
-     */
-    public int deleteKnowledgeById(Integer id);
-
-    /**
      * 逻辑删除与否
-     * @param isDelete
      * @param id
      * @return
      */
-    int logicDeleteKnowledgeById(String isDelete, Integer id);
+    int logicDeleteKnowledgeById(Integer id);
+
+    /**
+     * 禁用
+     * @param status
+     * @param id
+     * @return
+     */
+    public int forbiddenKnowledgeById(String status,Integer id);
 }

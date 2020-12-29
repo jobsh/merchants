@@ -147,4 +147,6 @@ public interface IContractService
     void autoExpire(ContractBO contractBO);
 
     void autoBegin(ContractBO contractBO);
+
+    int existCode(String code);
 }

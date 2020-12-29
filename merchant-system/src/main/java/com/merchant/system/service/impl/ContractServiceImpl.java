@@ -1,8 +1,6 @@
 package com.merchant.system.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.merchant.common.annotation.ContractLog;
 import com.merchant.common.annotation.DataScope;
 import com.merchant.common.annotation.Excel;
@@ -28,7 +26,6 @@ import com.merchant.system.service.*;
 import org.n3r.idworker.Sid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.datasource.lookup.JndiDataSourceLookup;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -119,7 +116,7 @@ public class ContractServiceImpl implements IContractService
     public int insertContract(AddContractBO contractBO)
     {
         contractBO.setNum(CONTRACT_PREFIX + sid.nextShort());
-        int res = contractMapper.countContractByNum(contractBO.getNum());
+        int res = contractMapper.countContractByCode(contractBO.getCode());
         if (res > 0) {
             throw new BaseException("已存在该合同编号");
         }
@@ -252,6 +249,8 @@ public class ContractServiceImpl implements IContractService
         }
 //        this.addSave(file, contractBO); 改为七牛云
         int res = contractMapper.updateContract(contractBO);
+
+        //  如果合同状态都是解约状态，则客户跟进状态自动为解约
         if (res > 0) {
             // 请求的地址
             this.setContractOperLog(contractOperLog);
@@ -487,6 +486,11 @@ public class ContractServiceImpl implements IContractService
     @Override
     public void autoBegin(ContractBO contractBO) {
         contractMapper.autoBegin(contractBO);
+    }
+
+    @Override
+    public int existCode(String code) {
+        return contractMapper.countContractByCode(code);
     }
 
 

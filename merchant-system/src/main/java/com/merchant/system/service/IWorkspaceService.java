@@ -1,8 +1,7 @@
 package com.merchant.system.service;
 
-import com.merchant.system.domain.vo.ContractDandianAndQuyuVO;
-import com.merchant.system.domain.vo.DianmianAndContractAllVO;
-import com.merchant.system.domain.vo.DianmianNumVO;
+import com.merchant.system.domain.vo.*;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -19,4 +18,8 @@ public interface IWorkspaceService {
     List<DianmianAndContractAllVO> dianmianAndContractAllList(String type);
 
     List<ContractDandianAndQuyuVO> selectContractDandianAndQuyuVO(String type);
+
+    List<CustomerWorkSpaceVO> selectCustomerWorkspaceList(String type, Integer deptId);
+
+    List<CustomerFeeWorkSpaceVO> selectCustomerFeeWorkspaceList(String type, Integer deptId);
 }

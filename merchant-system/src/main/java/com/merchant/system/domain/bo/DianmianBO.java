@@ -28,8 +28,10 @@ public class DianmianBO extends BaseEntity {
     @ApiModelProperty(value = "所属部门id", name = "deptId")
     private Integer deptId;
 
-    /** 所属公司name */
+    @ApiModelProperty(value = "所属部门名称", name = "deptName")
+    private String deptName;
 
+    /** 所属公司name */
     private String companyName;
 
     /** 店东id */
@@ -114,8 +116,20 @@ public class DianmianBO extends BaseEntity {
     private String checkInfo;
 
     /** 开店时间*/
-    @ApiModelProperty(value = "开店时间", name = "openDate")
+    @ApiModelProperty(value = "开店时间", name = "setDate")
+    private String setDate;
+
+    /** 开店时间*/
+    @ApiModelProperty(value = "营业时间", name = "openDate")
     private String openDate;
+
+    /** 开店时间*/
+    @ApiModelProperty(value = "休业时间", name = "restDate")
+    private String restDate;
+
+    /** 开店时间*/
+    @ApiModelProperty(value = "闭店时间", name = "closeDate")
+    private String closeDate;
 
 
     @ApiModelProperty(value = "最早录入时间", name = "inputDateStart")

@@ -1,8 +1,6 @@
 package com.merchant.system.service.impl;
 
-import com.merchant.system.domain.vo.ContractDandianAndQuyuVO;
-import com.merchant.system.domain.vo.DianmianAndContractAllVO;
-import com.merchant.system.domain.vo.DianmianNumVO;
+import com.merchant.system.domain.vo.*;
 import com.merchant.system.mapper.WorkspaceMapper;
 import com.merchant.system.service.IWorkspaceService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,5 +34,15 @@ public class WorkspaceServiceImpl implements IWorkspaceService {
     @Override
     public List<ContractDandianAndQuyuVO> selectContractDandianAndQuyuVO(String type) {
         return workspaceMapper.selectContractDandianAndQuyuVO(type);
+    }
+
+    @Override
+    public List<CustomerWorkSpaceVO> selectCustomerWorkspaceList(String type, Integer deptId) {
+        return workspaceMapper.selectCustomerWorkspaceList(type, deptId);
+    }
+
+    @Override
+    public List<CustomerFeeWorkSpaceVO> selectCustomerFeeWorkspaceList(String type, Integer deptId) {
+        return workspaceMapper.selectCustomerFeeWorkspaceList(type, deptId);
     }
 }

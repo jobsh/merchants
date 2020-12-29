@@ -8,6 +8,7 @@
         <result property="id" column="id"/>
         <result property="deptId" column="dept_id"/>
         <result property="deptName" column="dept_name"/>
+        <result property="companyName" column="company_name"/>
         <result property="name" column="name"/>
         <result property="num" column="num"/>
         <result property="phone" column="phone"/>
@@ -32,12 +33,13 @@
     </resultMap>
 
     <sql id="selectCustomerVo">
-        select biz_customer.id, biz_customer.num, biz_customer.name, biz_customer.phone, biz_customer.level, biz_customer.customer_needs, biz_customer.company_name,
+        select biz_customer.id, biz_customer.num, biz_customer.name, biz_customer.phone, biz_customer.level, biz_customer.customer_needs,
         biz_customer.province, biz_customer.dianmian_address, biz_customer.city, biz_customer.district, biz_customer.resource, biz_customer.user_id, biz_customer.username, biz_customer.luru_name, biz_customer.experience, biz_customer.remark, biz_customer.status, biz_customer.input_date, biz_customer.update_date,
-        biz_customer.genjin_date, biz_customer.genjin_status, biz_customer.dept_id, d.dept_name
+        biz_customer.genjin_date, biz_customer.genjin_status, biz_customer.dept_id, d.dept_name,company.name company_name
         from biz_customer
         left join sys_user u on biz_customer.user_id = u.id
         left join sys_dept d on u.dept_id = d.id
+        left join sys_company company on d.company_id = company.id
     </sql>
 
     <select id="selectCustomerList" parameterType="CustomerBO" resultMap="CustomerResult">
@@ -135,8 +137,7 @@
             <if test="status != null and status != ''">status,</if>
             <if test="genjinStatus != null and genjinStatus != ''">genjin_status,</if>
             input_date,
-            update_date,
-            genjin_date,
+            update_date
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="deptId != null and deptId != ''">#{deptId},</if>
@@ -159,7 +160,7 @@
             <if test="status != null and status != ''">#{status},</if>
             <if test="genjinStatus != null and genjinStatus != ''">#{genjinStatus},</if>
 
-            now(),now(),now()
+            now(),now()
         </trim>
     </insert>
 

@@ -87,22 +87,22 @@ public class KnowledgeController extends BaseController
     /**
      * 删除知识库
      */
-    @PreAuthorize("@ss.hasPermi('system:knowledge:remove')")
+    @PreAuthorize("@ss.hasPermi('system:knowledge:logicDelete')")
     @Log(title = "知识库", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Integer[] ids)
+    @GetMapping("logicDelete/{id}")
+    public AjaxResult logicDelete(@PathVariable Integer id)
     {
-        return toAjax(knowledgeService.deleteKnowledgeByIds(ids));
+        return toAjax(knowledgeService.logicDeleteKnowledgeById(id));
     }
 
     /**
      * 删除知识库
      */
-    @PreAuthorize("@ss.hasPermi('system:knowledge:logicDelete')")
+    @PreAuthorize("@ss.hasPermi('system:knowledge:forbidden')")
     @Log(title = "知识库", businessType = BusinessType.DELETE)
-    @PostMapping("logicDelete")
-    public AjaxResult logicDelete(@RequestParam String isDelete, @RequestParam Integer id)
+    @GetMapping("forbidden")
+    public AjaxResult forbiddenKnowledgeById(@RequestParam String status, @RequestParam Integer id)
     {
-        return toAjax(knowledgeService.logicDeleteKnowledgeById(isDelete,id));
+        return toAjax(knowledgeService.forbiddenKnowledgeById(status,id));
     }
 }

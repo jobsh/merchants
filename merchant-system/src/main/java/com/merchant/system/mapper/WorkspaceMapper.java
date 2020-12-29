@@ -19,7 +19,7 @@ public interface WorkspaceMapper {
 
     List<ContractDandianAndQuyuVO> selectContractDandianAndQuyuVO(@Param("type") String type);
 
-    List<CustomerWorkSpaceVO> selectCustomerWorkspaceList(@Param("type") String type);
+    List<CustomerWorkSpaceVO> selectCustomerWorkspaceList(@Param("type") String type, @Param("deptId") Integer deptId);
 
-    List<CustomerFeeWorkSpaceVO> selectCustomerFeeWorkspaceList(@Param("type") String type);
+    List<CustomerFeeWorkSpaceVO> selectCustomerFeeWorkspaceList(@Param("type") String type,@Param("deptId") Integer deptId);
 }

@@ -37,6 +37,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <resultMap type="com.merchant.system.domain.vo.JingyingManagerFeeReportVO" id="JingyingManagerFeeReportVO">
         <result column="dept_name" property="deptName" />
+        <result property="companyName" column="company_name"/>
         <result column="user_name" property="userName" />
         <result column="post_name" property="postName" />
         <result column="num" property="contractNum" />
@@ -71,7 +72,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         left JOIN
             sys_company cm
         ON
-            cm.id = u.company_id
+            cm.id = d.company_id
         left JOIN
             sys_user_post up
         ON
@@ -185,7 +186,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         left JOIN
             sys_company cm
         ON
-            cm.id = u.company_id
+            cm.id = d.company_id
         left JOIN
             sys_user_post up
         ON
@@ -227,6 +228,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectJingyingMannagerFeeReportList" parameterType="CustomerReportBO" resultMap="JingyingManagerFeeReportVO">
         select
             d.dept_name, -- 公司部门
+            cm.`name` company_name,  -- 公司名称
             u.user_name, -- 姓名
             p.post_name, -- 职务
             contract.num, -- 合同
@@ -249,6 +251,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             sys_dept d
         ON
             u.dept_id = d.id
+        left JOIN
+            sys_company cm
+        ON
+            cm.id = d.company_id
         left JOIN
             sys_user_post up
         ON

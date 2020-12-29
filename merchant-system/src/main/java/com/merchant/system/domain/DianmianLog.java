@@ -4,6 +4,7 @@ import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.merchant.common.annotation.Excel;
 import com.merchant.common.core.domain.BaseEntity;
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -13,6 +14,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * @author hanke
  * @date 2020-11-26
  */
+@Data
 public class DianmianLog extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
@@ -39,7 +41,17 @@ public class DianmianLog extends BaseEntity
     /** 开店时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "开店时间", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date setDate;
+
+    /** 开店时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "营业时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date openDate;
+
+    /** 开店时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "暂停营业时间", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date restDate;
 
     /** 闭店时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
@@ -48,92 +60,4 @@ public class DianmianLog extends BaseEntity
 
     /** 插入时间 */
     private Date inputDate;
-
-    public void setId(Integer id) 
-    {
-        this.id = id;
-    }
-
-    public Integer getId() 
-    {
-        return id;
-    }
-    public void setDianmianId(Integer dianmianId) 
-    {
-        this.dianmianId = dianmianId;
-    }
-
-    public Integer getDianmianId() 
-    {
-        return dianmianId;
-    }
-    public void setOper(String oper) 
-    {
-        this.oper = oper;
-    }
-
-    public String getOper() 
-    {
-        return oper;
-    }
-    public void setDiscription(String discription) 
-    {
-        this.discription = discription;
-    }
-
-    public String getDiscription() 
-    {
-        return discription;
-    }
-    public void setStatus(String status) 
-    {
-        this.status = status;
-    }
-
-    public String getStatus() 
-    {
-        return status;
-    }
-    public void setOpenDate(Date openDate) 
-    {
-        this.openDate = openDate;
-    }
-
-    public Date getOpenDate() 
-    {
-        return openDate;
-    }
-    public void setCloseDate(Date closeDate) 
-    {
-        this.closeDate = closeDate;
-    }
-
-    public Date getCloseDate() 
-    {
-        return closeDate;
-    }
-    public void setInputDate(Date inputDate) 
-    {
-        this.inputDate = inputDate;
-    }
-
-    public Date getInputDate() 
-    {
-        return inputDate;
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", getId())
-            .append("dianmianId", getDianmianId())
-            .append("oper", getOper())
-            .append("discription", getDiscription())
-            .append("status", getStatus())
-            .append("openDate", getOpenDate())
-            .append("closeDate", getCloseDate())
-            .append("inputDate", getInputDate())
-            .append("remark", getRemark())
-            .toString();
-    }
 }

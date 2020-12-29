@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 /**
@@ -22,6 +23,7 @@ public class AddCustomerBO extends Customer {
     private Integer deptId;
     /** 前端传来的负责人手机号 */
     @ApiModelProperty(value = "经纪人手机号，多个手机号用逗号分隔", name = "managerPhone")
+    @Pattern(regexp = "^1[3456789][0-9]{9}(,1[3456789][0-9]{9})*$", message = "手机号格式不正确")
     private String managerPhone;
 
     /** 客户表主键id */

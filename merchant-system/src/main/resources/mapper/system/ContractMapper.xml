@@ -45,6 +45,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="createBy"    column="create_by"    />
         <result property="remark"    column="remark"    />
         <result property="deptName"    column="dept_name"    />
+        <result property="companyName" column="company_name"/>
+        <result property="input_date"    column="inputDate"    />
     </resultMap>
 
     <sql id="selectContractVo">
@@ -52,8 +54,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             biz_contract.id, biz_contract.dept_id, biz_contract.pid, biz_contract.root_num, biz_contract.num, biz_contract.code, customer_name, biz_contract.customer_id, biz_contract.customer_num, biz_contract.customer_phone, biz_contract.type, biz_contract.produce,
             biz_contract.dianmian_name, biz_contract.dianmian_num, biz_contract.dianmian_province, biz_contract.dianmian_city, biz_contract.dianmian_district, biz_contract.dianmian_address, biz_contract.dianmian_longitude, biz_contract.dianmian_latitude,
             biz_contract.guarantee, biz_contract.fee, biz_contract.operation, biz_contract.manager_id, biz_contract.manager, biz_contract.sign_date, biz_contract.sign_user_id,
-            biz_contract.sign_user, biz_contract.begin_date, biz_contract.end_date,biz_contract.terminate_date, biz_contract.status, biz_contract.check_status,biz_contract.check_date, biz_contract.create_by, biz_contract.remark, biz_contract.file, biz_contract.terminate_file, biz_contract.imgs,
-            d.dept_name
+            biz_contract.sign_user, biz_contract.begin_date, biz_contract.end_date,biz_contract.terminate_date, biz_contract.status, biz_contract.check_status,biz_contract.check_date, biz_contract.create_by, biz_contract.remark, biz_contract.file, biz_contract.terminate_file, biz_contract.imgs,biz_contract.input_date,
+            d.dept_name, company.name company_name
         from
             biz_contract
         left join
@@ -64,6 +66,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             sys_dept d
         on
             u.dept_id = d.id
+        left join
+            sys_company company
+        on
+            d.company_id = company.id
     </sql>
 
     <select id="selectContractList" parameterType="ContractBO" resultMap="ContractResult">
@@ -99,7 +105,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <!-- 数据范围过滤 -->
             ${params.dataScope}
         </where>
-        order by biz_contract.sign_date desc
+        order by biz_contract.input_date desc
     </select>
 
     <select id="selectContractById" parameterType="Integer" resultMap="ContractResult">
@@ -117,9 +123,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where biz_contract.num = #{num}
     </select>
 
-    <select id="countContractByNum" parameterType="String" resultType="Integer">
+    <select id="countContractByCode" parameterType="String" resultType="Integer">
         select count(1) from biz_contract
-        where biz_contract.num = #{num}
+        where biz_contract.code = #{code}
     </select>
     <select id="selectContractByIds" resultType="com.merchant.system.domain.Contract" parameterType="Integer">
         select * from biz_contract where biz_contract.id in
