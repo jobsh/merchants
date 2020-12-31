@@ -30,7 +30,7 @@ public class Genjin extends BaseEntity
 
     /** 跟进人id */
     @Excel(name = "跟进人id")
-    private Long sysUserId;
+    private Long userId;
 
     /** 写跟进的内容 */
     @Excel(name = "写跟进的内容")
@@ -84,14 +84,14 @@ public class Genjin extends BaseEntity
     {
         return customerName;
     }
-    public void setSysUserId(Long sysUserId) 
+    public void setuserId(Long userId)
     {
-        this.sysUserId = sysUserId;
+        this.userId = userId;
     }
 
-    public Long getSysUserId() 
+    public Long getuserId()
     {
-        return sysUserId;
+        return userId;
     }
     public void setContent(String content) 
     {
@@ -154,7 +154,7 @@ public class Genjin extends BaseEntity
             .append("id", getId())
             .append("customerId", getCustomerId())
             .append("customerName", getCustomerName())
-            .append("sysUserId", getSysUserId())
+            .append("userId", getuserId())
             .append("content", getContent())
             .append("method", getMethod())
             .append("status", getStatus())

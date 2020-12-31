@@ -39,7 +39,7 @@ public class AddCustomerBO extends Customer {
 
     /** 客户电话 */
     @NotNull(message = "客户手机号不能为空")
-    @Size(min = 0, max = 11, message = "手机号码长度不能超过11个字符")
+    @Pattern(regexp = "^1[3456789][0-9]{9}(,1[3456789][0-9]{9})*$", message = "手机号格式不正确")
     @ApiModelProperty(value = "客户电话", name = "phone")
     private String phone;
 

@@ -4,6 +4,7 @@ import java.util.List;
 import com.merchant.system.domain.Customer;
 import com.merchant.system.domain.bo.AddCustomerBO;
 import com.merchant.system.domain.bo.CustomerBO;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 我的客户Mapper接口
@@ -52,6 +53,14 @@ public interface CustomerMapper
      * @return 我的客户集合
      */
     public List<Customer> selectCustomerList(CustomerBO customerBO);
+
+    /**
+     * 查询我的线索列表
+     *
+     * @param customerBO 我的客户
+     * @return 我的客户集合
+     */
+    public List<Customer> selectXiansuoList(CustomerBO customerBO);
 
     /**
      * 新增我的客户
@@ -118,5 +127,7 @@ public interface CustomerMapper
      * @param phone
      * @return
      */
-    int countCustomerByPhone(String phone);
+    int countCustomerByPhone(@Param("phone") String phone, @Param("userId") Integer userId);
+
+    int countXiansuoByPhone(@Param("phone") String phone);
 }

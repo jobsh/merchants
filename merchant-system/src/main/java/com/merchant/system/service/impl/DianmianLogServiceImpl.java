@@ -26,7 +26,7 @@ public class DianmianLogServiceImpl implements IDianmianLogService
      * @return 店面日志
      */
     @Override
-    public DianmianLog selectDianmianLogById(Integer id)
+    public List<DianmianLog> selectDianmianLogById(Integer id)
     {
         return dianmianLogMapper.selectDianmianLogById(id);
     }

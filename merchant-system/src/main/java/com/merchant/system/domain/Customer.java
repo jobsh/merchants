@@ -32,6 +32,9 @@ public class Customer extends BaseEntity
     /** 公司名称 */
     private String companyName;
 
+    /** 客户公司名称 */
+    private String customerCompany;
+
     private String num;
     /** 客户名称 */
     @Excel(name = "客户名称")

@@ -17,7 +17,7 @@ public interface DianmianLogMapper
      * @param id 店面日志ID
      * @return 店面日志
      */
-    public DianmianLog selectDianmianLogById(Integer id);
+    public List<DianmianLog> selectDianmianLogById(Integer id);
 
     /**
      * 查询店面日志列表

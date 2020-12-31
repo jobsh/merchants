@@ -39,7 +39,7 @@ public class Dianmian extends BaseEntity
 
     /** 管理人id */
     @Excel(name = "管理人id")
-    private Long sysUserId;
+    private Long userId;
 
     /** 所属公司id */
     @Excel(name = "所属公司id")

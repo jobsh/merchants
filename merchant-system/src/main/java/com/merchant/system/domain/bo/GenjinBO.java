@@ -28,8 +28,8 @@ public class GenjinBO {
     private String customerName;
 
     /** 负责人id */
-    @ApiModelProperty(value = "负责人id", name = "sysUserId")
-    private Long sysUserId;
+    @ApiModelProperty(value = "负责人id", name = "userId")
+    private Long userId;
 
     /** 写跟进的内容 */
     @ApiModelProperty(value = "写跟进的内容", name = "content")

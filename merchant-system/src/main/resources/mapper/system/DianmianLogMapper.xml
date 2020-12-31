@@ -10,27 +10,30 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="oper"    column="oper"    />
         <result property="discription"    column="discription"    />
         <result property="status"    column="status"    />
-        <result property="openDate"    column="open_date"    />
-        <result property="closeDate"    column="close_date"    />
+        <result property="operDate"    column="oper_date"    />
         <result property="inputDate"    column="input_date"    />
         <result property="remark"    column="remark"    />
     </resultMap>
 
     <sql id="selectDianmianLogVo">
-        select id, dianmian_id, oper, discription, status, open_date, close_date, input_date, remark from biz_dianmian_log
+        select biz_dianmian_log.oper, biz_dianmian_log.discription, biz_dianmian_log.status, biz_dianmian_log.oper_date, biz_dianmian_log.input_date, biz_dianmian_log.remark from biz_dianmian_log
+        left join biz_dianmian dianmian
+        on dianmian.id = biz_dianmian_log.dianmian_id
     </sql>
 
     <select id="selectDianmianLogList" parameterType="DianmianLog" resultMap="DianmianLogResult">
         <include refid="selectDianmianLogVo"/>
         <where>  
-            <if test="dianmianId != null "> and dianmian_id = #{dianmianId}</if>
-            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="dianmianId != null "> and biz_dianmian_log.dianmian_id = #{dianmianId}</if>
+            <if test="status != null  and status != ''"> and biz_dianmian_log.status = #{status}</if>
         </where>
     </select>
     
     <select id="selectDianmianLogById" parameterType="Integer" resultMap="DianmianLogResult">
         <include refid="selectDianmianLogVo"/>
-        where id = #{id}
+        where dianmian.id = #{id}
+        order by
+        biz_dianmian_log.input_date desc
     </select>
         
     <insert id="insertDianmianLog" parameterType="DianmianLog">
@@ -41,22 +44,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="oper != null">oper,</if>
             <if test="discription != null">discription,</if>
             <if test="status != null">status,</if>
-            <if test="setDate != null">set_date,</if>
-            <if test="openDate != null">open_date,</if>
-            <if test="closeDate != null">close_date,</if>
-            <if test="resetDate != null">close_date,</if>
-
+            <if test="operDate != null">oper_date,</if>
             <if test="remark != null">remark,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
+
             <if test="id != null">#{id},</if>
             <if test="dianmianId != null">#{dianmianId},</if>
             <if test="oper != null">#{oper},</if>
             <if test="discription != null">#{discription},</if>
             <if test="status != null">#{status},</if>
-            <if test="setDate != null">#{setDate},</if>
-            <if test="openDate != null">#{openDate},</if>
-            <if test="closeDate != null">#{closeDate},</if>
+            <if test="operDate != null">#{operDate},</if>
             <if test="remark != null">#{remark},</if>
          </trim>
     </insert>
@@ -68,10 +66,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="oper != null">oper = #{oper},</if>
             <if test="discription != null">discription = #{discription},</if>
             <if test="status != null">status = #{status},</if>
-            <if test="kaidianDate != null">kaidian_date = #{kaidianDate},</if>
-            <if test="openDate != null">open_date = #{openDate},</if>
-            <if test="closeDate != null">close_date = #{closeDate},</if>
-            <if test="inputDate != null">input_date = #{inputDate},</if>
             <if test="remark != null">remark = #{remark},</if>
         </trim>
         where id = #{id}

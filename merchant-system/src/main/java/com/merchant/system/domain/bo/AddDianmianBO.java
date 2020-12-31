@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 /**
  * 店面管理对象 biz_dianmian
@@ -35,9 +36,9 @@ public class AddDianmianBO extends BaseEntity {
     private Integer diandongId;
 
     /** 管理人id */
-    @ApiModelProperty(value = "负责人id", name = "sysUserId")
+    @ApiModelProperty(value = "负责人id", name = "userId")
     @NotNull(message = "没有上传负责人id")
-    private Long sysUserId;
+    private Long userId;
 
     /** 所属公司id */
     @Excel(name = "所属公司id")
@@ -51,6 +52,7 @@ public class AddDianmianBO extends BaseEntity {
 
     /** 店东电话 */
     @ApiModelProperty(value = "店东手机号", name = "diandongPhone")
+    @Pattern(regexp = "^1[3456789][0-9]{9}(,1[3456789][0-9]{9})*$", message = "手机号格式不正确")
     @NotNull(message = "没有上传店东手机号")
     private String diandongPhone;
 
@@ -121,7 +123,15 @@ public class AddDianmianBO extends BaseEntity {
 
     /** 开店时间*/
     @ApiModelProperty(value = "开店时间", name = "openDate")
+    private String setDate;
+
+    /** 开店时间*/
+    @ApiModelProperty(value = "开店时间", name = "openDate")
     private String openDate;
+
+    /** 开店时间*/
+    @ApiModelProperty(value = "开店时间", name = "openDate")
+    private String restDate;
 
     /** 闭店时间*/
     @ApiModelProperty(value = "开店时间", name = "openDate")

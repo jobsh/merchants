@@ -9,7 +9,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="customerId"    column="customer_id"    />
         <result property="customerName"    column="customer_name"    />
         <result property="username"    column="username"    />
-        <result property="sysUserId"    column="sys_user_id"    />
+        <result property="userId"    column="sys_user_id"    />
         <result property="content"    column="content"    />
         <result property="method"    column="method"    />
         <result property="status"    column="status"    />
@@ -44,7 +44,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="customerId != null">customer_id,</if>
             <if test="customerName != null and customerName != ''">customer_name,</if>
-            <if test="sysUserId != null">sys_user_id,</if>
+            <if test="userId != null">sys_user_id,</if>
             <if test="content != null and content != ''">content,</if>
             <if test="method != null and method != ''">method,</if>
             <if test="status != null and status != ''">status,</if>
@@ -55,7 +55,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="customerId != null">#{customerId},</if>
             <if test="customerName != null and customerName != ''">#{customerName},</if>
-            <if test="sysUserId != null">#{sysUserId},</if>
+            <if test="userId != null">#{userId},</if>
             <if test="content != null and content != ''">#{content},</if>
             <if test="method != null and method != ''">#{method},</if>
             <if test="status != null and status != ''">#{status},</if>
@@ -70,7 +70,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="SET" suffixOverrides=",">
             <if test="customerId != null">customer_id = #{customerId},</if>
             <if test="customerName != null and customerName != ''">customer_name = #{customerName},</if>
-            <if test="sysUserId != null">sys_user_id = #{sysUserId},</if>
+            <if test="userId != null">sys_user_id = #{userId},</if>
             <if test="content != null and content != ''">content = #{content},</if>
             <if test="method != null and method != ''">method = #{method},</if>
             <if test="status != null and status != ''">status = #{status},</if>

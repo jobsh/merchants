@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 /**
  * 合同对象 biz_contract
@@ -65,6 +66,7 @@ public class AddContractBO extends BaseEntity
 
     /** 客户手机号（可以有多个手机号，逗号分隔） */
     @ApiModelProperty(value = "客户手机号", name = "customerPhone")
+    @Pattern(regexp = "^1[3456789][0-9]{9}(,1[3456789][0-9]{9})*$", message = "手机号格式不正确")
     @NotNull(message = "客户手机号不能为空")
     private String customerPhone;
 

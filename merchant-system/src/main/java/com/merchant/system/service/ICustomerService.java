@@ -110,7 +110,9 @@ public interface ICustomerService
      * @param phone
      * @return
      */
-    int existCustomer(@Param("phone") String phone);
+    boolean existCustomer(String phone,Integer userId);
+
+    boolean existXiansuo(String phone);
 
     /**
      * 导入用户数据

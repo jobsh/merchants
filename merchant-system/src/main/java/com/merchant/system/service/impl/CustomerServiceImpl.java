@@ -1,6 +1,8 @@
 package com.merchant.system.service.impl;
 
 import com.merchant.common.annotation.DataScope;
+import com.merchant.common.constant.HttpStatus;
+import com.merchant.common.core.domain.AjaxResult;
 import com.merchant.common.core.domain.entity.SysUser;
 import com.merchant.common.enums.CustomerStatus;
 import com.merchant.common.exception.CustomException;
@@ -18,8 +20,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 我的客户Service业务层处理
@@ -80,10 +85,10 @@ public class CustomerServiceImpl implements ICustomerService {
      */
 
     @Override
-    @DataScope(deptAlias = "d", userAlias = "u")
+    @DataScope(companyAlias = "d")
     public List<Customer> selectXiansuoList(@RequestBody CustomerBO customerBO) {
         customerBO.setStatus(CustomerStatus.DISABLE.getCode());
-        return customerMapper.selectCustomerList(customerBO);
+        return customerMapper.selectXiansuoList(customerBO);
     }
 
     /**
@@ -166,6 +171,9 @@ public class CustomerServiceImpl implements ICustomerService {
         if (customers.size() == 0 || customers == null || customers.isEmpty()) {
             return -2;
         }
+        if (existCustomer(customerBO.getPhone(),customerBO.getUserId())) {
+            return -3;
+        };
         customerBO.setUserId(sysUser.getId().intValue());
         customerBO.setUsername(sysUser.getUserName());
         customerBO.setDeptId(sysUser.getDeptId().intValue());
@@ -179,14 +187,36 @@ public class CustomerServiceImpl implements ICustomerService {
         // 清理冗余线索（phone相同的线索为冗余线索）,只保留一条最新更改的线索
 //        customerMapper.clearRedundantXiansuo(customerBO.getPhone());
         // 修改客户表status为线索状态（status由0置为1）
+        List<String> customerNames = new ArrayList<>();
+        if (existCustomer(customerBO.getPhone(),customerBO.getUserId())) {
+            return -3;
+        };
+        List<Customer> customers = customerMapper.selectCustomerByIds(customerBO);
+        for (Customer customer : customers) {
+            String phone = customer.getPhone();
+            if (existCustomer(phone, customerBO.getUserId())) {
+                customerNames.add(customer.getName());
+                Integer[] newIds = (Integer[]) Arrays.stream(customerBO.getIds()).filter(id -> !customer.getId().equals(id)).collect(Collectors.toList()).toArray();
+                customerBO.setIds(newIds);
+            }
+        }
         customerBO.setStatus(CustomerStatus.OK.getCode());
         // 设置负责人用户名
         return customerMapper.updateCustomerByIds(customerBO);
     }
 
     @Override
-    public int existCustomer(String phone) {
-        return customerMapper.countCustomerByPhone(phone);
+    public boolean existCustomer(String phone, Integer userId) {
+        String[] phoneArray = phone.split(",");
+        for (String p : phoneArray) {
+            if (customerMapper.countCustomerByPhone(p,userId) > 0) return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean existXiansuo(String phone) {
+        return customerMapper.countXiansuoByPhone(phone) > 0;
     }
 
     @Override
@@ -201,7 +231,7 @@ public class CustomerServiceImpl implements ICustomerService {
         for (Customer customer : customerList) {
             try {
                 // 验证是否存在这个用户
-                int res = customerMapper.countCustomerByPhone(customer.getPhone());
+                int res = customerMapper.countXiansuoByPhone(customer.getPhone());
                 if (res == 0) {
                     customer.setCreateBy(operName);
                     this.insertCustomer(customer);

@@ -44,7 +44,7 @@ public class CustomerXiansuo extends BaseEntity
 
     /** 负责人 */
     @Excel(name = "负责人")
-    private Long sysUserId;
+    private Long userId;
 
     /** 是否线索变为客户(0：否，1：是) */
     private Integer isCustomer;
@@ -112,14 +112,14 @@ public class CustomerXiansuo extends BaseEntity
     {
         return resource;
     }
-    public void setSysUserId(Long sysUserId) 
+    public void setuserId(Long userId)
     {
-        this.sysUserId = sysUserId;
+        this.userId = userId;
     }
 
-    public Long getSysUserId() 
+    public Long getuserId()
     {
-        return sysUserId;
+        return userId;
     }
     public void setIsCustomer(Integer isCustomer) 
     {
@@ -141,7 +141,7 @@ public class CustomerXiansuo extends BaseEntity
             .append("province", getProvince())
             .append("city", getCity())
             .append("resource", getResource())
-            .append("sysUserId", getSysUserId())
+            .append("userId", getuserId())
             .append("isCustomer", getIsCustomer())
             .append("createTime", getCreateTime())
             .append("updateTime", getUpdateTime())

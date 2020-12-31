@@ -34,7 +34,9 @@ public class DianmianVO extends Dianmian {
     private String diandongPhone;
 
     /** 管理人id */
-    private Long sysUserId;
+    private Long userId;
+
+    private String userName;
 
     /** 所属公司id */
     private Integer companyId;
@@ -110,7 +112,12 @@ public class DianmianVO extends Dianmian {
     private String remark;
 
     /** 客户信息 */
-    private Customer customer;
+//    private Customer customer;
+    private Integer customerId;
 
+    private String customerName;
+
+    /** 手输合同编号 */
+    private String contractCode;
 
 }

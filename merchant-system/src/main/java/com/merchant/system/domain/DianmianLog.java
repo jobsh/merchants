@@ -38,25 +38,10 @@ public class DianmianLog extends BaseEntity
     @Excel(name = "门店状态")
     private String status;
 
-    /** 开店时间 */
+    /** 修改店面状态时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "开店时间", width = 30, dateFormat = "yyyy-MM-dd")
-    private Date setDate;
-
-    /** 开店时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "营业时间", width = 30, dateFormat = "yyyy-MM-dd")
-    private Date openDate;
-
-    /** 开店时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "暂停营业时间", width = 30, dateFormat = "yyyy-MM-dd")
-    private Date restDate;
-
-    /** 闭店时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "闭店时间", width = 30, dateFormat = "yyyy-MM-dd")
-    private Date closeDate;
+    @Excel(name = "修改店面状态时间", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date operDate;
 
     /** 插入时间 */
     private Date inputDate;

@@ -1,7 +1,9 @@
 package com.merchant.web.controller.system;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.merchant.common.constant.HttpStatus;
 import com.merchant.common.core.domain.model.LoginUser;
@@ -59,7 +61,7 @@ public class CustomerController extends BaseController {
      * 查询我的线索列表
      */
     @ApiOperation(value = "查寻线索", notes = "查寻线索", httpMethod = "GET")
-    @PreAuthorize("@ss.hasPermi('system:customer:list')")
+    @PreAuthorize("@ss.hasPermi('system:xiansuo:list')")
     @PostMapping("/xiansuo/list")
     public TableDataInfo xiansuoList(@RequestBody(required = false) CustomerBO customerBO) {
         startPage();
@@ -96,10 +98,10 @@ public class CustomerController extends BaseController {
     }
 
     /**
-     * 导出我的客户列表
+     * 导出我的线索列表
      */
     @ApiOperation(value = "客户线索导出", notes = "客户线索导出", httpMethod = "GET")
-    @PreAuthorize("@ss.hasPermi('system:customer:export')")
+    @PreAuthorize("@ss.hasPermi('system:xiansuo:export')")
     @Log(title = "我的客户", businessType = BusinessType.EXPORT)
     @GetMapping("/xiansuo/export")
     public AjaxResult exportXiansuo(CustomerBO customerBO) {
@@ -143,9 +145,13 @@ public class CustomerController extends BaseController {
     @PostMapping("/customer")
     public AjaxResult add(@Validated @RequestBody AddCustomerBO customer) {
         // 根据手机号判断用户是否存在
-        int result = customerService.existCustomer(customer.getPhone());
-        if (result > 0) {
-            return AjaxResult.error(HttpStatus.EXIST_CUSTOMER,"该客户已存在");
+        String phone = customer.getPhone();
+        if (CustomerStatus.DISABLE.equals(customer.getStatus()) && customerService.existXiansuo(phone)) {
+            return AjaxResult.error(HttpStatus.EXIST_CUSTOMER,"已存在该线索");
+        }
+        // 如果是添加客户，手机号精确判重
+        if (CustomerStatus.OK.equals(customer.getStatus()) && customerService.existCustomer(phone,customer.getUserId())) {
+            return AjaxResult.error(HttpStatus.EXIST_CUSTOMER,"该负责人已有此客户");
         }
         String username = tokenService.getLoginUser(ServletUtils.getRequest()).getUsername();
         customer.setLuruName(username);
@@ -203,15 +209,16 @@ public class CustomerController extends BaseController {
         if (customerBO.getUserId() == null) {
             return AjaxResult.error("请传入正确负责人");
         }
+
         int result = customerService.transferCustomer(customerBO);
         if (result == -1) {
             return AjaxResult.error(HttpStatus.NOT_FIND_SYSUSER, "没有该负责人");
         } else if (result == -2) {
             return AjaxResult.error(HttpStatus.ERROR, "该客户在您操作前被删除或转为线索");
-        }
-        else if (result == 0) {
+        } else if (result == -3) {
+            AjaxResult.error(HttpStatus.EXIST_CUSTOMER,"该负责人已有此客户");
+        } else {
             AjaxResult.error(HttpStatus.ERROR, "转移失败");
-
         }
         return AjaxResult.success("转移客户成功");
 
@@ -221,17 +228,18 @@ public class CustomerController extends BaseController {
      * 转成客户
      */
     @ApiOperation(value = "批量线索转为客户", notes = "批量线索转为客户", httpMethod = "POST")
-    @PreAuthorize("@ss.hasPermi('system:customer:edit')")
+    @PreAuthorize("@ss.hasPermi('system:xiansuo:edit')")
     @Log(title = "线索转为客户", businessType = BusinessType.UPDATE)
     @PostMapping("/customer/evolve")
     public AjaxResult evolveCustomer(@RequestBody CustomerBO customerBO) {
 
         int result = customerService.evolveCustomer(customerBO);
         if (result == -1) {
-            AjaxResult.error(HttpStatus.NOT_FIND_SYSUSER, "没有该负责人");
-        } else if (result == 0) {
-            AjaxResult.error(HttpStatus.ERROR, "更新失败");
-
+            return AjaxResult.error(HttpStatus.NOT_FIND_SYSUSER, "没有该负责人");
+        } else if (result == -3) {
+            return AjaxResult.error(HttpStatus.EXIST_CUSTOMER,"该负责人已有此客户");
+        } else if (result == 0){
+            return AjaxResult.error(HttpStatus.ERROR, "更新失败");
         }
         return AjaxResult.success("转为客户成功");
 
@@ -246,12 +254,10 @@ public class CustomerController extends BaseController {
     @GetMapping("/customer/exist")
     public AjaxResult existCustomer(
             @ApiParam(name = "phone", value = "客户手机号", required = true)
-            @RequestBody String phone) {
+            @RequestParam String phone,@RequestParam Integer userId) {
 
-        int result = customerService.existCustomer(phone);
-
-        if (result > 0) {
-            return AjaxResult.error(HttpStatus.EXIST_CUSTOMER,"该客户已存在");
+        if (customerService.existCustomer(phone, userId)) {
+            return AjaxResult.error(HttpStatus.EXIST_CUSTOMER,"该负责人已有此客户");
         }
 
         return AjaxResult.success();

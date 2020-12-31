@@ -6,12 +6,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <resultMap type="com.merchant.system.domain.vo.DianmianVO" id="DianmianResult">
         <result property="id"    column="id"    />
+        <result property="customerId"    column="customer_id"    />
+        <result property="customerName"    column="customer_name"    />
+        <result property="userName" column="user_name" />
         <result property="deptId"    column="dept_id"    />
         <result column="dept_name" property="deptName"/>
         <result property="diandongId"    column="diandong_id"    />
         <result property="diandongName"    column="diandong_name"    />
         <result property="diandongPhone"    column="diandong_phone"    />
-        <result property="sysUserId"    column="sys_user_id"    />
+        <result property="userId"    column="sys_user_id"    />
         <result property="companyId"    column="company_id"    />
         <result property="companyName"    column="company_name"    />
         <result property="name"    column="name"    />
@@ -30,13 +33,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="contractNum"    column="contract_num"    />
         <result property="type"    column="type"    />
         <result property="area"    column="area"    />
+        <result property="contractCode"    column="contract_code"    />
         <result property="closeReason"    column="close_reason"    />
         <result property="checkInfo"    column="check_info"    />
         <result property="areaName"    column="area_name"    />
         <result property="remark"    column="remark"    />
-        <association property="customer" javaType="com.merchant.system.domain.Customer">
+        <!--<association property="customer" javaType="com.merchant.system.domain.Customer">
             <id column="diandong_id" property="id"/>
-            <result column="user_id" property="userId"/>
             <result column="phone" property="phone"/>
             <result column="customerName" property="name"/>
             <result column="username" property="username"/>
@@ -54,27 +57,28 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <result column="remark" property="remark"/>
             <result column="genjin_date" property="genjinDate"/>
             <result column="remark" property="remark"/>
-        </association>
+        </association>-->
     </resultMap>
 
     <sql id="selectDianmianVo">
-        select dianmian.id, dianmian.dept_id, dianmian.diandong_id, dianmian.diandong_name, dianmian.diandong_phone, dianmian.sys_user_id, dianmian.company_id, dianmian.name, dianmian.status, dianmian.province, dianmian.city, dianmian.district, dianmian.longitude, dianmian.latitude, dianmian.address, dianmian.check_result, dianmian.contract_num, dianmian.type, dianmian.area, dianmian.close_date, dianmian.close_reason, dianmian.check_info, dianmian.remark,
-               dianmian.rest_date, dianmian.open_date, dianmian.rest_date, dianmian.close_date,
-        c.name as customerName, c.*, biz_contract.dianmian_name area_name,company.`name` company_name,d.dept_name dept_name
+        select dianmian.id, dianmian.dept_id, dianmian.diandong_id, dianmian.diandong_name, dianmian.diandong_phone,  dianmian.company_id, dianmian.name, dianmian.status, dianmian.province, dianmian.city, dianmian.district, dianmian.longitude, dianmian.latitude, dianmian.address, dianmian.check_result, dianmian.contract_num, dianmian.type, dianmian.area, dianmian.close_date, dianmian.close_reason, dianmian.check_info, dianmian.remark,
+               dianmian.set_date set_date, dianmian.open_date open_date, dianmian.rest_date rest_date, dianmian.close_date close_date,
+               c.id as customer_id,c.name as customer_name, biz_contract.dianmian_name area_name,company.`name` company_name,d.dept_name dept_name,u.user_name as user_name,
+               biz_contract.manager_id user_id, biz_contract.code contract_code
         from
             biz_dianmian dianmian
-        left join
-            biz_customer c
-        on
-            dianmian.diandong_id = c.id
         left join
             biz_contract
         on
             biz_contract.num = dianmian.contract_num
         left join
+            biz_customer c
+        on
+            biz_contract.customer_id = c.id
+        left join
             sys_user u
         on
-            dianmian.sys_user_id = u.id
+            biz_contract.manager_id = u.id
         left join
             sys_dept d
         on
@@ -96,7 +100,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="deptId != null and deptId != 0">
                 AND (u.dept_id = #{deptId} OR u.dept_id IN ( SELECT t.id FROM sys_dept t WHERE find_in_set(#{deptId}, ancestors) ))
             </if>
-            <if test="sysUserId !=  null  and sysUserId != ''">and sys_user_id = #{sysUserId}</if>
+            <if test="userId !=  null  and userId != ''">and biz_contract.manager_id = #{userId}</if>
             <if test="diandongId != null "> and dianmian.diandong_id = #{diandongId}</if>
             <if test="diandongName != null  and diandongName != ''"> and dianmian.diandong_name like concat('%', #{diandongName}, '%')</if>
             <if test="diandongPhone != null  and diandongPhone != ''"> and dianmian.diandong_phone = #{diandongPhone}</if>
@@ -116,16 +120,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="username != null  and username != ''"> and c.username like concat('%', #{username}, '%')</if>
             <if test="keywords != null and keywords != ''">and (
                 instr(dianmian.name, #{keywords}) +
-                instr(dianmian.area, #{keywords}) +
-                instr(dianmian.province, #{keywords})+
-                instr(dianmian.city, #{keywords})+
-                instr(dianmian.district, #{keywords})+
-                instr(dianmian.area, #{keywords})
+                instr(biz_contract.code, #{keywords}) +
+                instr(c.name, #{keywords})+
                 ) > 0</if>
             <!-- 数据范围过滤 -->
             ${params.dataScope}
         </where>
-        order by dianmian.open_date desc
+        order by dianmian.input_date desc
     </select>
 
     <select id="selectDianmianById" parameterType="Integer" resultMap="DianmianResult">
@@ -144,7 +145,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="diandongId != null">diandong_id,</if>
             <if test="diandongName != null and diandongName != ''">diandong_name,</if>
             <if test="diandongPhone != null and diandongPhone != ''">diandong_phone,</if>
-            <if test="sysUserId != null">sys_user_id,</if>
+            <if test="userId != null">sys_user_id,</if>
             <if test="companyId != null">company_id,</if>
             <if test="name != null and name != ''">name,</if>
             <if test="status != null and status != ''">status,</if>
@@ -171,7 +172,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="diandongId != null">#{diandongId},</if>
             <if test="diandongName != null and diandongName != ''">#{diandongName},</if>
             <if test="diandongPhone != null and diandongPhone != ''">#{diandongPhone},</if>
-            <if test="sysUserId != null">#{sysUserId},</if>
+            <if test="userId != null">#{userId},</if>
             <if test="companyId != null">#{companyId},</if>
             <if test="name != null and name != ''">#{name},</if>
             <if test="status != null and status != ''">#{status},</if>
@@ -201,7 +202,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="diandongId != null">diandong_id = #{diandongId},</if>
             <if test="diandongName != null and diandongName != ''">diandong_name = #{diandongName},</if>
             <if test="diandongPhone != null and diandongPhone != ''">diandong_phone = #{diandongPhone},</if>
-            <if test="sysUserId != null">sys_user_id = #{sysUserId},</if>
+            <if test="userId != null">sys_user_id = #{userId},</if>
             <if test="companyId != null">company_id = #{companyId},</if>
             <if test="name != null and name != ''">name = #{name},</if>
             <if test="status != null and status != ''">status = #{status},</if>
@@ -231,7 +232,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="diandongId != null">diandong_id = #{diandongId},</if>
             <if test="diandongName != null and diandongName != ''">diandong_name = #{diandongName},</if>
             <if test="diandongPhone != null and diandongPhone != ''">diandong_phone = #{diandongPhone},</if>
-            <if test="sysUserId != null">sys_user_id = #{sysUserId},</if>
+            <if test="userId != null">sys_user_id = #{userId},</if>
             <if test="companyId != null">company_id = #{companyId},</if>
             <if test="name != null and name != ''">name = #{name},</if>
             <if test="status != null and status != ''">status = #{status},</if>

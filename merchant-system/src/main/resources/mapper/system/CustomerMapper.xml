@@ -14,7 +14,7 @@
         <result property="phone" column="phone"/>
         <result property="level" column="level"/>
         <result property="customerNeeds" column="customer_needs"/>
-        <result property="companyName" column="company_name"/>
+        <result property="customerCompany" column="customer_company"/>
         <result property="province" column="province"/>
         <result property="dianmianAddress" column="dianmian_address"/>
         <result property="city" column="city"/>
@@ -33,7 +33,7 @@
     </resultMap>
 
     <sql id="selectCustomerVo">
-        select biz_customer.id, biz_customer.num, biz_customer.name, biz_customer.phone, biz_customer.level, biz_customer.customer_needs,
+        select biz_customer.id, biz_customer.num, biz_customer.name, biz_customer.company_name customer_company ,biz_customer.phone, biz_customer.level, biz_customer.customer_needs,
         biz_customer.province, biz_customer.dianmian_address, biz_customer.city, biz_customer.district, biz_customer.resource, biz_customer.user_id, biz_customer.username, biz_customer.luru_name, biz_customer.experience, biz_customer.remark, biz_customer.status, biz_customer.input_date, biz_customer.update_date,
         biz_customer.genjin_date, biz_customer.genjin_status, biz_customer.dept_id, d.dept_name,company.name company_name
         from biz_customer
@@ -43,6 +43,43 @@
     </sql>
 
     <select id="selectCustomerList" parameterType="CustomerBO" resultMap="CustomerResult">
+        <include refid="selectCustomerVo"/>
+        <where>
+            <if test="deptId != null and deptId != 0">
+                AND (u.dept_id = #{deptId} OR u.dept_id IN ( SELECT t.id FROM sys_dept t WHERE find_in_set(#{deptId}, ancestors) ))
+            </if>
+            <if test="userId !=  null  and userId != ''">and biz_customer.user_id = #{userId}</if>
+            <if test="name !=  null  and name != ''">and biz_customer.name like concat('%', #{name}, '%')</if>
+            <if test="phone != null  and phone != ''">and biz_customer.phone = #{phone}</if>
+            <if test="level != null  and level != ''">and biz_customer.level = #{level}</if>
+            <if test="customerNeeds != null  and customerNeeds != ''">and biz_customer.customer_needs = #{customerNeeds}</if>
+            <if test="companyName != null  and companyName != ''">and biz_customer.company_name like concat('%', #{companyName},
+                '%')
+            </if>
+            <if test="province != null  and province != ''">and biz_customer.province = #{province}</if>
+            <if test="dianmianAddress != null  and dianmianAddress != ''">and biz_customer.dianmian_address = #{dianmianAddress}</if>
+            <if test="city != null  and city != ''">and biz_customer.city = #{city}</if>
+            <if test="district != null  and district != ''">and biz_customer.district = #{district}</if>
+            <if test="resource != null  and resource != ''">and biz_customer.resource = #{resource}</if>
+            <if test="username != null  and username != ''">and biz_customer.username like concat('%', #{username}, '%')</if>
+            <if test="inputDateStart != null  and inputDateStart != ''">and date_format(biz_customer.input_date,'%y%m%d') &gt;= date_format(#{inputDateStart},'%y%m%d')</if>
+            <if test="inputDateEnd != null and inputDateEnd != ''">and date_format(biz_customer.input_date,'%y%m%d')  &lt;= date_format(#{inputDateEnd},'%y%m%d')</if>
+            <if test="status != null and status != ''">and biz_customer.status = #{status}</if>
+            <if test="genjinStatus != null and genjinStatus != ''">and biz_customer.genjin_status = #{genjinStatus}</if>
+            <if test="daysFirst != null and daysFirst != ''">and biz_customer.genjin_date &lt;= DATE_SUB(NOW(),INTERVAL #{daysFirst} DAY) </if>
+            <if test="daysSecond != null and daysSecond != ''">and biz_customer.genjin_date &gt;= DATE_SUB(NOW(),INTERVAL #{daysSecond} DAY)</if>
+            <if test="keywords != null and keywords != ''">and (
+                instr(d.dept_name, #{keywords}) +
+                instr(biz_customer.name, #{keywords}) +
+                instr(biz_customer.phone, #{keywords})
+                ) > 0</if>
+            <!-- 数据范围过滤 -->
+            ${params.dataScope}
+        </where>
+        order by biz_customer.genjin_date desc, biz_customer.input_date desc
+    </select>
+
+    <select id="selectXiansuoList" parameterType="CustomerBO" resultMap="CustomerResult">
         <include refid="selectCustomerVo"/>
         <where>
             <if test="deptId != null and deptId != 0">
@@ -105,13 +142,23 @@
         </foreach>
     </select>
 
-    <select id="countCustomerByPhone" parameterType="String" resultType="java.lang.Integer">
+    <select id="countCustomerByPhone" resultType="java.lang.Integer">
         select
             count(*)
         from
             biz_customer c
         where
-            c.phone = #{phone}
+            c.status = '1' and c.user_id = #{userId} and FIND_IN_SET(#{phone},c.phone)
+    </select>
+
+    <select id="countXiansuoByPhone" resultType="java.lang.Integer">
+        select
+            count(*)
+        from
+            biz_customer c
+        <where>
+            <if test="phone !=  null  and phone != ''">and c.phone = #{phone}</if>
+        </where>
     </select>
 
     <insert id="insertCustomer" parameterType="Customer" useGeneratedKeys="true" keyProperty="id">
@@ -159,7 +206,6 @@
             <if test="remark != null and remark != ''">#{remark},</if>
             <if test="status != null and status != ''">#{status},</if>
             <if test="genjinStatus != null and genjinStatus != ''">#{genjinStatus},</if>
-
             now(),now()
         </trim>
     </insert>

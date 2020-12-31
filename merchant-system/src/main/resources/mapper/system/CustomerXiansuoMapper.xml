@@ -12,7 +12,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="province"    column="province"    />
         <result property="city"    column="city"    />
         <result property="resource"    column="resource"    />
-        <result property="sysUserId"    column="sys_user_id"    />
+        <result property="userId"    column="sys_user_id"    />
         <result property="isCustomer"    column="is_customer"    />
         <result property="createTime"    column="create_time"    />
         <result property="updateTime"    column="update_time"    />
@@ -31,7 +31,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="province != null  and province != ''"> and province = #{province}</if>
             <if test="city != null  and city != ''"> and city = #{city}</if>
             <if test="resource != null  and resource != ''"> and resource = #{resource}</if>
-            <if test="sysUserId != null "> and sys_user_id = #{sysUserId}</if>
+            <if test="userId != null "> and sys_user_id = #{userId}</if>
             <if test="createTime != null "> and create_time = #{createTime}</if>
             <if test="updateTime != null "> and update_time = #{updateTime}</if>
         </where>
@@ -51,7 +51,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="province != null and province != ''">province,</if>
             <if test="city != null and city != ''">city,</if>
             <if test="resource != null and resource != ''">resource,</if>
-            <if test="sysUserId != null">sys_user_id,</if>
+            <if test="userId != null">sys_user_id,</if>
             <if test="isCustomer != null">is_customer,</if>
             create_time,
             update_time,
@@ -63,7 +63,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="province != null and province != ''">#{province},</if>
             <if test="city != null and city != ''">#{city},</if>
             <if test="resource != null and resource != ''">#{resource},</if>
-            <if test="sysUserId != null">#{sysUserId},</if>
+            <if test="userId != null">#{userId},</if>
             <if test="isCustomer != null">#{isCustomer},</if>
             now(),
             now()
@@ -79,7 +79,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="province != null and province != ''">province = #{province},</if>
             <if test="city != null and city != ''">city = #{city},</if>
             <if test="resource != null and resource != ''">resource = #{resource},</if>
-            <if test="sysUserId != null">sys_user_id = #{sysUserId},</if>
+            <if test="userId != null">sys_user_id = #{userId},</if>
             <if test="isCustomer != null">is_customer = #{isCustomer},</if>
             update_time = now()
         </trim>

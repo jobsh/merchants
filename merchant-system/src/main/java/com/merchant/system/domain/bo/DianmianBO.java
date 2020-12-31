@@ -39,8 +39,8 @@ public class DianmianBO extends BaseEntity {
     private Integer diandongId;
 
     /** 管理人id */
-    @ApiModelProperty(value = "负责人id", name = "sysUserId")
-    private Long sysUserId;
+    @ApiModelProperty(value = "负责人id", name = "userId")
+    private Long userId;
 
     /** 所属公司id */
     @Excel(name = "所属公司id")
