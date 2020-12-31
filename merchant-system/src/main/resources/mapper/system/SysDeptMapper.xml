@@ -16,6 +16,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="status"     column="status"      />
 		<result property="delFlag"    column="del_flag"    />
 		<result property="parentName" column="parent_name" />
+		<result property="companyId" column="company_id" />
 		<result property="createBy"   column="create_by"   />
 		<result property="createTime" column="create_date" />
 		<result property="updateBy"   column="update_by"   />
@@ -23,7 +24,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</resultMap>
 	
 	<sql id="selectDeptVo">
-        select d.id, d.parent_id, d.ancestors, d.dept_name, d.order_num, d.leader, d.phone, d.email, d.status, d.del_flag, d.create_by, d.create_date
+        select d.id, d.parent_id, d.ancestors, d.dept_name, d.order_num, d.leader, d.phone, d.email, d.status, d.del_flag,d.company_id, d.create_by, d.create_date
         from sys_dept d
     </sql>
     

@@ -30,6 +30,8 @@ public class ContractFeeBO extends ContractFee {
     private String companyName;
     /** 签约产品 */
     private String produce;
+    /** 合同负责人id */
+    private Integer managerId;
     /** 收款时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "收款时间开始", width = 30, dateFormat = "yyyy-MM-dd")

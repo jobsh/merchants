@@ -51,6 +51,8 @@ public class SysDept extends BaseEntity
 
     /** 父部门名称 */
     private String parentName;
+
+    private Integer companyId;
     
     /** 子部门 */
     private List<SysDept> children = new ArrayList<SysDept>();
@@ -199,5 +201,13 @@ public class SysDept extends BaseEntity
             .append("updateBy", getUpdateBy())
             .append("updateTime", getUpdateTime())
             .toString();
+    }
+
+    public Integer getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(Integer companyId) {
+        this.companyId = companyId;
     }
 }

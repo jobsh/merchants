@@ -81,6 +81,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                 AND (u.dept_id = #{deptId} OR u.dept_id IN ( SELECT t.id FROM sys_dept t WHERE find_in_set(#{deptId}, ancestors) ))
             </if>
             <if test="receiverId !=  null  and receiverId != ''">and receiver_id = #{receiverId}</if>
+            <if test="managerId !=  null  and managerId != ''">and biz_contract.manager_id = #{managerId}</if>
             <if test="num != null  and num != ''"> and num = #{num}</if>
             <if test="contractNum != null  and contractNum != ''"> and contract_num = #{contractNum}</if>
             <if test="type != null  and type != ''"> and biz_contract_fee.type = #{type}</if>
