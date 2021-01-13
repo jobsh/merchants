@@ -1,4 +1,4 @@
-# 项目相关配置, 对应com.ruoyi.common.config.RuoYiConfig
+# 项目相关配置, 对应com.ruoyi.common.config.MerchantConfig
 merchant:
   # 名称
   name: merchant
@@ -43,7 +43,7 @@ spring:
     # 国际化资源文件路径
     basename: i18n/messages
   profiles: 
-    active: druid
+    active: dev
   # 文件上传
   servlet:
      multipart:
@@ -59,9 +59,9 @@ spring:
   # redis 配置
   redis:
     # 地址
-    host: 192.168.53.47
+    host: 182.92.192.42
     port: 6379
-    password: 123456
+    password: shrek
     database: 0
     # sentinel:
     #   nodes: 172.31.220.61:26379,172.31.220.62:26379,172.31.220.63:26379

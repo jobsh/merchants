@@ -5,8 +5,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.merchant.common.core.domain.entity.SysCompany;
+import com.merchant.common.enums.SysDeptType;
 import com.merchant.system.mapper.SysDeptMapper;
 import com.merchant.system.mapper.SysRoleMapper;
+import com.merchant.system.service.ISysCompanyService;
 import com.merchant.system.service.ISysDeptService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +21,8 @@ import com.merchant.common.core.domain.entity.SysRole;
 import com.merchant.common.exception.CustomException;
 import com.merchant.common.utils.StringUtils;
 
+import javax.annotation.Resource;
+
 /**
  * 部门管理 服务实现
  * 
@@ -26,11 +31,14 @@ import com.merchant.common.utils.StringUtils;
 @Service
 public class SysDeptServiceImpl implements ISysDeptService
 {
-    @Autowired
+    @Resource
     private SysDeptMapper deptMapper;
 
-    @Autowired
+    @Resource
     private SysRoleMapper roleMapper;
+
+    @Autowired
+    private ISysCompanyService companyService;
 
     /**
      * 查询部门管理数据
@@ -185,6 +193,16 @@ public class SysDeptServiceImpl implements ISysDeptService
         if (!UserConstants.DEPT_NORMAL.equals(info.getStatus()))
         {
             throw new CustomException("部门停用，不允许新增");
+        }
+        if (SysDeptType.IS_COMPANY.getCode().equals(dept.getIsCompany())) {
+            dept.setIsCompany("1");
+            SysCompany company = new SysCompany();
+            company.setName(dept.getDeptName());
+            company.setSimpleName(dept.getDeptName());
+            company.setPhone(dept.getPhone());
+            company.setContactPerson(dept.getLeader());
+            companyService.insertSysCompany(company);
+            dept.setCompanyId(company.getId());
         }
         dept.setAncestors(info.getAncestors() + "," + dept.getParentId());
         return deptMapper.insertDept(dept);
