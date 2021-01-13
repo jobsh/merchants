@@ -4,7 +4,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.merchant.system.mapper.ContractMapper">
     
-    <resultMap type="Contract" id="ContractResult">
+    <resultMap type="com.merchant.system.domain.Contract" id="ContractResult">
         <result property="id"    column="id"    />
         <result property="deptId"    column="dept_id"    />
         <result property="pid"    column="pid"    />
@@ -46,7 +46,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="remark"    column="remark"    />
         <result property="deptName"    column="dept_name"    />
         <result property="companyName" column="company_name"/>
-        <result property="input_date"    column="inputDate"    />
+        <result property="inputDate"    column="input_date"    />
+        <result property="lvyueFee"    column="lvyue_fee"    />
+        <result property="jingyingManagerFee"    column="jingying_manager_fee"    />
+        <result property="yunyingManagerFee"    column="yunying_manager_fee"    />
+        <result property="systemUseFee"    column="system_use_fee"    />
+        <result property="systemMaintenanceFee"    column="system_maintenance_fee"    />
+        <result property="daibanFee"    column="daiban_fee"    />
+        <result property="guohuoFee"    column="guohuo_fee"    />
+        <result property="totalFee"    column="total_fee"    />
     </resultMap>
 
     <sql id="selectContractVo">
@@ -55,7 +63,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             biz_contract.dianmian_name, biz_contract.dianmian_num, biz_contract.dianmian_province, biz_contract.dianmian_city, biz_contract.dianmian_district, biz_contract.dianmian_address, biz_contract.dianmian_longitude, biz_contract.dianmian_latitude,
             biz_contract.guarantee, biz_contract.fee, biz_contract.operation, biz_contract.manager_id, biz_contract.manager, biz_contract.sign_date, biz_contract.sign_user_id,
             biz_contract.sign_user, biz_contract.begin_date, biz_contract.end_date,biz_contract.terminate_date, biz_contract.status, biz_contract.check_status,biz_contract.check_date, biz_contract.create_by, biz_contract.remark, biz_contract.file, biz_contract.terminate_file, biz_contract.imgs,biz_contract.input_date,
-            d.dept_name, company.name company_name
+            d.dept_name, company.name company_name,
+            IFNULL(lvyue_fee, 0) lvyue_fee,
+            IFNULL(jingying_manager_fee, 0) jingying_manager_fee,
+            IFNULL(yunying_manager_fee, 0) yunying_manager_fee,
+            IFNULL(system_use_fee, 0) system_use_fee,
+            IFNULL(system_maintenance_fee, 0) system_maintenance_fee,
+            IFNULL(daiban_fee, 0) daiban_fee,
+            IFNULL(guohuo_fee, 0) guohuo_fee,
+            IFNULL(lvyue_fee, 0) +  IFNULL(jingying_manager_fee, 0) +
+            IFNULL(yunying_manager_fee, 0) + IFNULL(system_use_fee, 0) + IFNULL(system_maintenance_fee, 0) + IFNULL(daiban_fee, 0)
+                + IFNULL(guohuo_fee, 0) as total_fee
         from
             biz_contract
         left join
@@ -70,6 +88,25 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             sys_company company
         on
             d.company_id = company.id
+        left JOIN
+            (
+            select
+                fee.contract_num contract_num,
+                SUM(case when fee.type = '0' then fee.amount else 0 end) lvyue_fee,
+                SUM(case when fee.type = '1' then fee.amount else 0 end) jingying_manager_fee,
+                SUM(case when fee.type = '2' then fee.amount else 0 end) yunying_manager_fee,
+                SUM(case when fee.type = '3' then fee.amount else 0 end) system_use_fee,
+                SUM(case when fee.type = '4' then fee.amount else 0 end) system_maintenance_fee,
+                SUM(case when fee.type = '6' then fee.amount else 0 end) daiban_fee,
+                SUM(case when fee.type = '5' then fee.amount else 0 end) guohuo_fee
+            FROM
+                biz_contract_fee fee
+            GROUP BY
+            fee.contract_num
+            ) fee
+        ON fee.contract_num = biz_contract.num
+
+
     </sql>
 
     <select id="selectContractList" parameterType="ContractBO" resultMap="ContractResult">
@@ -82,8 +119,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="managerId !=  null  and managerId != ''">and manager_id = #{managerId}</if>
             <if test="num != null  and num != ''"> and biz_contract.num  like concat('%', #{num}, '%')</if>
             <if test="customerName != null  and customerName != ''"> and biz_contract.customer_name like concat('%', #{customerName}, '%')</if>
+            <if test="code != null  and code != ''"> and biz_contract.code like concat('%', #{code}, '%')</if>
+            <if test="dianmianName != null and dianmianName != ''">biz_contract.dianmian_name like concat('%', #{dianmianName}, '%')</if>
             <if test="customerPhone != null  and customerPhone != ''"> and biz_contract.customer_phone = #{customerPhone}</if>
-            <if test="type != null  and type != ''"> and biz_contract.type = #{type}</if>
             <if test="produce != null  and produce != ''"> and biz_contract.produce = #{produce}</if>
             <if test="operation != null  and operation != ''"> and biz_contract.operation = #{operation}</if>
             <if test="signDateStart != null  and signDateStart != ''">and biz_contract.sign_date &gt;= #{signDateStart}</if>
@@ -94,8 +132,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="checkDateEnd != null  and checkDateEnd != ''">and biz_contract.check_date &lt;= #{checkDateEnd}</if>
             <if test="endDateStart != null  and endDateStart != ''">and biz_contract.end_date &gt;= #{endDateStart}</if>
             <if test="endDateEnd != null  and endDateEnd != ''">and biz_contract.end_date &lt;= #{endDateEnd}</if>
-            <if test="status != null  and status != ''"> and biz_contract.status = #{status}</if>
-            <if test="checkStatus = null  and checkStatus = ''"> and biz_contract.check_status &lt;&gt; '2'</if>
+            <if test="status == null or status == ''"> and biz_contract.status between '0' and '1'</if>
+            <if test="status != null and status != ''"> and biz_contract.status = #{status}</if>
+            <if test="checkStatus == null  or checkStatus == ''"> and biz_contract.check_status &lt;&gt; '2'</if>
             <if test="checkStatus != null  and checkStatus != ''"> and biz_contract.check_status = #{checkStatus}</if>
             <if test="keywords != null and keywords != ''">and (
                 instr(biz_contract.customer_name, #{keywords}) +

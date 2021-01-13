@@ -173,4 +173,14 @@ public class Contract extends BaseEntity
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Excel(name = "合同录入时间")
     private Date inputDate;
+
+    private Integer lvyueFee;
+    private Integer jingyingManagerFee;
+    private Integer yunyingManagerFee;
+    private Integer systemUseFee;
+    private Integer systemMaintenanceFee;
+    private Integer daibanFee;
+    private Integer guohuoFee;
+    private Integer totalFee;
+
 }

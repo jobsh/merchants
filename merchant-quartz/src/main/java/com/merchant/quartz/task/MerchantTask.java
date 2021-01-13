@@ -15,7 +15,7 @@ import com.merchant.common.utils.StringUtils;
  * @author hanke
  */
 @Component("ryTask")
-public class RyTask {
+public class MerchantTask {
 
     @Autowired
     private ICustomerService customerService;

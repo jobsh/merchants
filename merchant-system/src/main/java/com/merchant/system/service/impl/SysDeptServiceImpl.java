@@ -20,6 +20,8 @@ import com.merchant.common.core.domain.entity.SysDept;
 import com.merchant.common.core.domain.entity.SysRole;
 import com.merchant.common.exception.CustomException;
 import com.merchant.common.utils.StringUtils;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
@@ -186,6 +188,7 @@ public class SysDeptServiceImpl implements ISysDeptService
      * @return 结果
      */
     @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public int insertDept(SysDept dept)
     {
         SysDept info = deptMapper.selectDeptById(dept.getParentId());
@@ -215,16 +218,32 @@ public class SysDeptServiceImpl implements ISysDeptService
      * @return 结果
      */
     @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public int updateDept(SysDept dept)
     {
         SysDept newParentDept = deptMapper.selectDeptById(dept.getParentId());
+        Integer newCompanyId = newParentDept.getCompanyId();
+
         SysDept oldDept = deptMapper.selectDeptById(dept.getDeptId());
         if (StringUtils.isNotNull(newParentDept) && StringUtils.isNotNull(oldDept))
         {
             String newAncestors = newParentDept.getAncestors() + "," + newParentDept.getDeptId();
             String oldAncestors = oldDept.getAncestors();
             dept.setAncestors(newAncestors);
+            if (newParentDept.getParentId() != 0) {
+                dept.setCompanyId(newCompanyId);
+                dept.setIsCompany(SysDeptType.IS_DEPT.getCode());
+            }
             updateDeptChildren(dept.getDeptId(), newAncestors, oldAncestors);
+        }
+
+        if (SysDeptType.IS_COMPANY.getCode().equals(oldDept.getIsCompany())) {
+            SysCompany company = companyService.selectSysCompanyById(oldDept.getCompanyId());
+            company.setPhone(company.getPhone());
+            company.setContactPerson(dept.getLeader());
+            company.setName(dept.getDeptName());
+            company.setSimpleName(dept.getDeptName());
+            companyService.updateSysCompany(company);
         }
         int result = deptMapper.updateDept(dept);
         if (UserConstants.DEPT_NORMAL.equals(dept.getStatus()))
@@ -275,8 +294,14 @@ public class SysDeptServiceImpl implements ISysDeptService
      * @return 结果
      */
     @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public int deleteDeptById(Long deptId)
     {
+        SysDept sysDept = deptMapper.selectDeptById(deptId);
+        // 如果是公司，把公司表的记录删除
+        if (SysDeptType.IS_COMPANY.getCode().equals(sysDept.getIsCompany())) {
+            companyService.deleteSysCompanyById(sysDept.getCompanyId());
+        }
         return deptMapper.deleteDeptById(deptId);
     }
 
