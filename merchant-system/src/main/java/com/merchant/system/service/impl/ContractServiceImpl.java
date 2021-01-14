@@ -175,7 +175,7 @@ public class ContractServiceImpl implements IContractService
     @Override
     public int updateContract(ContractBO contractBO) throws Exception {
         Contract oldContract = contractMapper.selectContractById(contractBO.getId());
-        if (ContractStatus.CHECKED.getCode().equals(oldContract.getCheckDate())){
+        if (ContractStatus.CHECKED.getCode().equals(oldContract.getCheckStatus())){
             return -1;
         }
         int res = contractMapper.updateContract(contractBO);
@@ -184,9 +184,11 @@ public class ContractServiceImpl implements IContractService
 
         if (res > 0) {
             Contract newContract = contractMapper.selectContractById(contractBO.getId());
-            Map<String, String> compareRes = compareTwoObject(oldContract, newContract,"fee");
+            Map<String, String> compareRes = compareTwoObject(oldContract, newContract,"fee","customerId","operation","managerId");
             Map<String, String> compareFee = compareTwoObject(JSONObject.parseObject(oldContract.getFee(),Fee.class), JSONObject.parseObject(newContract.getFee(),Fee.class));
-            compareRes.put("费用详情:",compareFee.toString());
+            if (compareFee!= null && compareFee.size() > 0 && !compareFee.isEmpty()) {
+                compareRes.put("费用详情:",JSONObject.toJSONString(compareFee));
+            }
             // 请求的地址
             ContractOperLog contractOperLog = new ContractOperLog();
             this.setContractOperLog(contractOperLog);
@@ -277,7 +279,7 @@ public class ContractServiceImpl implements IContractService
 
         // 查询出要续签的合同
         Contract contract = contractMapper.selectContractById(id);
-        if (ContractStatus.CHECKED.getCode().equals(contract.getCheckDate())){
+        if (ContractStatus.CHECKED.getCode().equals(contract.getCheckStatus())){
             return -1;
         }
         ContractBO oldContract = new ContractBO();

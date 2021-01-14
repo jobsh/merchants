@@ -44,9 +44,11 @@ public class Contract extends BaseEntity
     private String customerName;
 
     /** 客户id */
+    @Excel(name = "customerId")
     private Integer customerId;
 
     /** 客户编号 */
+    @Excel(name = "customerNum")
     private String customerNum;
 
     /** 客户手机号（可以有多个手机号，逗号分隔） */
@@ -105,6 +107,7 @@ public class Contract extends BaseEntity
     @Excel(name = "操作")
     private String operation;
 
+    @Excel(name = "负责人id")
     private Integer managerId;
 
     /** 负责人 */
@@ -116,6 +119,7 @@ public class Contract extends BaseEntity
     @Excel(name = "签约日期", width = 30, dateFormat = "yyyy-MM-dd")
     private Date signDate;
 
+    @Excel(name = "签约人id")
     private Integer signUserId;
 
     /** 签约人员 */
