@@ -1,11 +1,7 @@
 package com.merchant.system.domain;
 
 import com.merchant.common.annotation.Excel;
-import com.merchant.common.annotation.Excels;
 import lombok.Data;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * @Classname Fee
@@ -17,7 +13,7 @@ import java.util.Map;
 public class Fee {
     @Excel(name = "履约保证金")
     private String lvyueFee;
-    @Excel(name = "经营管理费")
+    @Excel(name = "运营管理费")
     private String yunyingManagerFee;
     @Excel(name = "系统使用费")
     private String systemUseFee;
@@ -29,12 +25,4 @@ public class Fee {
     private String guohuoFee;
     @Excel(name = "经营管理费")
     private JingyingManagerFee jingyingManagerFee;
-
-    @Data
-    public class JingyingManagerFee {
-        @Excel(name = "总费用")
-        private String total;
-        @Excel(name = "经营管理费详情")
-        private List<Map<String, String>> detail;
-    }
 }

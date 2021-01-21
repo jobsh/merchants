@@ -96,7 +96,7 @@ public interface ICustomerService
      * @param customerBO：我的客户
      * @return
      */
-    int transferCustomer(CustomerBO customerBO);
+    Object transferCustomer(CustomerBO customerBO);
 
     /**
      * 线索升级为客户

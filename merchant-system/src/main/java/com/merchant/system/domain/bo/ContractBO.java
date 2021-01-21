@@ -23,6 +23,7 @@ public class ContractBO extends BaseEntity
     private static final long serialVersionUID = 1L;
 
     /** 合同表主键id */
+    @Excel(name = "合同id")
     @ApiModelProperty(value = "合同id", name = "id")
     private Integer id;
 
@@ -31,41 +32,51 @@ public class ContractBO extends BaseEntity
     private Integer[] ids;
 
     /** 合同表主键id */
+    @Excel(name = "部门id")
     @ApiModelProperty(value = "部门id", name = "deptId")
     private Integer deptId;
 
     /** 上级合同id */
+    @Excel(name = "上级合同id")
     private Integer pid;
 
     @ApiModelProperty(value = "关联合同编号", name = "rootNum")
+    @Excel(name = "关联合同编号")
     private String rootNum;
 
     /** 合同编号 */
     @ApiModelProperty(value = "合同编号", name = "num")
+    @Excel(name = "合同编号")
     private String num;
 
     /** 合同代码 */
     @ApiModelProperty(value = "合同代码", name = "code")
+    @Excel(name = "合同code")
     private String code;
 
     /** 客户姓名 */
     @ApiModelProperty(value = "客户姓名", name = "customerName")
+    @Excel(name = "客户姓名")
     private String customerName;
 
     /** 客户id */
     @ApiModelProperty(value = "客户id", name = "customerId")
+    @Excel(name = "客户id")
     private Integer customerId;
 
-    @ApiModelProperty(value = "客户编号", name = "customerNum")
     /** 客户编号 */
+    @ApiModelProperty(value = "客户编号", name = "customerNum")
+    @Excel(name = "客户编号")
     private String customerNum;
 
     /** 客户手机号（可以有多个手机号，逗号分隔） */
     @ApiModelProperty(value = "客户手机号", name = "customerPhone")
+    @Excel(name = "客户手机号")
     private String customerPhone;
 
     /** 客户手机号（可以有多个手机号，逗号分隔） */
     @ApiModelProperty(value = "负责人手机号", name = "managerPhone")
+    @Excel(name = "负责人手机号")
     private String managerPhone;
 
     /** 合同类型(0：新签:1：续签) */
@@ -75,10 +86,12 @@ public class ContractBO extends BaseEntity
 
     /** 签约产品 */
     @ApiModelProperty(value = "签约产品", name = "produce")
+    @Excel(name = "产品类型")
     private String produce;
 
     /** 店面或区域名称 */
     @ApiModelProperty(value = "店面或区域名称", name = "dianmianName")
+    @Excel(name = "店面或区域名称")
     private String dianmianName;
 
     /** 店面数量 */

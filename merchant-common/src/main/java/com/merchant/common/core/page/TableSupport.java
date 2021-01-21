@@ -1,6 +1,7 @@
 package com.merchant.common.core.page;
 
 import com.merchant.common.utils.ServletUtils;
+import org.apache.poi.ss.formula.functions.T;
 
 /**
  * 表格数据处理
@@ -32,8 +33,7 @@ public class TableSupport
     /**
      * 封装分页对象
      */
-    public static PageDomain getPageDomain()
-    {
+    public static PageDomain getPageDomain() {
         PageDomain pageDomain = new PageDomain();
         pageDomain.setPageNum(ServletUtils.getParameterToInt(PAGE_NUM));
         pageDomain.setPageSize(ServletUtils.getParameterToInt(PAGE_SIZE));

@@ -76,7 +76,7 @@
             <!-- 数据范围过滤 -->
             ${params.dataScope}
         </where>
-        order by biz_customer.genjin_date desc, biz_customer.input_date desc
+
     </select>
 
     <select id="selectXiansuoList" parameterType="CustomerBO" resultMap="CustomerResult">
@@ -113,7 +113,6 @@
             <!-- 数据范围过滤 -->
             ${params.dataScope}
         </where>
-        order by biz_customer.genjin_date desc, biz_customer.input_date desc
     </select>
 
     <select id="selectCustomerById" parameterType="Integer" resultMap="CustomerResult">
