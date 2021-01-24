@@ -1,6 +1,8 @@
 # 数据源配置
 server:
   port: 8087
+merchant:
+  profile: /home/merchant/uploadPath/picture
 spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource

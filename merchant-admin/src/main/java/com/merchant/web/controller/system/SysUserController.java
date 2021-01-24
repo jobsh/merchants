@@ -116,8 +116,9 @@ public class SysUserController extends BaseController
     public AjaxResult getInfo(@ApiParam(name = "userId", value = "系统用户id", required = true) @PathVariable(value = "userId", required = false) Long userId)
     {
         AjaxResult ajax = AjaxResult.success();
+        Long currentUserId = tokenService.getLoginUser(ServletUtils.getRequest()).getUser().getId();
         List<SysRole> roles = roleService.selectRoleAll();
-        ajax.put("roles", SysUser.isAdmin(userId) ? roles : roles.stream().filter(r -> !r.isAdmin()).collect(Collectors.toList()));
+        ajax.put("roles", SysUser.isAdmin(userId == null?currentUserId:userId) ? roles : roles.stream().filter(r -> !r.isAdmin()).collect(Collectors.toList()));
         ajax.put("posts", postService.selectPostAll());
         if (StringUtils.isNotNull(userId))
         {

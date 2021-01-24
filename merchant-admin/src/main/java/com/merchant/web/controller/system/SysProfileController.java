@@ -106,18 +106,18 @@ public class SysProfileController extends BaseController
      */
     @Log(title = "用户头像", businessType = BusinessType.UPDATE)
     @PostMapping("/avatar")
-    public AjaxResult avatar(@RequestParam("avatarfile") MultipartFile file) throws IOException
+    public AjaxResult avatar(@RequestParam("avatarfile") String filePath) throws IOException
     {
-        if (!file.isEmpty())
+        if (!filePath.isEmpty())
         {
             LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
-            String avatar = FileUploadUtils.upload(MerchantConfig.getAvatarPath(), file);
-            if (userService.updateUserAvatar(loginUser.getUsername(), avatar))
+//            String avatar = FileUploadUtils.upload(MerchantConfig.getAvatarPath(), file);
+            if (userService.updateUserAvatar(loginUser.getUsername(), filePath))
             {
                 AjaxResult ajax = AjaxResult.success();
-                ajax.put("imgUrl", avatar);
+                ajax.put("imgUrl", filePath);
                 // 更新缓存用户头像
-                loginUser.getUser().setAvatar(avatar);
+                loginUser.getUser().setAvatar(filePath);
                 tokenService.setLoginUser(loginUser);
                 return ajax;
             }

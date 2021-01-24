@@ -3,12 +3,14 @@ package com.merchant.framework.aspectj;
 import java.lang.reflect.Method;
 
 import com.merchant.framework.web.service.TokenService;
+import com.merchant.system.service.ISysUserService;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.merchant.common.annotation.DataScope;
 import com.merchant.common.core.domain.BaseEntity;
@@ -80,7 +82,7 @@ public class DataScopeAspect {
         if (StringUtils.isNotNull(loginUser)) {
             SysUser currentUser = loginUser.getUser();
             // 如果是超级管理员，则不过滤数据
-            if (StringUtils.isNotNull(currentUser) && !currentUser.isAdmin()) {
+            if (StringUtils.isNotNull(currentUser) && !ISysUserService.isAdmin(currentUser)) {
                 dataScopeFilter(joinPoint, currentUser, controllerDataScope.deptAlias(),
                         controllerDataScope.userAlias(), controllerDataScope.companyAlias());
             }
