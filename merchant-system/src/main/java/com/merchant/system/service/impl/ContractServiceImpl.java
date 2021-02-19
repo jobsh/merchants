@@ -1,5 +1,6 @@
 package com.merchant.system.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.merchant.common.annotation.ContractLog;
 import com.merchant.common.annotation.DataScope;
@@ -12,18 +13,18 @@ import com.merchant.common.enums.ContractStatus;
 import com.merchant.common.enums.GenjinStatus;
 import com.merchant.common.exception.BaseException;
 import com.merchant.common.utils.DateUtils;
+import com.merchant.common.utils.JsonUtils;
 import com.merchant.common.utils.ServletUtils;
-import com.merchant.common.utils.StringUtils;
 import com.merchant.common.utils.file.FileUploadUtils;
 import com.merchant.common.utils.ip.IpUtils;
-import com.merchant.system.domain.Contract;
-import com.merchant.system.domain.ContractOperLog;
-import com.merchant.system.domain.Fee;
+import com.merchant.system.domain.*;
 import com.merchant.system.domain.bo.AddContractBO;
 import com.merchant.system.domain.bo.ContractBO;
+import com.merchant.system.domain.bo.ContractCompareBO;
 import com.merchant.system.domain.bo.CustomerBO;
 import com.merchant.system.mapper.ContractMapper;
 import com.merchant.system.service.*;
+import com.qiniu.util.Json;
 import org.n3r.idworker.Sid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,10 +39,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.BiPredicate;
 
 import static com.merchant.common.constant.Constants.CONTRACT_PREFIX;
@@ -55,7 +53,7 @@ import static com.merchant.common.constant.Constants.CONTRACT_PREFIX;
 @Service
 public class ContractServiceImpl implements IContractService 
 {
-    @Autowired
+    @Resource
     private ContractMapper contractMapper;
 
     @Autowired
@@ -126,7 +124,9 @@ public class ContractServiceImpl implements IContractService
         contractBO.setPid(0);
         // 新签合同rootNum设置为本合同编号，pid为0
         contractBO.setRootNum(contractBO.getNum());
-        contractBO.setCreateBy(tokenService.getLoginUser(ServletUtils.getRequest()).getUsername());
+        // 创建人
+        String createBy = tokenService.getLoginUser(ServletUtils.getRequest()).getUsername();
+        contractBO.setCreateBy(createBy);
         if (DateUtils.getNowDate().before(DateUtils.parseDate(contractBO.getBeginDate()))) {
             // 如果当前时间在合同开始时间之前，设置合同状态为有效未执行
             contractBO.setStatus(ContractStatus.EFFECTIVE_NOT_EXECUTE.getCode());
@@ -139,7 +139,7 @@ public class ContractServiceImpl implements IContractService
         // 审核状态为未审核
         contractBO.setCheckStatus(ContractStatus.UNCHECK.getCode());
         Fee fee = JSONObject.parseObject(contractBO.getFee(), Fee.class);
-        Fee.JingyingManagerFee jingyingManagerFee = fee.getJingyingManagerFee();
+        JingyingManagerFee jingyingManagerFee = fee.getJingyingManagerFee();
         Integer total = jingyingManagerFee.getDetail().stream().mapToInt(item -> Integer.parseInt(item.get("money"))).sum();
         jingyingManagerFee.setTotal(total.toString());
         fee.setJingyingManagerFee(jingyingManagerFee);
@@ -177,32 +177,65 @@ public class ContractServiceImpl implements IContractService
     @Override
     public int updateContract(ContractBO contractBO) throws Exception {
         Contract oldContract = contractMapper.selectContractById(contractBO.getId());
-        if (ContractStatus.CHECKED.getCode().equals(oldContract.getCheckDate())){
+        if (ContractStatus.CHECKED.getCode().equals(oldContract.getCheckStatus())){
             return -1;
         }
+
+        ContractCompareBO oldContactBO = new ContractCompareBO();
+        ContractCompareBO newContactBO = new ContractCompareBO();
+        BeanUtils.copyProperties(oldContract,oldContactBO);
+        BeanUtils.copyProperties(contractBO,newContactBO);
+        // 进行时间转化
+        oldContactBO.setBeginDate(DateUtils.parseDateToStr(DateUtils.YYYY_MM_DD,oldContract.getBeginDate()));
+        oldContactBO.setEndDate(DateUtils.parseDateToStr(DateUtils.YYYY_MM_DD,oldContract.getEndDate()));
+        oldContactBO.setSignDate(DateUtils.parseDateToStr(DateUtils.YYYY_MM_DD,oldContract.getSignDate()));
+
+        Fee oldFee = JSONObject.parseObject(oldContract.getFee(), Fee.class);
+        Fee newFee = JSONObject.parseObject(contractBO.getFee(), Fee.class);
+        JingyingManagerFee oldManagerFee = oldFee.getJingyingManagerFee();
+        JingyingManagerFee newManagerFee = newFee.getJingyingManagerFee();
+        // 计算经营管理费total
+        Integer total = newManagerFee.getDetail().stream().mapToInt(item -> Integer.parseInt(item.get("money"))).sum();
+        newManagerFee.setTotal(total + "");
+        contractBO.setFee(JSON.toJSONString(newFee));
         int res = contractMapper.updateContract(contractBO);
+        newFee.setJingyingManagerFee(newManagerFee);
+        contractBO.setFee(JSON.toJSONString(newFee));
+        // 改成元为单位
+        this.feeToYuan(oldFee);
+        this.feeToYuan(newFee);
+        this.managerFeeToYuan(newManagerFee);
+        this.managerFeeToYuan(oldManagerFee);
+
         // 记录日志
 //        Map memberValues = this.getAnnotationMemberValues("updateContract", ContractLog.class);
 
         if (res > 0) {
-            Contract newContract = contractMapper.selectContractById(contractBO.getId());
-            Map<String, String> compareRes = compareTwoObject(oldContract, newContract,"fee","managerId","dianmianNum");
-            Map<String, String> compareFee = compareTwoObject(JSONObject.parseObject(oldContract.getFee(),Fee.class), JSONObject.parseObject(newContract.getFee(),Fee.class));
-            if (compareFee.size() != 0 && !compareFee.isEmpty() && compareFee != null) {
-                compareRes.put("费用详情:",JSONObject.toJSONString(compareFee));
+
+            Map<String,Object> finalResultMap = new HashMap<>();
+            Map<String, String> compareRes = compareTwoObject(oldContactBO, newContactBO);
+            Map<String, String> compareFee = compareTwoObject(oldFee, newFee,"jingyingManagerFee");
+            Map<String, String> compareManagerFee = compareTwoObject(oldManagerFee, newManagerFee);
+
+            if (compareRes!= null && compareRes.size() > 0 && !compareRes.isEmpty()) {
+                finalResultMap.put("基础内容:",compareRes);
+            }
+            if (compareFee!= null && compareFee.size() > 0 && !compareFee.isEmpty()) {
+                finalResultMap.put("费用详情:",compareFee);
+            }
+            if (compareManagerFee!= null && compareManagerFee.size() > 0 && !compareManagerFee.isEmpty()) {
+                finalResultMap.put("经营管理费:",compareManagerFee);
             }
             // 请求的地址
             ContractOperLog contractOperLog = new ContractOperLog();
-            this.setContractOperLog(contractOperLog);
-            // 添加合同日志
-            contractOperLog.setRequestMethod("PUT");
-            contractOperLog.setContractNum(oldContract.getNum());
-            contractOperLog.setBusinessType(ContractOperType.MODIFY.ordinal());
-            contractOperLog.setTitle("修改合同");
-            System.out.println(JSONObject.toJSONString(compareRes));
-            contractOperLog.setDescription(JSONObject.toJSONString(compareRes));
-//            memberValues.put("description", compareRes);
-            if (compareRes.size() != 0 && !compareRes.isEmpty() && compareRes != null){
+            if (finalResultMap!= null && finalResultMap.size() > 0 && !finalResultMap.isEmpty()) {
+                this.setContractOperLog(contractOperLog);
+                // 添加合同日志
+                contractOperLog.setRequestMethod("PUT");
+                contractOperLog.setContractNum(oldContract.getNum());
+                contractOperLog.setBusinessType(ContractOperType.MODIFY.ordinal());
+                contractOperLog.setTitle("修改合同");
+                contractOperLog.setDescription(JSON.toJSONString(finalResultMap));
                 contractLogService.insertOperlog(contractOperLog);
             }
         }
@@ -248,10 +281,10 @@ public class ContractServiceImpl implements IContractService
         ContractOperLog contractOperLog = new ContractOperLog();
         if (contract.getEndDate().after(DateUtils.parseDate(contractBO.getTerminateDate()))) {
             contractBO.setStatus(ContractStatus.EXPIRED_TERMINATION.getCode());
-            contractOperLog.setTitle("未到期解约");
+            contractOperLog.setTitle("到期解约");
         } else {
             contractBO.setStatus(ContractStatus.UNEXPIRED_TERMINATION.getCode());
-            contractOperLog.setTitle("到期解约");
+            contractOperLog.setTitle("未到期解约");
         }
 //        this.addSave(file, contractBO); 改为七牛云
         int res = contractMapper.updateContract(contractBO);
@@ -281,12 +314,9 @@ public class ContractServiceImpl implements IContractService
     @Transactional(propagation = Propagation.REQUIRED)
     public int renew(Integer id, AddContractBO contractBO) {
 
-        if (contractMapper.countContractByCode(contractBO.getCode()) > 0) {
-            throw new BaseException("已存在该合同编号");
-        }
         // 查询出要续签的合同
         Contract contract = contractMapper.selectContractById(id);
-        if (ContractStatus.CHECKED.getCode().equals(contract.getCheckDate())){
+        if (ContractStatus.CHECKED.getCode().equals(contract.getCheckStatus())){
             return -1;
         }
         ContractBO oldContract = new ContractBO();
@@ -298,12 +328,13 @@ public class ContractServiceImpl implements IContractService
         contractMapper.updateContract(oldContract);
 
         // 签发新合同
+        if (contractMapper.countContractByCode(contractBO.getCode()) > 0) {
+            throw new BaseException("已存在该合同编号");
+        }
         contractBO.setNum(CONTRACT_PREFIX + sid.nextShort());
-
         contractBO.setRootNum(contract.getRootNum());
         // 设置新合同pid
         contractBO.setPid(contract.getId());
-        contractBO.setCreateBy(tokenService.getLoginUser(ServletUtils.getRequest()).getUsername());
         // 设置新合同类型为续签
         contractBO.setType(ContractStatus.SIGN_RENEW.getCode());
         // 设置新合同状态为有效执行中
@@ -346,7 +377,7 @@ public class ContractServiceImpl implements IContractService
             BeanUtils.copyProperties(contract, contractBO);
             contractBO.setManagerId(managerId);
             contractBO.setManager(sysUser.getUserName());
-            contractBO.setSignUserId(contractBO.getId());
+            contractBO.setSignUserId(managerId);
             contractBO.setSignUser(sysUser.getUserName());
             int res = contractMapper.updateContract(contractBO);
             // 查询出旧合同
@@ -401,7 +432,7 @@ public class ContractServiceImpl implements IContractService
             this.setContractOperLog(contractOperLog);
             // 添加合同日志
             contractOperLog.setRequestMethod("POST");
-            contractOperLog.setContractNum(contract.getNum());
+            contractOperLog.setContractNum(contractBO.getNum());
             contractOperLog.setBusinessType(ContractOperType.CHECK.ordinal());
             contractOperLog.setTitle("审核合同");
             contractOperLog.setDescription("合同状态改为已审核");
@@ -429,7 +460,7 @@ public class ContractServiceImpl implements IContractService
             this.setContractOperLog(contractOperLog);
             // 添加合同日志
             contractOperLog.setRequestMethod("POST");
-            contractOperLog.setContractNum(contract.getNum());
+            contractOperLog.setContractNum(contractBO.getNum());
             contractOperLog.setBusinessType(ContractOperType.CHECK.ordinal());
             contractOperLog.setTitle("反审核合同");
             contractOperLog.setDescription("合同状态改为未审核");
@@ -590,6 +621,29 @@ public class ContractServiceImpl implements IContractService
         // 上传并返回新文件名称
         String fileName = FileUploadUtils.upload(filePath, file);
         contractBO.setTerminateFile(fileName);
+    }
+
+    private Fee feeToYuan(Fee fee){
+        // 改成元为单位
+        fee.setLvyueFee((Integer.parseInt(fee.getLvyueFee()) / 100) + "元");
+        fee.setYunyingManagerFee((Integer.parseInt(fee.getYunyingManagerFee()) / 100) + "元");
+        fee.setSystemUseFee((Integer.parseInt(fee.getSystemUseFee()) / 100) + "元");
+        fee.setSystemMaintenanceFee((Integer.parseInt(fee.getSystemMaintenanceFee()) / 100) + "元");
+        fee.setDaibanFee((Integer.parseInt(fee.getDaibanFee()) / 100) + "元");
+        fee.setGuohuoFee((Integer.parseInt(fee.getGuohuoFee()) / 100) + "元");
+        return fee;
+    }
+    private void managerFeeToYuan(JingyingManagerFee managerFee) {
+        // 改成元为单位
+        managerFee.setTotal(Integer.parseInt(managerFee.getTotal()) / 100 + "元");
+        for (Map<String, String> detail : managerFee.getDetail()) {
+            for (Iterator iter = detail.keySet().iterator(); iter.hasNext(); ) {
+                String key = (String) iter.next();
+                if (key == "money") {
+                    detail.put(key, (Integer.parseInt(detail.get(key)) / 100) + "元");
+                }
+            }
+        }
     }
 
 }

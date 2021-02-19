@@ -37,7 +37,7 @@
         biz_customer.province, biz_customer.dianmian_address, biz_customer.city, biz_customer.district, biz_customer.resource, biz_customer.user_id, biz_customer.username, biz_customer.luru_name, biz_customer.experience, biz_customer.remark, biz_customer.status, biz_customer.input_date, biz_customer.update_date,
         biz_customer.genjin_date, biz_customer.genjin_status, biz_customer.dept_id, d.dept_name,company.name company_name
         from biz_customer
-        left join sys_user u on biz_customer.user_id clearCache= u.id
+        left join sys_user u on biz_customer.user_id = u.id
         left join sys_dept d on u.dept_id = d.id
         left join sys_company company on d.company_id = company.id
     </sql>
@@ -76,7 +76,7 @@
             <!-- 数据范围过滤 -->
             ${params.dataScope}
         </where>
-        order by biz_customer.input_date desc, biz_customer.genjin_date desc
+
     </select>
 
     <select id="selectXiansuoList" parameterType="CustomerBO" resultMap="CustomerResult">
@@ -113,7 +113,6 @@
             <!-- 数据范围过滤 -->
             ${params.dataScope}
         </where>
-        order by biz_customer.input_date desc, biz_customer.genjin_date desc
     </select>
 
     <select id="selectCustomerById" parameterType="Integer" resultMap="CustomerResult">

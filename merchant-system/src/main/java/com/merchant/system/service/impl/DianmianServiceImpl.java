@@ -1,7 +1,6 @@
 package com.merchant.system.service.impl;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import com.merchant.common.annotation.DataScope;
 import com.merchant.common.enums.DianmianStatus;
@@ -13,6 +12,7 @@ import com.merchant.system.domain.bo.AddDianmianBO;
 import com.merchant.system.domain.bo.ContractBO;
 import com.merchant.system.domain.bo.DianmianBO;
 import com.merchant.system.domain.vo.DianmianVO;
+import com.merchant.system.mapper.ContractMapper;
 import com.merchant.system.mapper.DianmianLogMapper;
 import com.merchant.system.service.IContractService;
 import org.springframework.beans.BeanUtils;
@@ -23,6 +23,8 @@ import com.merchant.system.domain.Dianmian;
 import com.merchant.system.service.IDianmianService;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.xml.crypto.Data;
 
 /**
  * 店面管理Service业务层处理
@@ -40,7 +42,7 @@ public class DianmianServiceImpl implements IDianmianService
     private DianmianLogMapper dianmianLogMapper;
 
     @Autowired
-    private IContractService contractService;
+    private ContractMapper contractMapper;
     /**
      * 查询店面管理
      * 
@@ -74,26 +76,26 @@ public class DianmianServiceImpl implements IDianmianService
      * @return 结果
      */
     @Override
-    public int insertDianmian(AddDianmianBO dianmian) throws Exception {
-        String contractNum = dianmian.getContractNum();
-        Contract contract = contractService.selectContractByNum(contractNum);
-        // 修改合同中对应的店面数量
-        AtomicInteger oldDianmianNum = new AtomicInteger(contract.getDianmianNum());
-        contract.setDianmianNum(oldDianmianNum.incrementAndGet());
-        ContractBO contractBO = new ContractBO();
-        BeanUtils.copyProperties(contract,contractBO);
-        contractService.updateContract(contractBO);
+    public int insertDianmian(AddDianmianBO dianmian)
+    {
         dianmian.setStatus(dianmian.getStatus());
         dianmian.setSetDate(dianmian.getSetDate());
         int res = dianmianMapper.insertDianmian(dianmian);
         if (res > 0) {
             // 增加日志
+            Contract contract = contractMapper.selectContractByNum(dianmian.getContractNum());
+            Integer dianmianNum = contract.getDianmianNum();
+            contract.setDianmianNum(++dianmianNum);
+            ContractBO contractBO = new ContractBO();
+            BeanUtils.copyProperties(contract,contractBO);
+            contractMapper.updateContract(contractBO);
             DianmianLog dianmianLog = new DianmianLog();
             dianmianLog.setOperDate(DateUtils.parseDate(dianmian.getSetDate()));
             dianmianLog.setDianmianId(dianmian.getId());
             dianmianLog.setStatus(DianmianStatus.SET.getCode());
             dianmianLog.setOper(DianmianStatus.SET.getInfo());
             dianmianLogMapper.insertDianmianLog(dianmianLog);
+
         }
         return res;
     }
@@ -114,7 +116,7 @@ public class DianmianServiceImpl implements IDianmianService
             DianmianVO dianmianVO = dianmianMapper.selectDianmianById(dianmian.getId());
             DianmianLog dianmianLog = new DianmianLog();
             dianmianLog.setDianmianId(dianmian.getId());
-            if (DianmianStatus.SET.getCode().equals(dianmian.getStatus()) && dianmian.getSetDate().compareTo(dianmianVO.getSetDate())!=0) {
+            if (DianmianStatus.SET.getCode().equals(dianmian.getStatus()) || !DateUtils.isSameDay(dianmian.getSetDate(),dianmianVO.getSetDate())) {
                 dianmian.setStatus(dianmian.getStatus());
                 dianmian.setSetDate(dianmian.getSetDate());
 
@@ -123,7 +125,7 @@ public class DianmianServiceImpl implements IDianmianService
                 dianmianLog.setOper(DianmianStatus.SET.getInfo());
                 dianmianLogMapper.insertDianmianLog(dianmianLog);
 
-            } else if (DianmianStatus.OPEN.getCode().equals(dianmian.getStatus()) && dianmian.getOpenDate().compareTo(dianmianVO.getOpenDate())!=0) {
+            } else if (DianmianStatus.OPEN.getCode().equals(dianmian.getStatus()) || !DateUtils.isSameDay(dianmian.getOpenDate(),dianmianVO.getOpenDate())) {
                 dianmian.setStatus(dianmian.getStatus());
                 dianmian.setOpenDate(dianmian.getOpenDate());
 
@@ -132,7 +134,7 @@ public class DianmianServiceImpl implements IDianmianService
                 dianmianLog.setOper(DianmianStatus.OPEN.getInfo());
                 dianmianLogMapper.insertDianmianLog(dianmianLog);
 
-            } else if (DianmianStatus.ClOSED.getCode().equals(dianmian.getStatus()) && dianmian.getCloseDate().compareTo(dianmianVO.getCloseDate())!=0) {
+            } else if (DianmianStatus.ClOSED.getCode().equals(dianmian.getStatus()) || !DateUtils.isSameDay(dianmian.getCloseDate(),dianmianVO.getCloseDate())) {
                 dianmian.setCloseDate(dianmian.getCloseDate());
                 dianmian.setCloseReason(dianmian.getCloseReason());
                 dianmian.setStatus(dianmian.getStatus());
@@ -143,7 +145,7 @@ public class DianmianServiceImpl implements IDianmianService
                 dianmianLog.setDiscription(dianmian.getCloseReason());
                 dianmianLogMapper.insertDianmianLog(dianmianLog);
 
-            } else if (DianmianStatus.REST.getCode().equals(dianmian.getStatus()) && dianmian.getRestDate().compareTo(dianmianVO.getRestDate())!=0){
+            } else if (DianmianStatus.REST.getCode().equals(dianmian.getStatus()) || !DateUtils.isSameDay(dianmian.getRestDate(),dianmianVO.getRestDate())){
                 dianmian.setRestDate(dianmian.getRestDate());
                 dianmian.setCloseReason(dianmian.getCloseReason());
                 dianmian.setStatus(dianmian.getStatus());

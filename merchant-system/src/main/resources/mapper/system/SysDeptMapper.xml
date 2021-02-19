@@ -35,6 +35,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <if test="parentId != null and parentId != 0">
 			AND parent_id = #{parentId}
 		</if>
+		<if test="isCompany != null and isCompany != 0">
+			AND is_company = #{isCompany}
+		</if>
 		<if test="deptName != null and deptName != ''">
 			AND dept_name like concat('%', #{deptName}, '%')
 		</if>
@@ -96,6 +99,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  			<if test="leader != null and leader != ''">leader,</if>
  			<if test="phone != null and phone != ''">phone,</if>
  			<if test="email != null and email != ''">email,</if>
+ 			<if test="isCompany != null and isCompany != ''">is_company,</if>
+ 			<if test="companyId != null and companyId != 0">company_id,</if>
  			<if test="status != null">status,</if>
  			<if test="createBy != null and createBy != ''">create_by,</if>
  			create_date
@@ -110,6 +115,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  			<if test="leader != null and leader != ''">#{leader},</if>
  			<if test="phone != null and phone != ''">#{phone},</if>
  			<if test="email != null and email != ''">#{email},</if>
+			<if test="isCompany != null and isCompany != ''">#{isCompany},</if>
+			<if test="companyId != null and companyId != 0">#{companyId},</if>
  			<if test="status != null">#{status},</if>
  			<if test="createBy != null and createBy != ''">#{createBy},</if>
  			sysdate()
@@ -119,6 +126,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<update id="updateDept" parameterType="SysDept">
  		update sys_dept
  		<set>
+			<if test="isCompany != null and isCompany != ''">is_company = #{isCompany},</if>
+			<if test="companyId != null and companyId != 0">company_id = #{companyId},</if>
  			<if test="parentId != null and parentId != 0">parent_id = #{parentId},</if>
 			<if test="companyId != null and companyId != 0">company_id = #{companyId},</if>
 			<if test="isCompany != null and isCompany != 0">is_company = #{isCompany},</if>

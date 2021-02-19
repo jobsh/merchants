@@ -214,17 +214,24 @@ public class CustomerController extends BaseController {
             return AjaxResult.error("请传入正确负责人");
         }
 
-        int result = customerService.transferCustomer(customerBO);
-        if (result == -1) {
-            return AjaxResult.error(HttpStatus.NOT_FIND_SYSUSER, "没有该负责人");
-        } else if (result == -2) {
-            return AjaxResult.error(HttpStatus.ERROR, "该客户在您操作前被删除或转为线索");
-        } else if (result == -3) {
-            AjaxResult.error(HttpStatus.EXIST_CUSTOMER,"该负责人已有此客户");
-        } else {
-            AjaxResult.error(HttpStatus.ERROR, "转移失败");
+        Object result = customerService.transferCustomer(customerBO);
+        if (result instanceof Integer) {
+            if ((Integer)result == -1) {
+                return AjaxResult.error(HttpStatus.NOT_FIND_SYSUSER, "没有该负责人");
+            }
+            if ((Integer)result == -2) {
+                return AjaxResult.error(HttpStatus.ERROR, "该客户在您操作前被删除或转为线索");
+            }
+            if ((Integer)result == -3) {
+                return AjaxResult.error(HttpStatus.EXIST_CUSTOMER,"该负责人已有此客户");
+            }
         }
-        return AjaxResult.success("转移客户成功");
+        if (result instanceof List){
+            return AjaxResult.error("该负责人已存以下手机号的客户：" + result.toString());
+        }
+
+        return AjaxResult.success("成功转移" + result + "个客户");
+
 
     }
 

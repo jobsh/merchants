@@ -50,6 +50,23 @@ public class SysDeptController extends BaseController
     }
 
     /**
+     * 获取部门列表
+     */
+    @PreAuthorize("@ss.hasPermi('system:dept:list')")
+    @PostMapping("/companyList")
+    public AjaxResult companyList(@RequestBody(required = false) SysDept dept)
+    {
+        // 只查询公司
+        if (dept == null) {
+            dept = new SysDept();
+        }
+        dept.setIsCompany("1");
+        List<SysDept> depts = deptService.selectDeptList(dept);
+        return AjaxResult.success(depts);
+    }
+
+
+    /**
      * 查询部门列表（排除节点）
      */
     @PreAuthorize("@ss.hasPermi('system:dept:list')")

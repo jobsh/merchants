@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @Classname CustomerBO
@@ -24,6 +25,9 @@ public class CustomerBO extends Customer {
     /** 前端传来的客户手机号 */
     @ApiModelProperty(value = "客户手机号，多个手机号用都号分隔", name = "phones")
     private String[] phones;
+
+    @ApiModelProperty(value = "客户手机号，多个手机号用都号分隔", name = "phones")
+    private List<String> phonesList ;
     /** 部门id */
     @ApiModelProperty(value = "负责人部门id", name = "deptId")
     private Integer deptId;

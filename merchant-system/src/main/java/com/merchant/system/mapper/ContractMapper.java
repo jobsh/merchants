@@ -72,7 +72,7 @@ public interface ContractMapper
 
     /**
      * 根据合同编号查询有没有重复编号合同
-     * @param num
+     * @param code
      * @return
      */
     int countContractByCode(String code);

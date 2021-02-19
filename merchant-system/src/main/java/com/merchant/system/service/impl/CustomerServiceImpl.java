@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -35,13 +36,13 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 public class CustomerServiceImpl implements ICustomerService {
-    @Autowired
+    @Resource
     private CustomerMapper customerMapper;
 
     @Autowired
     private Sid sid;
 
-    @Autowired
+    @Resource
     private SysUserMapper sysUserMapper;
 
     @Autowired
@@ -157,7 +158,7 @@ public class CustomerServiceImpl implements ICustomerService {
     }
 
     @Override
-    public int transferCustomer(CustomerBO customerBO) {
+    public Object transferCustomer(CustomerBO customerBO) {
         // 根据负责人phone 查询出负责人id和负责人name
         SysUser sysUser = new SysUser();
 //        sysUser.setPhonenumber(customerBO.getManagerPhone());
@@ -174,12 +175,31 @@ public class CustomerServiceImpl implements ICustomerService {
         if (existCustomer(customerBO.getPhone(),customerBO.getUserId())) {
             return -3;
         };
+
+        List<String> existPhone = new ArrayList<>();
+        for (Customer customer : customers) {
+            String phone = customer.getPhone();
+            if (existCustomer(phone, customerBO.getUserId())) {
+                existPhone.add(phone);
+                List<Integer> newIdList = Arrays.stream(customerBO.getIds()).filter(id -> !customer.getId().equals(id)).collect(Collectors.toList());
+                Integer[] newIdArray = new Integer[newIdList.size()];
+                if (newIdArray == null || newIdArray.length == 0) {
+                    return existPhone;
+                }
+                customerBO.setIds(newIdArray);
+            }
+        }
         customerBO.setUserId(sysUser.getId().intValue());
         customerBO.setUsername(sysUser.getUserName());
         customerBO.setDeptId(sysUser.getDeptId().intValue());
 
         // 更新customer负责人id和username
-        return customerMapper.updateCustomerByIds(customerBO);
+        int res = customerMapper.updateCustomerByIds(customerBO);
+        if (existPhone.size() > 0) {
+            return existPhone;
+        } else {
+            return res;
+        }
     }
 
     @Override
@@ -188,14 +208,17 @@ public class CustomerServiceImpl implements ICustomerService {
 //        customerMapper.clearRedundantXiansuo(customerBO.getPhone());
         // 修改客户表status为线索状态（status由0置为1）
         List<String> customerNames = new ArrayList<>();
+
+
         if (existCustomer(customerBO.getPhone(),customerBO.getUserId())) {
             return -3;
         };
+        List<String> existPhone = new ArrayList<>();
         List<Customer> customers = customerMapper.selectCustomerByIds(customerBO);
         for (Customer customer : customers) {
             String phone = customer.getPhone();
             if (existCustomer(phone, customerBO.getUserId())) {
-                customerNames.add(customer.getName());
+                existPhone.add(phone);
                 Integer[] newIds = (Integer[]) Arrays.stream(customerBO.getIds()).filter(id -> !customer.getId().equals(id)).collect(Collectors.toList()).toArray();
                 customerBO.setIds(newIds);
             }
@@ -207,9 +230,11 @@ public class CustomerServiceImpl implements ICustomerService {
 
     @Override
     public boolean existCustomer(String phone, Integer userId) {
-        String[] phoneArray = phone.split(",");
-        for (String p : phoneArray) {
-            if (customerMapper.countCustomerByPhone(p,userId) > 0) return true;
+        if(StringUtils.isNotEmpty(phone)){
+            String[] phoneArray = phone.split(",");
+            for (String p : phoneArray) {
+                if (customerMapper.countCustomerByPhone(p,userId) > 0) return true;
+            }
         }
         return false;
     }

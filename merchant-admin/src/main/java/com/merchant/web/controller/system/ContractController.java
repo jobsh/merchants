@@ -118,7 +118,7 @@ public class ContractController extends BaseController
     /**
      * 新增合同
      */
-    @PreAuthorize("@ss.hasPermi('contract:contractManager:add')")
+    @PreAuthorize("@ss.hasPermi('system:customer:renew')")
     @Log(title = "合同", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@Validated @RequestBody AddContractBO contractBO)

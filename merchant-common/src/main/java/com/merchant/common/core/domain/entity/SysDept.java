@@ -53,6 +53,8 @@ public class SysDept extends BaseEntity
     private String parentName;
 
     private Integer companyId;
+
+    private String isCompany;
     
     private String isCompany;
 

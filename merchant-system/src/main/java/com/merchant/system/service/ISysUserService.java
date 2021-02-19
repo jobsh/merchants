@@ -1,6 +1,8 @@
 package com.merchant.system.service;
 
 import java.util.List;
+
+import com.merchant.common.core.domain.entity.SysRole;
 import com.merchant.common.core.domain.entity.SysUser;
 
 /**
@@ -174,4 +176,22 @@ public interface ISysUserService
      * @return 结果
      */
     public String importUser(List<SysUser> userList, Boolean isUpdateSupport, String operName);
+
+    /**
+     * 判断是否是超级管理员
+     *
+     * @param user
+     * @return
+     */
+    static Boolean isAdmin(SysUser user) {
+        if (user.isAdmin()) {
+            return true;
+        }
+        for (SysRole role : user.getRoles()) {
+            if ("超级管理员".equals(role.getRemark())) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

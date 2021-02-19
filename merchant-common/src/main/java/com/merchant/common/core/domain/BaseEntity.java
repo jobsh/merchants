@@ -48,6 +48,9 @@ public class BaseEntity extends PageDomain implements Serializable
 
     private String keywords;
 
+    /** 排序字段 */
+    private String orderBy;
+
     /** 请求参数 */
     private Map<String, Object> params;
 
@@ -151,5 +154,14 @@ public class BaseEntity extends PageDomain implements Serializable
 
     public void setKeywords(String keywords) {
         this.keywords = keywords;
+    }
+
+    @Override
+    public String getOrderBy() {
+        return orderBy;
+    }
+
+    public void setOrderBy(String orderBy) {
+        this.orderBy = orderBy;
     }
 }
