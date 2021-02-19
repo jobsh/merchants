@@ -10,6 +10,7 @@ import com.merchant.common.core.domain.model.LoginUser;
 import com.merchant.common.enums.CustomerStatus;
 import com.merchant.common.utils.DateUtils;
 import com.merchant.common.utils.ServletUtils;
+import com.merchant.common.utils.StringUtils;
 import com.merchant.framework.web.service.TokenService;
 import com.merchant.system.domain.bo.AddCustomerBO;
 import com.merchant.system.domain.bo.CustomerBO;
@@ -146,11 +147,11 @@ public class CustomerController extends BaseController {
     public AjaxResult add(@Validated @RequestBody AddCustomerBO customer) {
         // 根据手机号判断用户是否存在
         String phone = customer.getPhone();
-        if (CustomerStatus.DISABLE.equals(customer.getStatus()) && customerService.existXiansuo(phone)) {
+        if (CustomerStatus.DISABLE.getCode().equals(customer.getStatus()) && customerService.existXiansuo(phone)) {
             return AjaxResult.error(HttpStatus.EXIST_CUSTOMER,"已存在该线索");
         }
         // 如果是添加客户，手机号精确判重
-        if (CustomerStatus.OK.equals(customer.getStatus()) && customerService.existCustomer(phone,customer.getUserId())) {
+        if (CustomerStatus.OK.getCode().equals(customer.getStatus()) && customerService.existCustomer(phone,customer.getUserId())) {
             return AjaxResult.error(HttpStatus.EXIST_CUSTOMER,"该负责人已有此客户");
         }
         String username = tokenService.getLoginUser(ServletUtils.getRequest()).getUsername();
@@ -206,6 +207,9 @@ public class CustomerController extends BaseController {
     @PostMapping("/customer/transfer")
     public AjaxResult transferCustomer(@RequestBody CustomerBO customerBO) {
 
+        if (!StringUtils.isNotEmpty(customerBO.getPhone())) {
+            return AjaxResult.error("请传入客户手机号");
+        }
         if (customerBO.getUserId() == null) {
             return AjaxResult.error("请传入正确负责人");
         }
@@ -253,7 +257,7 @@ public class CustomerController extends BaseController {
     }
 
     /**
-     * 通过手机号判断该线索/客户是否存在
+     * 通过手机号判断该客户是否存在
      * @param phone
      * @return
      */
@@ -268,8 +272,23 @@ public class CustomerController extends BaseController {
         }
 
         return AjaxResult.success();
-
     }
 
+    /**
+     * 通过手机号判断该线索是否存在
+     * @param phone
+     * @return
+     */
+    @ApiOperation(value = "通过手机号判断该线索/客户是否存在", notes = "通过手机号判断该线索/客户是否存在", httpMethod = "GET")
+    @GetMapping("/xiansuo/exist")
+    public AjaxResult existXiansuo(
+            @ApiParam(name = "phone", value = "客户手机号", required = true)
+            @RequestParam String phone) {
 
+        if (customerService.existXiansuo(phone)) {
+            return AjaxResult.error(HttpStatus.EXIST_CUSTOMER,"手机号已存在");
+        }
+
+        return AjaxResult.success();
+    }
 }

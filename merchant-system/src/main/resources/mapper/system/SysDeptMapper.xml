@@ -90,7 +90,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <insert id="insertDept" parameterType="SysDept">
  		insert into sys_dept(
  			<if test="deptId != null and deptId != 0">id,</if>
- 			<if test="parentId != null and parentId != 0">parent_id,</if>
+			<if test="companyId != null and companyId != 0">company_id,</if>
+			<if test="isCompany != null and isCompany != 0">is_company,</if>
+			<if test="parentId != null and parentId != 0">parent_id,</if>
  			<if test="deptName != null and deptName != ''">dept_name,</if>
  			<if test="ancestors != null and ancestors != ''">ancestors,</if>
  			<if test="orderNum != null and orderNum != ''">order_num,</if>
@@ -104,7 +106,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  			create_date
  		)values(
  			<if test="deptId != null and deptId != 0">#{deptId},</if>
- 			<if test="parentId != null and parentId != 0">#{parentId},</if>
+			<if test="companyId != null and companyId != 0">#{companyId},</if>
+			<if test="isCompany != null and isCompany != ''">#{isCompany},</if>
+			<if test="parentId != null and parentId != 0">#{parentId},</if>
  			<if test="deptName != null and deptName != ''">#{deptName},</if>
  			<if test="ancestors != null and ancestors != ''">#{ancestors},</if>
  			<if test="orderNum != null and orderNum != ''">#{orderNum},</if>
@@ -125,7 +129,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="isCompany != null and isCompany != ''">is_company = #{isCompany},</if>
 			<if test="companyId != null and companyId != 0">company_id = #{companyId},</if>
  			<if test="parentId != null and parentId != 0">parent_id = #{parentId},</if>
- 			<if test="deptName != null and deptName != ''">dept_name = #{deptName},</if>
+			<if test="companyId != null and companyId != 0">company_id = #{companyId},</if>
+			<if test="isCompany != null and isCompany != 0">is_company = #{isCompany},</if>
+			<if test="deptName != null and deptName != ''">dept_name = #{deptName},</if>
  			<if test="ancestors != null and ancestors != ''">ancestors = #{ancestors},</if>
  			<if test="orderNum != null and orderNum != ''">order_num = #{orderNum},</if>
  			<if test="leader != null">leader = #{leader},</if>

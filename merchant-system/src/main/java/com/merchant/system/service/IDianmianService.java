@@ -36,7 +36,7 @@ public interface IDianmianService
      * @param dianmian 店面管理
      * @return 结果
      */
-    public int insertDianmian(AddDianmianBO dianmian);
+    public int insertDianmian(AddDianmianBO dianmian) throws Exception;
 
     /**
      * 修改店面管理

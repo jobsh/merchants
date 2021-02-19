@@ -197,8 +197,8 @@ public class SysDeptServiceImpl implements ISysDeptService
         {
             throw new CustomException("部门停用，不允许新增");
         }
-        if (SysDeptType.IS_COMPANY.getCode().equals(dept.getIsCompany())) {
-            dept.setIsCompany("1");
+        if ((SysDeptType.IS_COMPANY.getCode().equals(dept.getIsCompany())) || info.getCompanyId().intValue() == 100) {
+            dept.setIsCompany(SysDeptType.IS_COMPANY.getCode());
             SysCompany company = new SysCompany();
             company.setName(dept.getDeptName());
             company.setSimpleName(dept.getDeptName());
@@ -225,7 +225,7 @@ public class SysDeptServiceImpl implements ISysDeptService
         Integer newCompanyId = newParentDept.getCompanyId();
 
         SysDept oldDept = deptMapper.selectDeptById(dept.getDeptId());
-        if (StringUtils.isNotNull(newParentDept) && StringUtils.isNotNull(oldDept))
+        if (StringUtils.isNotNull(oldDept))
         {
             String newAncestors = newParentDept.getAncestors() + "," + newParentDept.getDeptId();
             String oldAncestors = oldDept.getAncestors();
