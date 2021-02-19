@@ -56,8 +56,6 @@ public class SysDept extends BaseEntity
 
     private String isCompany;
     
-    private String isCompany;
-
     /** 子部门 */
     private List<SysDept> children = new ArrayList<SysDept>();
 
