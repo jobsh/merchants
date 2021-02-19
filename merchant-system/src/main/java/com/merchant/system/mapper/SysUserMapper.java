@@ -29,10 +29,10 @@ public interface SysUserMapper
 
     /**
      * 根据关键字查询
-     * @param keywords
+     * @param sysUser
      * @return
      */
-    List<SysUser> selectUserByKeywords(String keywords);
+    List<SysUser> selectUserByKeywords(SysUser sysUser);
 
     /**
      * 通过用户ID查询用户

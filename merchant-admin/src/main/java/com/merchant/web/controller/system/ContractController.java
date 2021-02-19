@@ -10,6 +10,7 @@ import com.merchant.common.core.page.TableDataInfo;
 import com.merchant.common.enums.BusinessType;
 import com.merchant.common.exception.BaseException;
 import com.merchant.common.utils.ServletUtils;
+import com.merchant.common.utils.StringUtils;
 import com.merchant.common.utils.file.FileUploadUtils;
 import com.merchant.common.utils.poi.ExcelUtil;
 import com.merchant.framework.web.service.TokenService;
@@ -35,15 +36,14 @@ import java.util.List;
 
 /**
  * 合同Controller
- * 
+ *
  * @author hanke
  * @date 2020-11-03
  */
 @Api(value = "合同相关相关的api接口", tags = {"合同相关相关的api接口"})
 @RestController
 @RequestMapping("/contract/contractManager")
-public class ContractController extends BaseController
-{
+public class ContractController extends BaseController {
     @Autowired
     private IContractService contractService;
     @Autowired
@@ -60,8 +60,7 @@ public class ContractController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('contract:contractManager:list')")
     @PostMapping("/list")
-    public TableDataInfo list(@RequestBody ContractBO contractBO)
-    {
+    public TableDataInfo list(@RequestBody ContractBO contractBO) {
         // 默认查询未失效的,在mapper.xml中控制，已失效状态为2
         startPage();
         List<Contract> list = contractService.selectContractList(contractBO);
@@ -72,8 +71,7 @@ public class ContractController extends BaseController
      * 根据客户id查询出客户的合同列表
      */
     @GetMapping("/list/{customerId}")
-    public TableDataInfo list(@PathVariable("customerId") Integer customerId)
-    {
+    public TableDataInfo list(@PathVariable("customerId") Integer customerId) {
         startPage();
         List<Contract> list = contractService.selectContractListByCustomerId(customerId);
         return getDataTable(list);
@@ -83,8 +81,7 @@ public class ContractController extends BaseController
      * 查询关联合同
      */
     @GetMapping("/relatedList/{rootNum}")
-    public TableDataInfo relatedList(@PathVariable("rootNum") String rootNum)
-    {
+    public TableDataInfo relatedList(@PathVariable("rootNum") String rootNum) {
         startPage();
         List<Contract> list = contractService.selectContractByRootNum(rootNum);
         return getDataTable(list);
@@ -96,8 +93,7 @@ public class ContractController extends BaseController
     @PreAuthorize("@ss.hasPermi('contract:contractManager:export')")
     @Log(title = "合同", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
-    public AjaxResult export(ContractBO contractBO)
-    {
+    public AjaxResult export(ContractBO contractBO) {
         List<Contract> list = contractService.selectContractList(contractBO);
         ExcelUtil<Contract> util = new ExcelUtil<>(Contract.class);
         return util.exportExcel(list, "contractManager");
@@ -106,13 +102,11 @@ public class ContractController extends BaseController
     /**
      * 获取合同详细信息
      */
-    @PreAuthorize("@ss.hasPermi('contract:contractManager:query')")
+    @PreAuthorize("@ss.hasPermi('contract:contractitem:list')")
     @GetMapping(value = "/{num}")
-    public AjaxResult getInfo(@PathVariable("num") String num)
-    {
+    public AjaxResult getInfo(@PathVariable("num") String num) {
         return AjaxResult.success(contractService.selectContractByNum(num));
     }
-
 
 
     /**
@@ -121,8 +115,7 @@ public class ContractController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:customer:renew')")
     @Log(title = "合同", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@Validated @RequestBody AddContractBO contractBO)
-    {
+    public AjaxResult add(@Validated @RequestBody AddContractBO contractBO) {
         return toAjax(contractService.insertContract(contractBO));
     }
 
@@ -154,11 +147,10 @@ public class ContractController extends BaseController
     @ApiOperation(value = "删除合同", notes = "删除合同", httpMethod = "DELETE")
     @PreAuthorize("@ss.hasPermi('contract:contractManager:remove')")
     @Log(title = "合同", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
+    @DeleteMapping("/{ids}")
     public AjaxResult remove(
             @ApiParam(name = "ids", value = "合同ids", required = true)
-            @PathVariable Integer[] ids)
-    {
+            @PathVariable Integer[] ids) {
         return toAjax(contractService.deleteContractByIds(ids));
     }
 
@@ -167,7 +159,7 @@ public class ContractController extends BaseController
      * 合同解约
      */
     @ApiOperation(value = "合同解约", notes = "合同解约", httpMethod = "POST")
-    @PreAuthorize("@ss.hasPermi('contract:contractManager:edit')")
+    @PreAuthorize("@ss.hasPermi('contract:contractManager:break')")
     @Log(title = "合同", businessType = BusinessType.UPDATE)
     @PostMapping("/terminate")
     public AjaxResult terminate(@RequestBody ContractBO contractBO) {
@@ -190,7 +182,7 @@ public class ContractController extends BaseController
      * 合同续约
      */
     @ApiOperation(value = "合同续约", notes = "合同续约", httpMethod = "POST")
-    @PreAuthorize("@ss.hasPermi('contract:contractManager:edit')")
+    @PreAuthorize("@ss.hasPermi('contract:contractManager:renew')")
     @Log(title = "合同", businessType = BusinessType.UPDATE)
     @PostMapping("/renew/{id}")
     public AjaxResult renew(
@@ -205,7 +197,7 @@ public class ContractController extends BaseController
      * 转移合同
      */
     @ApiOperation(value = "转移合同", notes = "转移合同", httpMethod = "POST")
-    @PreAuthorize("@ss.hasPermi('contract:contractManager:edit')")
+    @PreAuthorize("@ss.hasPermi('contract:contractManager:transfer')")
     @Log(title = "合同", businessType = BusinessType.UPDATE)
     @PostMapping("/transfer/ids")
     public AjaxResult transfer(@RequestBody ContractBO contractBO) throws IllegalAccessException {
@@ -225,22 +217,23 @@ public class ContractController extends BaseController
 
     /**
      * 审核合同，修改审核状态和签约日期
-     * @param id 合同id
-     * @param signDate 签约日期
+     *
+     * @param id        合同id
+     * @param checkDate 签约日期
      * @return
      */
     @ApiOperation(value = "审核合同", notes = "审核合同", httpMethod = "POST")
-    @PreAuthorize("@ss.hasPermi('contract:contractManager:edit')")
+    @PreAuthorize("@ss.hasPermi('contract:contractManager:check')")
     @Log(title = "合同", businessType = BusinessType.UPDATE)
     @PostMapping("/check/")
     public AjaxResult check(
             @ApiParam(name = "id", value = "合同id", required = true) @RequestParam Integer id,
-            @ApiParam(name = "signDate", value = "签约日期", required = true) @RequestParam String signDate) throws IllegalAccessException {
+            @ApiParam(name = "checkDate", value = "签约日期", required = true) @RequestParam String checkDate) throws IllegalAccessException {
         // 查询合同
         if (id == null) {
             return AjaxResult.error("参数错误");
         }
-        int res = contractService.check(id, signDate);
+        int res = contractService.check(id, checkDate);
         if (res == -1) {
             return AjaxResult.error("合同已审核，不可失效操作");
         }
@@ -250,11 +243,12 @@ public class ContractController extends BaseController
 
     /**
      * 反审核
+     *
      * @param id 合同id
      * @return
      */
     @ApiOperation(value = "反审核", notes = "反审核", httpMethod = "GET")
-    @PreAuthorize("@ss.hasPermi('contract:contractManager:edit')")
+    @PreAuthorize("@ss.hasPermi('contract:contractManager:unCheck')")
     @Log(title = "合同", businessType = BusinessType.UPDATE)
     @GetMapping("/uncheck/{id}")
     public AjaxResult uncheck(@ApiParam(name = "id", value = "合同id", required = true) @PathVariable("id") Integer id) {
@@ -294,8 +288,6 @@ public class ContractController extends BaseController
     /**
      * 手动输入的合同编号判重
      */
-    @ApiOperation(value = "合同失效", notes = "合同失效", httpMethod = "GET")
-    @PreAuthorize("@ss.hasPermi('contract:contractManager:edit')")
     @Log(title = "合同", businessType = BusinessType.UPDATE)
     @GetMapping("/existCode/{code}")
     public AjaxResult existCode(@ApiParam(name = "id", value = "手输入合同code", required = true) @PathVariable("code") String code) {
@@ -317,30 +309,16 @@ public class ContractController extends BaseController
      * 上传合同图片
      */
     @PostMapping("/contractImg")
-    public AjaxResult uploadContractImage(@RequestParam("id") Integer id, @RequestParam("imgs") List<MultipartFile> imgs) throws IOException{
-        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
-        String phonenumber = loginUser.getUser().getPhonenumber();
-        if (!imgs.isEmpty() && imgs.size() > 0 && imgs != null) {
-            List<String> imgPathList = new ArrayList<>();
-            for (MultipartFile img : imgs) {
-                String imgPath = FileUploadUtils.upload(MerchantConfig.getContractPath() + "/img/" + phonenumber, img);
-                imgPathList.add(imgPath);
-            }
-            if (imgPathList != null && imgPathList.size() > 0 && !imgPathList.isEmpty()) {
-                AjaxResult ajax = AjaxResult.success();
-                contractService.uploadContractImgs(id, JSONObject.toJSONString(imgPathList));
-                ajax.put("imgUrl", JSONObject.toJSONString(imgPathList));
-                return ajax;
-            }
-        }
-        return AjaxResult.error("上传图片异常，请联系管理员");
+    public AjaxResult uploadContractImage(@RequestBody ContractBO contractBO){
+        return toAjax(contractService.uploadContractImgs(contractBO));
     }
 
     /**
      * 上传合同附件
      */
+    @PreAuthorize("@ss.hasPermi('contract:contractItem:addFujian')")
     @PostMapping("/contractFile")
-    public AjaxResult uploadContractFile(@RequestParam("id") Integer id, @RequestParam("files") List<MultipartFile> files) throws IOException{
+    public AjaxResult uploadContractFile(@RequestParam("id") Integer id, @RequestParam("files") List<MultipartFile> files) throws IOException {
 
         LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
         String phonenumber = loginUser.getUser().getPhonenumber();
@@ -359,7 +337,6 @@ public class ContractController extends BaseController
         }
         return AjaxResult.error("上传附件异常，请联系管理员");
     }
-
 
 
 }

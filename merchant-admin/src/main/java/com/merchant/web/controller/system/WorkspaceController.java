@@ -1,6 +1,7 @@
 package com.merchant.web.controller.system;
 
 import com.merchant.common.core.domain.AjaxResult;
+import com.merchant.common.utils.SecurityUtils;
 import com.merchant.system.domain.vo.ContractDandianAndQuyuVO;
 import com.merchant.system.domain.vo.DianmianAndContractAllVO;
 import com.merchant.system.domain.vo.DianmianNumVO;
@@ -33,36 +34,42 @@ public class WorkspaceController {
 
     @ApiOperation(value = "店面地图接口", notes = "店面地图接口", httpMethod = "GET")
     @GetMapping("dianmianNum")
-    @PreAuthorize("@ss.hasPermi('system:workspace:list')")
+    @PreAuthorize("@ss.hasPermi('workspace:above')")
     public AjaxResult selectDianmianNumList(@ApiParam(name = "type", value = "查询时间类型") String type) {
         return AjaxResult.success(workspaceService.selectDianmianNumList(type));
     }
 
     @ApiOperation(value = "店面合同ALL接口", notes = "店面合同ALL接口", httpMethod = "GET")
-    @PreAuthorize("@ss.hasPermi('system:workspace:list')")
+    @PreAuthorize("@ss.hasPermi('workspace:above')")
     @GetMapping("dianmianAndContractAll")
     public AjaxResult dianmianAndContractAllList(@ApiParam(name = "type", value = "查询时间类型") String type) {
         return AjaxResult.success(workspaceService.dianmianAndContractAllList(type));
     }
 
     @ApiOperation(value = "店面合同单店加盟和区域加盟共用数据接口", notes = "店面合同单店加盟和区域加盟共用数据接口", httpMethod = "GET")
-    @PreAuthorize("@ss.hasPermi('system:workspace:list')")
+    @PreAuthorize("@ss.hasPermi('workspace:above')")
     @GetMapping("ContractDandianAndQuyu")
     public AjaxResult selectContractDandianAndQuyuVO(@ApiParam(name = "type", value = "查询时间类型") String type) {
         return AjaxResult.success(workspaceService.selectContractDandianAndQuyuVO(type));
     }
 
     @ApiOperation(value = "统计报表接口", notes = "统计报表接口", httpMethod = "GET")
-    @PreAuthorize("@ss.hasPermi('system:workspace:list')")
+    @PreAuthorize("@ss.hasPermi('workspace:below')")
     @GetMapping("customerWorkspaceList")
     public AjaxResult customerWorkspaceList(@ApiParam(name = "type", value = "查询时间类型") String type, Integer deptId) {
+        if (deptId == null){
+            deptId = SecurityUtils.getLoginUser().getUser().getDept().getDeptId().intValue();
+        }
         return AjaxResult.success(workspaceService.selectCustomerWorkspaceList(type,deptId));
     }
 
     @ApiOperation(value = "业绩报表接口", notes = "业绩报表接口", httpMethod = "GET")
-    @PreAuthorize("@ss.hasPermi('system:workspace:list')")
+    @PreAuthorize("@ss.hasPermi('workspace:below')")
     @GetMapping("customerFeeWorkspaceList")
     public AjaxResult customerFeeWorkspaceList(@ApiParam(name = "type", value = "查询时间类型") String type, Integer deptId) {
+        if (deptId == null){
+            deptId = SecurityUtils.getLoginUser().getUser().getDept().getDeptId().intValue();
+        }
         return AjaxResult.success(workspaceService.selectCustomerFeeWorkspaceList(type,deptId));
     }
 

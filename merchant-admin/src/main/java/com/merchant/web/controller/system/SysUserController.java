@@ -3,6 +3,7 @@ package com.merchant.web.controller.system;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.merchant.system.service.ISysConfigService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -51,11 +52,14 @@ public class SysUserController extends BaseController
     @Autowired
     private TokenService tokenService;
 
+    @Autowired
+    private ISysConfigService configService;
+
     /**
      * 获取用户列表
      */
     @ApiOperation(value = "获取用户列表", notes = "获取用户列表", httpMethod = "POST")
-    @PreAuthorize("@ss.hasPermi('system:user:list')")
+//    @PreAuthorize("@ss.hasPermi('system:user:list')")
     @PostMapping("/list")
     public TableDataInfo list(@RequestBody SysUser user)
     {
@@ -65,7 +69,7 @@ public class SysUserController extends BaseController
     }
 
     @ApiOperation(value = "根据关键字获取用户列表", notes = "根据关键字获取用户列表", httpMethod = "GET")
-    @PreAuthorize("@ss.hasPermi('system:user:list')")
+//    @PreAuthorize("@ss.hasPermi('system:user:list')")
     @GetMapping("/list/keywords")
     public TableDataInfo listByKeywords(@ApiParam(name = "keywords", value = "查询关键字", required = true) @RequestParam(required = false) String keywords)
     {
@@ -116,9 +120,10 @@ public class SysUserController extends BaseController
     public AjaxResult getInfo(@ApiParam(name = "userId", value = "系统用户id", required = true) @PathVariable(value = "userId", required = false) Long userId)
     {
         AjaxResult ajax = AjaxResult.success();
-        Long currentUserId = tokenService.getLoginUser(ServletUtils.getRequest()).getUser().getId();
+        SysUser sysUser = tokenService.getLoginUser(ServletUtils.getRequest()).getUser();
+        Long currentUserId = sysUser.getId();
         List<SysRole> roles = roleService.selectRoleAll();
-        ajax.put("roles", SysUser.isAdmin(userId == null?currentUserId:userId) ? roles : roles.stream().filter(r -> !r.isAdmin()).collect(Collectors.toList()));
+        ajax.put("roles", SecurityUtils.isAdmin(sysUser) ? roles : roles.stream().filter(r -> !r.isAdmin()).collect(Collectors.toList()));
         ajax.put("posts", postService.selectPostAll());
         if (StringUtils.isNotNull(userId))
         {
@@ -138,17 +143,18 @@ public class SysUserController extends BaseController
     @PostMapping
     public AjaxResult add(@Validated @RequestBody SysUser user)
     {
-        if (UserConstants.NOT_UNIQUE.equals(userService.checkUserNameUnique(user.getUserName())))
-        {
-            return AjaxResult.error("新增用户'" + user.getUserName() + "'失败，登录账号已存在");
-        }
-        else if (UserConstants.NOT_UNIQUE.equals(userService.checkPhoneUnique(user)))
-        {
+//        if (UserConstants.NOT_UNIQUE.equals(userService.checkUserNameUnique(user.getUserName())))
+//        {
+//            return AjaxResult.error("新增用户'" + user.getUserName() + "'失败，登录账号已存在");
+//        }
+//        else
+        if (UserConstants.NOT_UNIQUE.equals(userService.checkPhoneUnique(user))) {
             return AjaxResult.error("新增用户'" + user.getUserName() + "'失败，手机号码已存在");
         }
 
         user.setCreateBy(SecurityUtils.getUsername());
-        user.setPassword(SecurityUtils.encryptPassword(user.getPassword()));
+        String initPassword = configService.selectConfigByKey("sys.user.initPassword");
+        user.setPassword(SecurityUtils.encryptPassword(initPassword));
         return toAjax(userService.insertUser(user));
     }
 
@@ -165,6 +171,10 @@ public class SysUserController extends BaseController
         if (UserConstants.NOT_UNIQUE.equals(userService.checkPhoneUnique(user)))
         {
             return AjaxResult.error("修改用户'" + user.getUserName() + "'失败，手机号码已存在");
+        }
+        if (StringUtils.isNotEmpty(user.getPassword())) {
+            String encryptPassword = SecurityUtils.encryptPassword(user.getPassword());
+            user.setPassword(encryptPassword);
         }
         user.setUpdateBy(SecurityUtils.getUsername());
         return toAjax(userService.updateUser(user));
@@ -194,7 +204,8 @@ public class SysUserController extends BaseController
         userService.checkUserAllowed(user);
         user.setPassword(SecurityUtils.encryptPassword(user.getPassword()));
         user.setUpdateBy(SecurityUtils.getUsername());
-        return toAjax(userService.resetPwd(user));
+        int res = userService.resetPwd(user);
+        return toAjax(res);
     }
 
     /**

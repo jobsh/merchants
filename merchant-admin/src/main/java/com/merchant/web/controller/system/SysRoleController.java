@@ -123,10 +123,10 @@ public class SysRoleController extends BaseController
         {
             // 更新缓存用户权限
             LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
-            if (StringUtils.isNotNull(loginUser.getUser()) && !loginUser.getUser().isAdmin())
+            if (StringUtils.isNotNull(loginUser.getUser()) && !SecurityUtils.isAdmin(loginUser.getUser()))
             {
                 loginUser.setPermissions(permissionService.getMenuPermission(loginUser.getUser()));
-                loginUser.setUser(userService.selectUserByUserName(loginUser.getUser().getUserName()));
+                loginUser.setUser(userService.selectUserById(loginUser.getUser().getId()));
                 tokenService.setLoginUser(loginUser);
             }
             return AjaxResult.success();

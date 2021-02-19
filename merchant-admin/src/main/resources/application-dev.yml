@@ -63,9 +63,9 @@ spring:
 
   redis:
     # 地址
-    host: 182.92.192.42
+    host: 192.168.31.113
     port: 6379
-    password: shrek
+    password: imooc
     database: 0
     # sentinel:
     #   nodes: 172.31.220.61:26379,172.31.220.62:26379,172.31.220.63:26379

@@ -1,6 +1,8 @@
 package com.merchant.common.utils;
 
 import com.merchant.common.constant.HttpStatus;
+import com.merchant.common.core.domain.entity.SysRole;
+import com.merchant.common.core.domain.entity.SysUser;
 import com.merchant.common.core.domain.model.LoginUser;
 import com.merchant.common.exception.CustomException;
 import org.springframework.security.core.Authentication;
@@ -80,6 +82,24 @@ public class SecurityUtils
     /**
      * 是否为管理员
      * 
+     * @param user 系统用户
+     * @return 结果
+     */
+    public static Boolean isAdmin(SysUser user) {
+        if (user.isAdmin()) {
+            return true;
+        }
+        for (SysRole role : user.getRoles()) {
+            if ("超级管理员".equals(role.getRemark())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 是否为管理员
+     *
      * @param userId 用户ID
      * @return 结果
      */

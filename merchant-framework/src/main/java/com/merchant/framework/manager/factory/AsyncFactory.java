@@ -3,7 +3,10 @@ package com.merchant.framework.manager.factory;
 import java.util.TimerTask;
 
 import com.merchant.system.domain.ContractOperLog;
+import com.merchant.system.domain.bo.ContractBO;
 import com.merchant.system.service.IContractLogService;
+import com.merchant.system.service.IContractService;
+import com.merchant.system.service.impl.ContractServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.merchant.common.constant.Constants;
@@ -17,6 +20,7 @@ import com.merchant.system.domain.SysOperLog;
 import com.merchant.system.service.ISysLogininforService;
 import com.merchant.system.service.ISysOperLogService;
 import eu.bitwalker.useragentutils.UserAgent;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * 异步工厂（产生任务用）
@@ -115,5 +119,14 @@ public class AsyncFactory
             }
         };
     }
+//    public static TimerTask autoBegin(ContractBO contractBO) {
+//        return new TimerTask() {
+//            @Override
+//            public void run() {
+//                IContractService contractService = new ContractServiceImpl();
+//                contractService.autoBegin(contractBO);
+//            }
+//        };
+//    }
 
 }

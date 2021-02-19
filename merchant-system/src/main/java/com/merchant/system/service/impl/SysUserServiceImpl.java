@@ -67,21 +67,12 @@ public class SysUserServiceImpl implements ISysUserService
         return userMapper.selectUserList(user);
     }
 
-    /**
-     * 通过用户名查询用户
-     * 
-     * @param userName 用户名
-     * @return 用户对象信息
-     */
     @Override
-    public SysUser selectUserByUserName(String userName)
-    {
-        return userMapper.selectUserByUserName(userName);
-    }
-
-    @Override
+    @DataScope(deptAlias = "d", userAlias = "u")
     public List<SysUser> selectUserByKeywords(String keywords) {
-        return userMapper.selectUserByKeywords(keywords);
+        SysUser sysUser = new SysUser();
+        sysUser.setKeywords(keywords);
+        return userMapper.selectUserByKeywords(sysUser);
     }
 
     /**
@@ -97,6 +88,7 @@ public class SysUserServiceImpl implements ISysUserService
     }
 
     @Override
+    @DataScope(deptAlias = "d", userAlias = "u")
     public SysUser selectUserByPhone(String phone) {
         return userMapper.selectUserByPhone(phone);
     }
@@ -206,7 +198,7 @@ public class SysUserServiceImpl implements ISysUserService
     @Override
     public void checkUserAllowed(SysUser user)
     {
-        if (StringUtils.isNotNull(user.getId()) && user.isAdmin())
+        if (StringUtils.isNotNull(user.getId()) && SecurityUtils.isAdmin(user))
         {
             throw new CustomException("不允许操作超级管理员用户");
         }
@@ -424,7 +416,7 @@ public class SysUserServiceImpl implements ISysUserService
             try
             {
                 // 验证是否存在这个用户
-                SysUser u = userMapper.selectUserByUserName(user.getUserName());
+                SysUser u = userMapper.selectUserByPhone(user.getPassword());
                 if (StringUtils.isNull(u))
                 {
                     user.setPassword(SecurityUtils.encryptPassword(password));

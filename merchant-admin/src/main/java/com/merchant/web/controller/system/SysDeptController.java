@@ -50,7 +50,6 @@ public class SysDeptController extends BaseController
     /**
      * 获取部门列表
      */
-    @PreAuthorize("@ss.hasPermi('system:dept:list')")
     @PostMapping("/companyList")
     public AjaxResult companyList(@RequestBody(required = false) SysDept dept)
     {

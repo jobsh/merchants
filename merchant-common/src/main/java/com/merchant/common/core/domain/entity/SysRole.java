@@ -81,13 +81,13 @@ public class SysRole extends BaseEntity
 
     public boolean isAdmin()
     {
-        return isAdmin(this.roleId);
+        return ((roleId != null && 1L == roleId) || "超级管理员".equals(this.getRemark()));
     }
 
-    public static boolean isAdmin(Long roleId)
-    {
-        return roleId != null && 1L == roleId;
-    }
+//    public static boolean isAdmin(Long roleId)
+//    {
+//        return roleId != null && 1L == roleId;
+//    }
 
     @NotBlank(message = "角色名称不能为空")
     @Size(min = 0, max = 30, message = "角色名称长度不能超过30个字符")

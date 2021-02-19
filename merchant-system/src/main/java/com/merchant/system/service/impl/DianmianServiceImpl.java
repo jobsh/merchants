@@ -24,6 +24,7 @@ import com.merchant.system.service.IDianmianService;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import javax.xml.crypto.Data;
 
 /**
@@ -35,13 +36,13 @@ import javax.xml.crypto.Data;
 @Service
 public class DianmianServiceImpl implements IDianmianService 
 {
-    @Autowired
+    @Resource
     private DianmianMapper dianmianMapper;
 
-    @Autowired
+    @Resource
     private DianmianLogMapper dianmianLogMapper;
 
-    @Autowired
+    @Resource
     private ContractMapper contractMapper;
     /**
      * 查询店面管理
@@ -116,7 +117,9 @@ public class DianmianServiceImpl implements IDianmianService
             DianmianVO dianmianVO = dianmianMapper.selectDianmianById(dianmian.getId());
             DianmianLog dianmianLog = new DianmianLog();
             dianmianLog.setDianmianId(dianmian.getId());
-            if (DianmianStatus.SET.getCode().equals(dianmian.getStatus()) || !DateUtils.isSameDay(dianmian.getSetDate(),dianmianVO.getSetDate())) {
+            if (DianmianStatus.SET.getCode().equals(dianmian.getStatus())
+                    && (!dianmian.getStatus().equals(dianmianVO.getStatus()) ||
+                    !DateUtils.isSameDay(dianmian.getSetDate(),dianmianVO.getSetDate()))) {
                 dianmian.setStatus(dianmian.getStatus());
                 dianmian.setSetDate(dianmian.getSetDate());
 
@@ -125,7 +128,7 @@ public class DianmianServiceImpl implements IDianmianService
                 dianmianLog.setOper(DianmianStatus.SET.getInfo());
                 dianmianLogMapper.insertDianmianLog(dianmianLog);
 
-            } else if (DianmianStatus.OPEN.getCode().equals(dianmian.getStatus()) || !DateUtils.isSameDay(dianmian.getOpenDate(),dianmianVO.getOpenDate())) {
+            } else if (DianmianStatus.OPEN.getCode().equals(dianmian.getStatus()) && (!dianmian.getStatus().equals(dianmianVO.getStatus()) || !DateUtils.isSameDay(dianmian.getOpenDate(),dianmianVO.getOpenDate()))) {
                 dianmian.setStatus(dianmian.getStatus());
                 dianmian.setOpenDate(dianmian.getOpenDate());
 
@@ -134,7 +137,7 @@ public class DianmianServiceImpl implements IDianmianService
                 dianmianLog.setOper(DianmianStatus.OPEN.getInfo());
                 dianmianLogMapper.insertDianmianLog(dianmianLog);
 
-            } else if (DianmianStatus.ClOSED.getCode().equals(dianmian.getStatus()) || !DateUtils.isSameDay(dianmian.getCloseDate(),dianmianVO.getCloseDate())) {
+            } else if (DianmianStatus.ClOSED.getCode().equals(dianmian.getStatus()) && (!dianmian.getStatus().equals(dianmianVO.getStatus()) || !DateUtils.isSameDay(dianmian.getCloseDate(),dianmianVO.getCloseDate()))) {
                 dianmian.setCloseDate(dianmian.getCloseDate());
                 dianmian.setCloseReason(dianmian.getCloseReason());
                 dianmian.setStatus(dianmian.getStatus());
@@ -145,7 +148,7 @@ public class DianmianServiceImpl implements IDianmianService
                 dianmianLog.setDiscription(dianmian.getCloseReason());
                 dianmianLogMapper.insertDianmianLog(dianmianLog);
 
-            } else if (DianmianStatus.REST.getCode().equals(dianmian.getStatus()) || !DateUtils.isSameDay(dianmian.getRestDate(),dianmianVO.getRestDate())){
+            } else if (DianmianStatus.REST.getCode().equals(dianmian.getStatus()) && (!dianmian.getStatus().equals(dianmianVO.getStatus()) || !DateUtils.isSameDay(dianmian.getRestDate(),dianmianVO.getRestDate()))){
                 dianmian.setRestDate(dianmian.getRestDate());
                 dianmian.setCloseReason(dianmian.getCloseReason());
                 dianmian.setStatus(dianmian.getStatus());

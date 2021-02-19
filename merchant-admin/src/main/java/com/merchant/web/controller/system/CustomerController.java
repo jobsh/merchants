@@ -72,8 +72,8 @@ public class CustomerController extends BaseController {
 
     @ApiOperation(value = "客户线索导入", notes = "客户线索导入", httpMethod = "POST")
     @Log(title = "用户管理", businessType = BusinessType.IMPORT)
-    @PreAuthorize("@ss.hasPermi('system:customer:import')")
-    @PostMapping("/importData")
+    @PreAuthorize("@ss.hasPermi('system:xiansuo:import')")
+    @PostMapping("/xiansuo/importData")
     public AjaxResult importData(MultipartFile file, boolean updateSupport) throws Exception
     {
         ExcelUtil<Customer> util = new ExcelUtil<>(Customer.class);
@@ -114,7 +114,7 @@ public class CustomerController extends BaseController {
      * 获取我的客户详细信息
      */
     @ApiOperation(value = "根据id获取客户详情", notes = "根据id获取客户详情", httpMethod = "GET")
-    @PreAuthorize("@ss.hasPermi('system:customer:query')")
+    @PreAuthorize("@ss.hasPermi('system:customer:list')")
     @GetMapping(value = "/customer/{id}")
     public AjaxResult getCustomerById(
             @ApiParam(name = "id", value = "客户id", required = true)
@@ -127,7 +127,7 @@ public class CustomerController extends BaseController {
      * 获取我的线索详细信息
      */
     @ApiOperation(value = "根据id获取客户详情", notes = "根据id获取客户详情", httpMethod = "GET")
-    @PreAuthorize("@ss.hasPermi('system:customer:query')")
+    @PreAuthorize("@ss.hasPermi('system:xiansuo:list')")
     @GetMapping(value = "/xiansuo/{id}")
     public AjaxResult getXiansuoById(
             @ApiParam(name = "id", value = "客户id", required = true)
@@ -201,7 +201,7 @@ public class CustomerController extends BaseController {
      * 转移客户
      */
     @ApiOperation(value = "批量转移我的客户", notes = "批量转移我的客户", httpMethod = "POST")
-    @PreAuthorize("@ss.hasPermi('system:customer:edit')")
+    @PreAuthorize("@ss.hasPermi('system:customer:transfer')")
     @Log(title = "转移客户", businessType = BusinessType.UPDATE)
     @PostMapping("/customer/transfer")
     public AjaxResult transferCustomer(@RequestBody CustomerBO customerBO) {
@@ -235,7 +235,7 @@ public class CustomerController extends BaseController {
      * 转成客户
      */
     @ApiOperation(value = "批量线索转为客户", notes = "批量线索转为客户", httpMethod = "POST")
-    @PreAuthorize("@ss.hasPermi('system:xiansuo:edit')")
+    @PreAuthorize("@ss.hasPermi('system:xiansuo:tocustomer')")
     @Log(title = "线索转为客户", businessType = BusinessType.UPDATE)
     @PostMapping("/customer/evolve")
     public AjaxResult evolveCustomer(@RequestBody CustomerBO customerBO) {

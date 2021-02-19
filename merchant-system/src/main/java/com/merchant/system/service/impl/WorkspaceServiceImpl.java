@@ -1,5 +1,6 @@
 package com.merchant.system.service.impl;
 
+import com.merchant.common.annotation.DataScope;
 import com.merchant.system.domain.vo.*;
 import com.merchant.system.mapper.WorkspaceMapper;
 import com.merchant.system.service.IWorkspaceService;

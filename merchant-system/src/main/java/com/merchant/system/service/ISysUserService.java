@@ -20,14 +20,6 @@ public interface ISysUserService
      */
     public List<SysUser> selectUserList(SysUser user);
 
-    /**
-     * 通过用户名查询用户
-     * 
-     * @param userName 用户名
-     * @return 用户对象信息
-     */
-    public SysUser selectUserByUserName(String userName);
-
     List<SysUser> selectUserByKeywords (String keyWords);
 
     /**
@@ -176,22 +168,4 @@ public interface ISysUserService
      * @return 结果
      */
     public String importUser(List<SysUser> userList, Boolean isUpdateSupport, String operName);
-
-    /**
-     * 判断是否是超级管理员
-     *
-     * @param user
-     * @return
-     */
-    static Boolean isAdmin(SysUser user) {
-        if (user.isAdmin()) {
-            return true;
-        }
-        for (SysRole role : user.getRoles()) {
-            if ("超级管理员".equals(role.getRemark())) {
-                return true;
-            }
-        }
-        return false;
-    }
 }

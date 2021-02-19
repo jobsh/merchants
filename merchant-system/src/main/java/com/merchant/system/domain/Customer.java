@@ -21,6 +21,7 @@ public class Customer extends BaseEntity
     private static final long serialVersionUID = 1L;
 
     /** 客户表主键id */
+    @Excel(name = "客户序号", cellType = Excel.ColumnType.NUMERIC, prompt = "客户序号")
     private Integer id;
 
     /** 用户部门id */
@@ -30,11 +31,13 @@ public class Customer extends BaseEntity
     private String deptName;
 
     /** 公司名称 */
+    @Excel(name = "客户公司名称")
     private String companyName;
 
     /** 客户公司名称 */
     private String customerCompany;
 
+    @Excel(name = "客户编号")
     private String num;
     /** 客户名称 */
     @Excel(name = "客户名称")

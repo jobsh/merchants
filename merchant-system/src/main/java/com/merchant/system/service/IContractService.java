@@ -132,11 +132,10 @@ public interface IContractService
 
     /**
      * 更改合同图片路径信息
-     * @param id
-     * @param imgs
+     * @param contractBO
      * @return
      */
-    int uploadContractImgs(Integer id, String imgs);
+    int uploadContractImgs(ContractBO contractBO);
 
     Contract selectContractByNum(String num);
 
@@ -149,4 +148,6 @@ public interface IContractService
     void autoBegin(ContractBO contractBO);
 
     int existCode(String code);
+
+    int updateThisContractStatus(ContractBO contractBO);
 }

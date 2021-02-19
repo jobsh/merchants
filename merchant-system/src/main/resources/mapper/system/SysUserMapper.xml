@@ -63,12 +63,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="roleSort"     column="role_sort"      />
 		<result property="dataScope"     column="data_scope"    />
 		<result property="status"       column="role_status"    />
+		<result property="remark"       column="role_remark"    />
 	</resultMap>
 	
 	<sql id="selectUserVo">
-        select u.id, u.dept_id, u.user_name, u.nick_name, u.email, u.avatar, u.phonenumber, u.password, u.sex, u.status, u.del_flag, u.login_ip, u.login_date, u.create_by, u.create_date, u.remark,
+        select u.id, u.dept_id, u.user_name,u.password, u.nick_name, u.email, u.avatar, u.phonenumber, u.password, u.sex, u.status, u.del_flag, u.login_ip, u.login_date, u.create_by, u.create_date, u.remark,
         d.id,d.company_id, d.parent_id, d.dept_name, d.order_num, d.leader, d.status as dept_status,
-        r.role_id, r.role_name, r.role_key, r.role_sort, r.data_scope, r.status role_status,
+        r.role_id, r.role_name, r.role_key, r.role_sort, r.data_scope, r.status role_status,r.remark role_remark,
         sys_company.name, sys_company.simple_name, sys_company.source_name, sys_company.sign, sys_company.type, sys_company.contact_person, sys_company.address, sys_company.image, sys_company.phone, sys_company.introduce, sys_company.city_id, sys_company.status
         from sys_user u
 		left join sys_dept d on u.dept_id = d.id
@@ -110,18 +111,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		${params.dataScope}
 	</select>
 
-	<select id="selectUserByKeywords" parameterType="String" resultMap="SysUserResult">
+	<select id="selectUserByKeywords" parameterType="SysUser" resultMap="SysUserResult">
 		<include refid="selectUserVo"/>
 		where u.del_flag = '0'
 		<if test="keywords != null and keywords != ''">and (
 			instr(u.user_name, #{keywords}) +
 			instr(u.phonenumber, #{keywords})
 			) > 0</if>
+		${params.dataScope}
+
 	</select>
 
 	<select id="selectUserByUserName" parameterType="String" resultMap="SysUserResult">
 	    <include refid="selectUserVo"/>
 		where u.user_name = #{userName}
+		${params.dataScope}
 	</select>
 	
 	<select id="selectUserById" parameterType="Long" resultMap="SysUserResult">
@@ -135,11 +139,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 
 	<select id="checkUserNameUnique" parameterType="String" resultType="int">
-		select count(1) from sys_user where user_name = #{userName} limit 1
+		select count(1) from sys_user where user_name = #{userName}  and del_flag = '0' limit 1
 	</select>
 	
 	<select id="checkPhoneUnique" parameterType="String" resultMap="SysUserResult">
-		select id, phonenumber from sys_user where phonenumber = #{phonenumber} limit 1
+		select id, phonenumber from sys_user where phonenumber = #{phonenumber} and del_flag = '0' limit 1
 	</select>
 	
 	<select id="checkEmailUnique" parameterType="String" resultMap="SysUserResult">

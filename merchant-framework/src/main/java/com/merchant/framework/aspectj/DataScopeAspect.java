@@ -2,6 +2,7 @@ package com.merchant.framework.aspectj;
 
 import java.lang.reflect.Method;
 
+import com.merchant.common.utils.SecurityUtils;
 import com.merchant.framework.web.service.TokenService;
 import com.merchant.system.service.ISysUserService;
 import org.aspectj.lang.JoinPoint;
@@ -82,7 +83,7 @@ public class DataScopeAspect {
         if (StringUtils.isNotNull(loginUser)) {
             SysUser currentUser = loginUser.getUser();
             // 如果是超级管理员，则不过滤数据
-            if (StringUtils.isNotNull(currentUser) && !ISysUserService.isAdmin(currentUser)) {
+            if (StringUtils.isNotNull(currentUser) && !SecurityUtils.isAdmin(currentUser)) {
                 dataScopeFilter(joinPoint, currentUser, controllerDataScope.deptAlias(),
                         controllerDataScope.userAlias(), controllerDataScope.companyAlias());
             }

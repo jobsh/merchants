@@ -30,7 +30,7 @@ public class KnowledgeController extends BaseController
     /**
      * 查询知识库列表
      */
-    @PreAuthorize("@ss.hasPermi('system:knowledge:list')")
+    @PreAuthorize("@ss.hasPermi('zhishiku:list')")
     @GetMapping("/list")
     public TableDataInfo list(Knowledge knowledge)
     {

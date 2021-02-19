@@ -119,6 +119,7 @@ public class ContractFeeController extends BaseController
     /**
      * 费用审核
      */
+    @PreAuthorize("@ss.hasPermi('fee:feeManager:review')")
     @GetMapping(value = "/check")
     public AjaxResult check(@RequestParam Integer id,@RequestParam String checkDate)
     {
@@ -134,6 +135,7 @@ public class ContractFeeController extends BaseController
     /**
      * 费用反审核
      */
+    @PreAuthorize("@ss.hasPermi('fee:feeManager:backreview')")
     @GetMapping(value = "/uncheck/{id}")
     public AjaxResult uncheck(@PathVariable Integer id)
     {

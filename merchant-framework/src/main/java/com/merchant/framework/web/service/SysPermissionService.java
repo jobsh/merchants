@@ -2,6 +2,9 @@ package com.merchant.framework.web.service;
 
 import java.util.HashSet;
 import java.util.Set;
+
+import com.merchant.common.utils.SecurityUtils;
+import com.merchant.system.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.merchant.common.core.domain.entity.SysUser;
@@ -32,7 +35,7 @@ public class SysPermissionService
     {
         Set<String> roles = new HashSet<String>();
         // 管理员拥有所有权限
-        if (user.isAdmin())
+        if (SecurityUtils.isAdmin(user))
         {
             roles.add("admin");
         }
@@ -53,7 +56,7 @@ public class SysPermissionService
     {
         Set<String> perms = new HashSet<String>();
         // 管理员拥有所有权限
-        if (user.isAdmin())
+        if (SecurityUtils.isAdmin(user))
         {
             perms.add("*:*:*");
         }

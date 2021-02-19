@@ -33,7 +33,7 @@ public class UserDetailsServiceImpl implements UserDetailsService
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException
     {
-        SysUser user = userService.selectUserByUserName(username);
+        SysUser user = userService.selectUserByPhone(username);
         if (StringUtils.isNull(user))
         {
             log.info("登录用户：{} 不存在.", username);

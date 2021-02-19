@@ -277,6 +277,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="checkStatus != null and checkStatus != ''">check_status = #{checkStatus},</if>
             <if test="beginDate != null">begin_date = #{beginDate},</if>
             <if test="endDate != null and endDate != ''">end_date = #{endDate},</if>
+            <if test="checkDate != null and checkDate != ''">check_date = #{checkDate},</if>
             <if test="terminateDate != null and terminateDate != ''">terminate_date = #{terminateDate},</if>
             <if test="status != null and status != ''">status = #{status},</if>
             <if test="createBy != null and createBy != ''">create_by = #{createBy},</if>
@@ -300,8 +301,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             biz_contract bc
         set
             bc.status = #{status}
-        where
-            bc.begin_date &lt;= date_format(now(),'%Y-%m-%d') and bc.end_date &gt;= date_format(now(),'%Y-%m-%d') and bc.status = '1' -- 有效未执行
+        <where>
+            <if test="num != null and num != ''">
+                AND bc.num = #{num}
+            </if>
+            and bc.begin_date &lt;= date_format(now(),'%Y-%m-%d') and bc.end_date &gt;= date_format(now(),'%Y-%m-%d') and bc.status = '1' -- 有效未执行
+        </where>
     </update>
 
     <delete id="deleteContractById" parameterType="Integer">

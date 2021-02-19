@@ -12,6 +12,7 @@ import com.merchant.common.enums.ContractOperType;
 import com.merchant.common.enums.ContractStatus;
 import com.merchant.common.enums.GenjinStatus;
 import com.merchant.common.exception.BaseException;
+import com.merchant.common.exception.CustomException;
 import com.merchant.common.utils.DateUtils;
 import com.merchant.common.utils.JsonUtils;
 import com.merchant.common.utils.ServletUtils;
@@ -140,6 +141,9 @@ public class ContractServiceImpl implements IContractService
         contractBO.setCheckStatus(ContractStatus.UNCHECK.getCode());
         Fee fee = JSONObject.parseObject(contractBO.getFee(), Fee.class);
         JingyingManagerFee jingyingManagerFee = fee.getJingyingManagerFee();
+        if (jingyingManagerFee == null) {
+            throw new CustomException("经营管理费不能为空");
+        }
         Integer total = jingyingManagerFee.getDetail().stream().mapToInt(item -> Integer.parseInt(item.get("money"))).sum();
         jingyingManagerFee.setTotal(total.toString());
         fee.setJingyingManagerFee(jingyingManagerFee);
@@ -147,6 +151,11 @@ public class ContractServiceImpl implements IContractService
         contractBO.setFee(JSONObject.toJSONString(fee));
         int result = contractMapper.insertContract(contractBO);
         if (result > 0) {
+            // 更新合同状态
+            ContractBO contractBO1 = new ContractBO();
+            BeanUtils.copyProperties(contractBO,contractBO1);
+            this.updateThisContractStatus(contractBO1);
+
             // 客户录入合同后自动变为成交状态
             CustomerBO customerBO = new CustomerBO();
             customerBO.setId(contractBO.getCustomerId());
@@ -211,6 +220,10 @@ public class ContractServiceImpl implements IContractService
 //        Map memberValues = this.getAnnotationMemberValues("updateContract", ContractLog.class);
 
         if (res > 0) {
+// 更新合同状态
+            ContractBO contractBO1 = new ContractBO();
+            BeanUtils.copyProperties(contractBO,contractBO1);
+            this.updateThisContractStatus(contractBO1);
 
             Map<String,Object> finalResultMap = new HashMap<>();
             Map<String, String> compareRes = compareTwoObject(oldContactBO, newContactBO);
@@ -385,7 +398,7 @@ public class ContractServiceImpl implements IContractService
             if (res > 0) {
                 updateNum++;
                 Contract newContract = contractMapper.selectContractById(contractBO.getId());
-                Map<String, String> compareRes = compareTwoObject(oldContract, newContract);
+//                Map<String, String> compareRes = compareTwoObject(oldContract, newContract);
                 // 请求的地址
                 ContractOperLog contractOperLog = new ContractOperLog();
                 this.setContractOperLog(contractOperLog);
@@ -393,8 +406,8 @@ public class ContractServiceImpl implements IContractService
                 contractOperLog.setRequestMethod("POST");
                 contractOperLog.setContractNum(oldContract.getNum());
                 contractOperLog.setBusinessType(ContractOperType.TRANSFER.ordinal());
-                contractOperLog.setTitle("转移合同");
-                contractOperLog.setDescription(JSONObject.toJSONString(compareRes));
+                contractOperLog.setTitle("合同由" + contract.getManager() + "转移给" + sysUser.getUserName());
+//                contractOperLog.setDescription(JSONObject.toJSONString(compareRes));
 
                 contractLogService.insertOperlog(contractOperLog);
             }
@@ -404,22 +417,15 @@ public class ContractServiceImpl implements IContractService
     }
 
     @Override
-    public int check(Integer id, String signDate) {
+    public int check(Integer id, String checkDate) {
         ContractBO contractBO = new ContractBO();
         contractBO.setId(id);
         Contract contract = contractMapper.selectContractById(id);
         if (ContractStatus.CHECKED.getCode().equals(contract.getCheckStatus())) {
             return -1;
         }
-        if (contractBO.getSignDate() == null) {
-            contractBO.setSignDate(signDate);
-        }
-        if (contractBO.getCheckDate() == null) {
-            contractBO.setCheckDate(signDate);
-            if (signDate == null) {
-                contractBO.setCheckDate(DateUtils.dateTimeNow());
-            }
-        }
+        contractBO.setCheckDate(checkDate);
+        contractBO.setCheckDate(DateUtils.dateTimeNow());
         // 设置状态为已审核
         contractBO.setCheckStatus(ContractStatus.CHECKED.getCode());
 
@@ -507,11 +513,7 @@ public class ContractServiceImpl implements IContractService
     }
 
     @Override
-    public int uploadContractImgs(Integer id, String imgs) {
-        Contract contract = contractMapper.selectContractById(id);
-        ContractBO contractBO = new ContractBO();
-        BeanUtils.copyProperties(contract, contractBO);
-        contractBO.setImgs(imgs);
+    public int uploadContractImgs(ContractBO contractBO) {
         return contractMapper.updateContract(contractBO);
     }
 
@@ -533,6 +535,21 @@ public class ContractServiceImpl implements IContractService
     @Override
     public int existCode(String code) {
         return contractMapper.countContractByCode(code);
+    }
+
+    @Override
+    public int updateThisContractStatus(ContractBO contractBO) {
+        Date nowDate = DateUtils.getNowDate();
+        String beginDate = contractBO.getBeginDate();
+        String endDate = contractBO.getEndDate();
+        if (DateUtils.parseDate(beginDate).before(nowDate) && DateUtils.parseDate(endDate).after(nowDate)) {
+            // 有效执行中
+            contractBO.setStatus(ContractStatus.EFFECTIVE_EXECUTING.getCode());
+        }
+        if (DateUtils.parseDate(beginDate).after(nowDate) && DateUtils.parseDate(endDate).after(nowDate)) {
+            contractBO.setStatus(ContractStatus.EFFECTIVE_NOT_EXECUTE.getCode());
+        }
+        return contractMapper.updateContract(contractBO);
     }
 
 
@@ -645,5 +662,7 @@ public class ContractServiceImpl implements IContractService
             }
         }
     }
+
+
 
 }

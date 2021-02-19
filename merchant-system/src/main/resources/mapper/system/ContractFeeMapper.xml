@@ -112,6 +112,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectContractFeeByContractNum" parameterType="String" resultMap="ContractFeeResult">
         <include refid="selectContractFeeVo"/>
         where biz_contract_fee.contract_num = #{contractNum}
+        order by biz_contract_fee.input_date desc
     </select>
         
     <insert id="insertContractFee" parameterType="AddContractFeeBO" useGeneratedKeys="true" keyProperty="id">

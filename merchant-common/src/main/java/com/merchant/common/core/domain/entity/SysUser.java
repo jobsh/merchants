@@ -26,7 +26,6 @@ public class SysUser extends BaseEntity
     /** 用户ID */
     @Excel(name = "用户序号", cellType = Excel.ColumnType.NUMERIC, prompt = "用户编号")
     private Long id;
-
     /** 用户ID */
     private Integer companyId;
 

@@ -75,7 +75,7 @@ public class GenjinController extends BaseController
      * 新增客户跟进
      */
     @ApiOperation(value = "新增客户跟进", notes = "新增客户跟进", httpMethod = "GET")
-    @PreAuthorize("@ss.hasPermi('system:genjin:add')")
+    @PreAuthorize("@ss.hasPermi('system:customer:follow')")
     @Log(title = "客户跟进", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@Validated @RequestBody AddGenjinBO genjinBO)

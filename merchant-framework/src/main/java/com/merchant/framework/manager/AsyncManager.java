@@ -5,6 +5,9 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import com.merchant.common.utils.Threads;
 import com.merchant.common.utils.spring.SpringUtils;
+import com.merchant.system.domain.bo.ContractBO;
+import com.merchant.system.service.IContractService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * 异步任务管理器
@@ -52,4 +55,6 @@ public class AsyncManager
     {
         Threads.shutdownAndAwaitTermination(executor);
     }
+
+
 }

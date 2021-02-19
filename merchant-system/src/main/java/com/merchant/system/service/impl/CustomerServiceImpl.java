@@ -86,7 +86,7 @@ public class CustomerServiceImpl implements ICustomerService {
      */
 
     @Override
-    @DataScope(companyAlias = "d")
+    @DataScope(userAlias = "u",deptAlias = "d",companyAlias = "company")
     public List<Customer> selectXiansuoList(@RequestBody CustomerBO customerBO) {
         customerBO.setStatus(CustomerStatus.DISABLE.getCode());
         return customerMapper.selectXiansuoList(customerBO);
@@ -253,6 +253,15 @@ public class CustomerServiceImpl implements ICustomerService {
         int failureNum = 0;
         StringBuilder successMsg = new StringBuilder();
         StringBuilder failureMsg = new StringBuilder();
+        for (Customer customer : customerList) {
+            // 姓名电话不能为空
+            String phone = customer.getPhone();
+            String name = customer.getName();
+            if (StringUtils.isEmpty(phone) || StringUtils.isEmpty(name)) {
+                throw new CustomException("存在客户姓名或电话为空！");
+            }
+        }
+
         for (Customer customer : customerList) {
             try {
                 // 验证是否存在这个用户

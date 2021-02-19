@@ -9,12 +9,14 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.merchant.common.core.domain.model.LoginUser;
 import com.merchant.system.domain.vo.MetaVo;
 import com.merchant.system.domain.vo.RouterVo;
 import com.merchant.system.mapper.SysMenuMapper;
 import com.merchant.system.mapper.SysRoleMapper;
 import com.merchant.system.mapper.SysRoleMenuMapper;
 import com.merchant.system.service.ISysMenuService;
+import com.merchant.system.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.merchant.common.constant.UserConstants;
@@ -24,6 +26,8 @@ import com.merchant.common.core.domain.entity.SysRole;
 import com.merchant.common.core.domain.entity.SysUser;
 import com.merchant.common.utils.SecurityUtils;
 import com.merchant.common.utils.StringUtils;
+
+import javax.annotation.Resource;
 
 /**
  * 菜单 业务层处理
@@ -36,24 +40,27 @@ public class SysMenuServiceImpl implements ISysMenuService
     public static final String PREMISSION_STRING = "perms[\"{0}\"]";
 
     @Autowired
+    private ISysUserService userService;
+
+    @Resource
     private SysMenuMapper menuMapper;
 
-    @Autowired
+    @Resource
     private SysRoleMapper roleMapper;
 
-    @Autowired
+    @Resource
     private SysRoleMenuMapper roleMenuMapper;
 
     /**
      * 根据用户查询系统菜单列表
      * 
-     * @param userId 用户ID
+     * @param sysUser 用户ID
      * @return 菜单列表
      */
     @Override
-    public List<SysMenu> selectMenuList(Long userId)
+    public List<SysMenu> selectMenuList(SysUser sysUser)
     {
-        return selectMenuList(new SysMenu(), userId);
+        return selectMenuList(new SysMenu(),sysUser);
     }
 
     /**
@@ -63,17 +70,17 @@ public class SysMenuServiceImpl implements ISysMenuService
      * @return 菜单列表
      */
     @Override
-    public List<SysMenu> selectMenuList(SysMenu menu, Long userId)
+    public List<SysMenu> selectMenuList(SysMenu menu, SysUser sysUser)
     {
         List<SysMenu> menuList = null;
         // 管理员显示所有菜单信息
-        if (SysUser.isAdmin(userId))
+        if (SecurityUtils.isAdmin(sysUser))
         {
             menuList = menuMapper.selectMenuList(menu);
         }
         else
         {
-            menu.getParams().put("userId", userId);
+            menu.getParams().put("userId", sysUser.getId());
             menuList = menuMapper.selectMenuListByUserId(menu);
         }
         return menuList;
@@ -110,7 +117,8 @@ public class SysMenuServiceImpl implements ISysMenuService
     public List<SysMenu> selectMenuTreeByUserId(Long userId)
     {
         List<SysMenu> menus = null;
-        if (SecurityUtils.isAdmin(userId))
+        SysUser sysUser = userService.selectUserById(userId);
+        if (SecurityUtils.isAdmin(sysUser))
         {
             menus = menuMapper.selectMenuTreeAll();
         }
