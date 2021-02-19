@@ -1,6 +1,7 @@
 package com.merchant.system.domain;
 
 import java.util.Date;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.merchant.common.annotation.Excel;
 import com.merchant.common.core.domain.BaseEntity;
@@ -11,19 +12,22 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * 合同对象 biz_contract
- * 
+ *
  * @author hanke
  * @date 2020-11-03
  */
 @Data
-public class Contract extends BaseEntity
-{
+public class Contract extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
-    /** 合同表主键id */
+    /**
+     * 合同表主键id
+     */
     private Integer id;
 
-    /** 部门id */
+    /**
+     * 部门id
+     */
     @Excel(name = "部门id")
     private Integer deptId;
 
@@ -31,142 +35,226 @@ public class Contract extends BaseEntity
 
     private String rootNum;
 
-    /** 合同编号 */
+    /**
+     * 合同编号
+     */
     @Excel(name = "合同编号")
     private String num;
 
-    /** 合同代码 */
+    /**
+     * 合同代码
+     */
     @Excel(name = "合同代码")
     private String code;
 
-    /** 客户姓名 */
+    /**
+     * 客户姓名
+     */
     @Excel(name = "客户姓名")
     private String customerName;
 
-    /** 客户id */
+    /**
+     * 客户id
+     */
     private Integer customerId;
 
-    /** 客户编号 */
+    /**
+     * 客户编号
+     */
     private String customerNum;
 
-    /** 客户手机号（可以有多个手机号，逗号分隔） */
+    /**
+     * 客户手机号（可以有多个手机号，逗号分隔）
+     */
     @Excel(name = "客户手机号", readConverterExp = "可以有多个手机号，逗号分隔")
     private String customerPhone;
 
-    /** 合同类型(0：新签:1：续签) */
+    /**
+     * 合同类型(0：新签:1：续签)
+     */
     @Excel(name = "合同类型(0：新签:1：续签)")
     private String type;
 
-    /** 签约产品 */
+    /**
+     * 签约产品
+     */
     @Excel(name = "签约产品")
     private String produce;
 
-    /** 店面或区域名称 */
+    /**
+     * 店面或区域名称
+     */
     @Excel(name = "店面或区域名称")
     private String dianmianName;
 
-    /** 店面数量 */
+    /**
+     * 店面数量
+     */
     @Excel(name = "店面数量")
     private Integer dianmianNum;
 
-    /** 店面所在省份 */
+    /**
+     * 店面所在省份
+     */
     @Excel(name = "店面省份")
     private String dianmianProvince;
 
-    /** 店面所在城市 */
+    /**
+     * 店面所在城市
+     */
     @Excel(name = "店面城市")
     private String dianmianCity;
 
-    /** 店面所在区 */
+    /**
+     * 店面所在区
+     */
     @Excel(name = "店面所在区")
     private String dianmianDistrict;
 
-    /** 店面详细地址 */
+    /**
+     * 店面详细地址
+     */
     @Excel(name = "店面地址")
     private String dianmianAddress;
 
-    /** 店面经度 */
+    /**
+     * 店面经度
+     */
     @Excel(name = "店面经度")
     private String dianmianLongitude;
 
-    /** 店面纬度 */
+    /**
+     * 店面纬度
+     */
     @Excel(name = "店面维度")
     private String dianmianLatitude;
 
-    /** 保证金 */
+    /**
+     * 保证金
+     */
     @Excel(name = "保证金")
     private Integer guarantee;
 
-    /** 各种费用 */
+    /**
+     * 各种费用
+     */
     @Excel(name = "各种费用")
     private String fee;
 
-    /** 操作 */
+    @Excel(name = "履约保证金")
+    private Integer lvyueFee;
+
+    @Excel(name = "经营管理费")
+    private Integer jingyingManagerFee;
+    @Excel(name = "运营管理费")
+    private Integer yunyingManagerFee;
+    @Excel(name = "系统使用费")
+    private Integer systemUseFee;
+    @Excel(name = "系统维护费")
+    private Integer systemMaintenanceFee;
+    @Excel(name = "代办费")
+    private Integer daibanFee;
+    @Excel(name = "过户费")
+    private Integer guohuoFee;
+    @Excel(name = "总费用")
+    private Integer totalFee;
+
+    /**
+     * 操作
+     */
     @Excel(name = "操作")
     private String operation;
 
     private Integer managerId;
 
-    /** 负责人 */
+    /**
+     * 负责人
+     */
     @Excel(name = "负责人")
     private String manager;
 
-    /** 签约日期 */
+    /**
+     * 签约日期
+     */
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "签约日期", width = 30, dateFormat = "yyyy-MM-dd")
     private Date signDate;
 
     private Integer signUserId;
 
-    /** 签约人员 */
+    /**
+     * 签约人员
+     */
     @Excel(name = "签约人员")
     private String signUser;
 
-    /** 审核时间 */
+    /**
+     * 审核时间
+     */
     @Excel(name = "签约人员")
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date checkDate;
 
-    /** 合同开始日期 */
+    /**
+     * 合同开始日期
+     */
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "合同开始日期", width = 30, dateFormat = "yyyy-MM-dd")
     private Date beginDate;
 
-    /** 合同结束日期 */
+    /**
+     * 合同结束日期
+     */
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "合同结束日期")
     private Date endDate;
 
-    /** 合同解约日期 */
+    /**
+     * 合同解约日期
+     */
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "解约日期")
     private Date terminateDate;
 
-    /** 生效失效状态 */
+    /**
+     * 生效失效状态
+     */
     @Excel(name = "生效失效状态")
     private String status;
 
-    /** 审核状态（0:未审核  1:已审核） */
+    /**
+     * 审核状态（0:未审核  1:已审核）
+     */
     @Excel(name = "审核状态")
     private String checkStatus;
 
-    /** 合同附件 */
+    /**
+     * 合同附件
+     */
     @Excel(name = "合同附件")
     private String file;
 
-    /** 合同附件 */
+    /**
+     * 合同附件
+     */
     @Excel(name = "解约附件")
     private String terminateFile;
 
-    /** 合同图片 */
+    /**
+     * 合同图片
+     */
     @Excel(name = "合同图片附件")
     private String imgs;
 
-    /** 部门名 */
+    /**
+     * 部门名
+     */
     @Excel(name = "部门名")
     private String deptName;
 
-    /** 部门名 */
+    /**
+     * 部门名
+     */
     @Excel(name = "公司名")
     private String companyName;
 

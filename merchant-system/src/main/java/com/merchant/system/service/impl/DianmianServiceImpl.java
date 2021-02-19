@@ -1,16 +1,21 @@
 package com.merchant.system.service.impl;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import com.merchant.common.annotation.DataScope;
 import com.merchant.common.enums.DianmianStatus;
 import com.merchant.common.utils.DateUtils;
 import com.merchant.common.utils.StringUtils;
+import com.merchant.system.domain.Contract;
 import com.merchant.system.domain.DianmianLog;
 import com.merchant.system.domain.bo.AddDianmianBO;
+import com.merchant.system.domain.bo.ContractBO;
 import com.merchant.system.domain.bo.DianmianBO;
 import com.merchant.system.domain.vo.DianmianVO;
 import com.merchant.system.mapper.DianmianLogMapper;
+import com.merchant.system.service.IContractService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.merchant.system.mapper.DianmianMapper;
@@ -33,6 +38,9 @@ public class DianmianServiceImpl implements IDianmianService
 
     @Autowired
     private DianmianLogMapper dianmianLogMapper;
+
+    @Autowired
+    private IContractService contractService;
     /**
      * 查询店面管理
      * 
@@ -66,21 +74,26 @@ public class DianmianServiceImpl implements IDianmianService
      * @return 结果
      */
     @Override
-    public int insertDianmian(AddDianmianBO dianmian)
-    {
+    public int insertDianmian(AddDianmianBO dianmian) throws Exception {
+        String contractNum = dianmian.getContractNum();
+        Contract contract = contractService.selectContractByNum(contractNum);
+        // 修改合同中对应的店面数量
+        AtomicInteger oldDianmianNum = new AtomicInteger(contract.getDianmianNum());
+        contract.setDianmianNum(oldDianmianNum.incrementAndGet());
+        ContractBO contractBO = new ContractBO();
+        BeanUtils.copyProperties(contract,contractBO);
+        contractService.updateContract(contractBO);
         dianmian.setStatus(dianmian.getStatus());
         dianmian.setSetDate(dianmian.getSetDate());
         int res = dianmianMapper.insertDianmian(dianmian);
         if (res > 0) {
             // 增加日志
             DianmianLog dianmianLog = new DianmianLog();
-
             dianmianLog.setOperDate(DateUtils.parseDate(dianmian.getSetDate()));
             dianmianLog.setDianmianId(dianmian.getId());
             dianmianLog.setStatus(DianmianStatus.SET.getCode());
             dianmianLog.setOper(DianmianStatus.SET.getInfo());
             dianmianLogMapper.insertDianmianLog(dianmianLog);
-
         }
         return res;
     }

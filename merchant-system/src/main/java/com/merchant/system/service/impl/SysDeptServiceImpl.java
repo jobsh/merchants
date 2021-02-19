@@ -5,8 +5,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.merchant.common.core.domain.entity.SysCompany;
 import com.merchant.system.mapper.SysDeptMapper;
 import com.merchant.system.mapper.SysRoleMapper;
+import com.merchant.system.service.ISysCompanyService;
 import com.merchant.system.service.ISysDeptService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,8 @@ import com.merchant.common.core.domain.entity.SysDept;
 import com.merchant.common.core.domain.entity.SysRole;
 import com.merchant.common.exception.CustomException;
 import com.merchant.common.utils.StringUtils;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 部门管理 服务实现
@@ -31,6 +35,9 @@ public class SysDeptServiceImpl implements ISysDeptService
 
     @Autowired
     private SysRoleMapper roleMapper;
+
+    @Autowired
+    private ISysCompanyService companyService;
 
     /**
      * 查询部门管理数据
@@ -137,7 +144,7 @@ public class SysDeptServiceImpl implements ISysDeptService
     public boolean hasChildByDeptId(Long deptId)
     {
         int result = deptMapper.hasChildByDeptId(deptId);
-        return result > 0 ? true : false;
+        return result > 0;
     }
 
     /**
@@ -150,7 +157,7 @@ public class SysDeptServiceImpl implements ISysDeptService
     public boolean checkDeptExistUser(Long deptId)
     {
         int result = deptMapper.checkDeptExistUser(deptId);
-        return result > 0 ? true : false;
+        return result > 0;
     }
 
     /**
@@ -178,13 +185,28 @@ public class SysDeptServiceImpl implements ISysDeptService
      * @return 结果
      */
     @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public int insertDept(SysDept dept)
     {
         SysDept info = deptMapper.selectDeptById(dept.getParentId());
         // 如果父节点不为正常状态,则不允许新增子节点
+        if (StringUtils.isNull(info)) {
+            throw new CustomException("上级部门不存在");
+        }
         if (!UserConstants.DEPT_NORMAL.equals(info.getStatus()))
         {
             throw new CustomException("部门停用，不允许新增");
+        }
+        if ("1".equals(dept.getIsCompany())){
+            SysCompany company = new SysCompany();
+            company.setName(dept.getDeptName());
+            company.setSimpleName(dept.getDeptName());
+            company.setPhone(dept.getPhone());
+            company.setContactPerson(dept.getLeader());
+            companyService.insertSysCompany(company);
+            dept.setCompanyId(company.getId());
+        } else {
+            dept.setCompanyId(info.getCompanyId());
         }
         dept.setAncestors(info.getAncestors() + "," + dept.getParentId());
         return deptMapper.insertDept(dept);
@@ -203,9 +225,12 @@ public class SysDeptServiceImpl implements ISysDeptService
         SysDept oldDept = deptMapper.selectDeptById(dept.getDeptId());
         if (StringUtils.isNotNull(newParentDept) && StringUtils.isNotNull(oldDept))
         {
+            Integer newCompanyId = newParentDept.getCompanyId();
             String newAncestors = newParentDept.getAncestors() + "," + newParentDept.getDeptId();
             String oldAncestors = oldDept.getAncestors();
             dept.setAncestors(newAncestors);
+            // 更新公司id
+            dept.setCompanyId(newCompanyId);
             updateDeptChildren(dept.getDeptId(), newAncestors, oldAncestors);
         }
         int result = deptMapper.updateDept(dept);

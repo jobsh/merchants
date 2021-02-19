@@ -104,7 +104,13 @@ public class DianmianController extends BaseController
     @PostMapping
     public AjaxResult add(@Validated @RequestBody AddDianmianBO dianmian)
     {
-        return toAjax(dianmianService.insertDianmian(dianmian));
+        AjaxResult ajaxResult = null;
+        try {
+            ajaxResult = toAjax(dianmianService.insertDianmian(dianmian));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ajaxResult;
     }
 
     /**

@@ -54,6 +54,8 @@ public class SysDept extends BaseEntity
 
     private Integer companyId;
     
+    private String isCompany;
+
     /** 子部门 */
     private List<SysDept> children = new ArrayList<SysDept>();
 
@@ -209,5 +211,13 @@ public class SysDept extends BaseEntity
 
     public void setCompanyId(Integer companyId) {
         this.companyId = companyId;
+    }
+
+    public String getIsCompany() {
+        return isCompany;
+    }
+
+    public void setIsCompany(String isCompany) {
+        this.isCompany = isCompany;
     }
 }

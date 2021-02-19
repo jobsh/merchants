@@ -2,6 +2,8 @@ package com.merchant.web.controller.system;
 
 import java.util.Iterator;
 import java.util.List;
+
+import com.merchant.common.core.domain.entity.SysCompany;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -114,6 +116,7 @@ public class SysDeptController extends BaseController
             return AjaxResult.error("新增部门'" + dept.getDeptName() + "'失败，部门名称已存在");
         }
         dept.setCreateBy(SecurityUtils.getUsername());
+        // 如果是公司，需要如下处理
         return toAjax(deptService.insertDept(dept));
     }
 
