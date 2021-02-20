@@ -93,7 +93,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             c.resource &lt;= '6'
             <if test="inputDateStart !=  null">and date_format(c.input_date,'%y%m%d') &gt;= date_format(#{inputDateStart},'%y%m%d')</if>
             <if test="inputDateEnd !=  null">and date_format(c.input_date,'%y%m%d') &lt;= date_format(#{inputDateEnd},'%y%m%d')</if>
-            GROUP BY
+            <if test="inputDateStart ==  null and inputDateEnd == null">and DATE_FORMAT(c.input_date, '%Y%m' ) = DATE_FORMAT(CURDATE(), '%Y%m')</if>
+        GROUP BY
             uid
             ) as xiansuo_num
         on
@@ -108,7 +109,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             where 1=1
             <if test="inputDateStart !=  null">and date_format(gj.genjin_date,'%y%m%d') &gt;= date_format(#{inputDateStart},'%y%m%d')</if>
             <if test="inputDateEnd !=  null">and date_format(gj.genjin_date,'%y%m%d') &lt;= date_format(#{inputDateEnd},'%y%m%d')</if>
-            GROUP BY
+            <if test="inputDateStart ==  null and inputDateEnd == null">and DATE_FORMAT(gj.genjin_date, '%Y%m' ) = DATE_FORMAT(CURDATE(), '%Y%m')</if>
+        GROUP BY
             gj.sys_user_id
             ) as gj_num
         on
@@ -126,7 +128,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             where 1=1
             <if test="inputDateStart !=  null">and date_format(contract.sign_date,'%y%m%d') &gt;= date_format(#{inputDateStart},'%y%m%d')</if>
             <if test="inputDateEnd !=  null">and date_format(contract.sign_date,'%y%m%d') &lt;= date_format(#{inputDateEnd},'%y%m%d')</if>
-            GROUP BY
+            <if test="inputDateStart ==  null and inputDateEnd == null">and DATE_FORMAT(contract.sign_date, '%Y%m' ) = DATE_FORMAT(CURDATE(), '%Y%m')</if>
+        GROUP BY
             contract.manager_id
             ) contract_num
         ON
@@ -144,7 +147,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                 and dianmian.status BETWEEN 1 and 3 -- 闭店状态为0 需要排除出去，这里使用BETWEEN 1 and 3
                 <if test="inputDateStart !=  null">and date_format(dianmian.open_date,'%y%m%d') &gt;= date_format(#{inputDateStart},'%y%m%d')</if>
                 <if test="inputDateEnd !=  null">and date_format(dianmian.open_date,'%y%m%d') &lt;= date_format(#{inputDateEnd},'%y%m%d')</if>
-            GROUP BY
+                <if test="inputDateStart ==  null and inputDateEnd == null">and DATE_FORMAT(dianmian.open_date, '%Y%m' ) = DATE_FORMAT(CURDATE(), '%Y%m')</if>
+        GROUP BY
                 dianmian.sys_user_id
             ) dianmian
         ON
@@ -154,12 +158,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                 AND (u.dept_id = #{deptId} OR u.dept_id IN ( SELECT t.id FROM sys_dept t WHERE find_in_set(#{deptId}, ancestors) ))
             </if>
             <if test="username != null  and username != ''"> and u.user_name like concat('%', #{username}, '%')</if>
+            ${params.dataScope}
         </where>
     </select>
 
 
 
-    <select id="selectCustomerFeeReportList" resultMap="CustomerFeeReportVO" parameterType="CustomerReportBO">
+    <select id="selectCustomerFeeReportList" resultMap="CustomerFeeReportVO" parameterType="com.merchant.system.domain.bo.CustomerReportBO">
         select
             u.user_name,
             u.phonenumber,
@@ -211,6 +216,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <where>
                 <if test="inputDateStart !=  null ">and date_format(fee.shoukuan_date,'%y%m%d') &gt;= date_format(#{inputDateStart},'%y%m%d')</if>
                 <if test="inputDateEnd !=  null ">and date_format(fee.shoukuan_date,'%y%m%d') &lt;= date_format(#{inputDateEnd},'%y%m%d')</if>
+                <if test="inputDateStart ==  null and inputDateEnd == null">and DATE_FORMAT( fee.shoukuan_date, '%Y%m' ) = DATE_FORMAT(CURDATE(), '%Y%m')</if>
             </where>
         GROUP BY
                 fee.receiver_id
@@ -222,10 +228,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                 AND (u.dept_id = #{deptId} OR u.dept_id IN ( SELECT t.id FROM sys_dept t WHERE find_in_set(#{deptId}, ancestors) ))
             </if>
             <if test="username != null  and username != ''"> and u.user_name like concat('%', #{username}, '%')</if>
+            ${params.dataScope}
         </where>
     </select>
 
-    <select id="selectJingyingMannagerFeeReportList" parameterType="CustomerReportBO" resultMap="JingyingManagerFeeReportVO">
+    <select id="selectJingyingMannagerFeeReportList" parameterType="com.merchant.system.domain.bo.CustomerReportBO" resultMap="JingyingManagerFeeReportVO">
         select
             d.dept_name, -- 公司部门
             cm.`name` company_name,  -- 公司名称
@@ -272,12 +279,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                 SUM(case when fee.type = '1' then fee.amount else 0 end) jingying_manager_fee_yishou
             FROM
                 biz_contract_fee fee
+            <where>
+                <if test="inputDateStart != null and inputDateStart != ''">and date_format(fee.shoukuan_date,'%y%m%d') &gt;= date_format(#{inputDateStart},'%y%m%d')</if>
+                <if test="inputDateEnd !=  null and inputDateEnd != '' ">and date_format(fee.shoukuan_date,'%y%m%d') &lt;= date_format(#{inputDateEnd},'%y%m%d')</if>
+                <if test="inputDateStart ==  null and inputDateEnd == null">and DATE_FORMAT( fee.shoukuan_date, '%Y%m' ) = DATE_FORMAT(CURDATE(), '%Y%m')</if>
+            </where>
             GROUP BY
                 fee.contract_num
-            <where>
-                <if test="inputDateStart !=  null">and date_format(fee.shoukuan_date,'%y%m%d') &gt;= date_format(#{inputDateStart},'%y%m%d')</if>
-                <if test="inputDateEnd !=  null">and date_format(fee.shoukuan_date,'%y%m%d') &lt;= date_format(#{inputDateStart},'%y%m%d')</if>
-            </where>
         ) fee
         ON fee.contract_num = contract.num
         -- 查询条件
@@ -287,9 +295,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                 AND (u.dept_id = #{deptId} OR u.dept_id IN ( SELECT t.id FROM sys_dept t WHERE find_in_set(#{deptId}, ancestors) ))
             </if>
             <if test="username != null  and username != ''"> and u.user_name like concat('%', #{username}, '%')</if>
-            <if test="inputDateStart =  null and inputDateEnd = null">and DATE_FORMAT( contract.sign_date, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )</if>
+            <if test="inputDateStart ==  null and inputDateEnd == null">and DATE_FORMAT( contract.sign_date, '%Y%m' ) = DATE_FORMAT(CURDATE(), '%Y%m')</if>
             <if test="inputDateStart !=  null and inputDateStart !=''">and date_format(contract.sign_date,'%y%m%d') &gt;= date_format(#{inputDateStart},'%y%m%d')</if>
             <if test="inputDateEnd !=  null and inputDateEnd !=''">and date_format(contract.sign_date,'%y%m%d') &lt;= date_format(#{inputDateEnd},'%y%m%d')</if>
+            ${params.dataScope}
         </where>
     </select>
 </mapper>

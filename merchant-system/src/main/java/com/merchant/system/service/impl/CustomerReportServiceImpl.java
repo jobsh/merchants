@@ -1,5 +1,6 @@
 package com.merchant.system.service.impl;
 
+import com.merchant.common.annotation.DataScope;
 import com.merchant.system.domain.bo.CustomerReportBO;
 import com.merchant.system.domain.vo.CustomerFeeReportVO;
 import com.merchant.system.domain.vo.CustomerReportVO;
@@ -24,16 +25,19 @@ public class CustomerReportServiceImpl implements ICustomerReportService {
     private CustomerReportMapper customerReportMapper;
 
     @Override
+    @DataScope(deptAlias = "d", userAlias = "u")
     public List<CustomerReportVO> selectCustomerReportList(CustomerReportBO customerReportBO) {
         return customerReportMapper.selectCustomerReportList(customerReportBO);
     }
 
     @Override
+    @DataScope(deptAlias = "d", userAlias = "u")
     public List<CustomerFeeReportVO> selectCustomerFeeReportList(CustomerReportBO customerReportBO) {
         return customerReportMapper.selectCustomerFeeReportList(customerReportBO);
     }
 
     @Override
+    @DataScope(deptAlias = "d", userAlias = "u")
     public List<JingyingManagerFeeReportVO> selectJingyingMannagerFeeReportList(CustomerReportBO customerReportBO) {
         return customerReportMapper.selectJingyingMannagerFeeReportList(customerReportBO);
     }
