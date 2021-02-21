@@ -78,7 +78,7 @@ public class SysUserServiceImpl implements ISysUserService
     /**
      * 通过用户ID查询用户
      * 
-     * @param userId 用户ID
+     * @param userId 用户IDc
      * @return 用户对象信息
      */
     @Override
@@ -416,7 +416,7 @@ public class SysUserServiceImpl implements ISysUserService
             try
             {
                 // 验证是否存在这个用户
-                SysUser u = userMapper.selectUserByPhone(user.getPassword());
+                SysUser u = userMapper.selectUserByPhone(user.getPhonenumber());
                 if (StringUtils.isNull(u))
                 {
                     user.setPassword(SecurityUtils.encryptPassword(password));
