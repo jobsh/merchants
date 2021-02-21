@@ -24,6 +24,8 @@ public class CustomerFeeReportVO extends BaseEntity {
     private Integer systemMaintenanceFee;
     private Integer daibanFee;
     private Integer guohuoFee;
+    private Integer jiamengManagerFee;
+    private Integer yejiBuchangjin;
     private Integer totalFee;
 
 }

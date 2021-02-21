@@ -23,6 +23,10 @@ public class Fee {
     private String daibanFee;
     @Excel(name = "过户费")
     private String guohuoFee;
+    @Excel(name = "加盟管理费")
+    private Integer jiamengManagerFee;
+    @Excel(name = "业绩补偿金")
+    private String yejiBuchangjin;
     @Excel(name = "经营管理费")
     private JingyingManagerFee jingyingManagerFee;
 }

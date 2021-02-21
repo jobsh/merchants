@@ -32,6 +32,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result column="system_maintenance_fee" property="systemMaintenanceFee" />
         <result column="daiban_fee" property="daibanFee" />
         <result column="guohuo_fee" property="guohuoFee" />
+        <result column="jiameng_manager_fee" property="jiamengManagerFee" />
+        <result column="yeji_buchangjin" property="yejiBuchangjin" />
         <result column="total_fee" property="totalFee" />
     </resultMap>
 
@@ -41,6 +43,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result column="user_name" property="userName" />
         <result column="post_name" property="postName" />
         <result column="num" property="contractNum" />
+        <result column="code" property="contractCode" />
         <result column="customerName" property="customerName" />
         <result column="dianmian_name" property="dianmianName" />
         <result column="customerPhone" property="customerPhone" />
@@ -181,7 +184,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             IFNULL(guohuo_fee, 0) guohuo_fee,
             IFNULL(lvyue_fee, 0) +  IFNULL(jingying_manager_fee, 0) +
             IFNULL(yunying_manager_fee, 0) + IFNULL(system_use_fee, 0) + IFNULL(system_maintenance_fee, 0) + IFNULL(daiban_fee, 0)
-            + IFNULL(guohuo_fee, 0) as total_fee
+            + IFNULL(guohuo_fee, 0)  + IFNULL(jiameng_manager_fee, 0) + IFNULL(yeji_buchangjin, 0) as total_fee
         from
             sys_user u
         left join
@@ -210,7 +213,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                 SUM(case when fee.type = '3' then fee.amount else 0 end) system_use_fee,
                 SUM(case when fee.type = '4' then fee.amount else 0 end) system_maintenance_fee,
                 SUM(case when fee.type = '6' then fee.amount else 0 end) daiban_fee,
-                SUM(case when fee.type = '5' then fee.amount else 0 end) guohuo_fee
+                SUM(case when fee.type = '5' then fee.amount else 0 end) guohuo_fee,
+                SUM(case when fee.type = '7' then fee.amount else 0 end) jiameng_manager_fee,
+                SUM(case when fee.type = '8' then fee.amount else 0 end) yeji_buchangjin
             FROM
                 biz_contract_fee fee
             <where>
@@ -239,6 +244,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             u.user_name, -- 姓名
             p.post_name, -- 职务
             contract.num, -- 合同
+            contract.code, -- 合同
             contract.dianmian_name, -- 区域/店面
             c.`name` customerName,  -- 客户名
             c.phone customerPhone ,-- 客户电话

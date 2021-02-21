@@ -54,6 +54,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="systemMaintenanceFee"    column="system_maintenance_fee"    />
         <result property="daibanFee"    column="daiban_fee"    />
         <result property="guohuoFee"    column="guohuo_fee"    />
+        <result property="jiamengManagerFee"    column="jiameng_manager_fee"    />
+        <result property="yejiBuchangjin"    column="yeji_buchangjin"    />
         <result property="totalFee"    column="total_fee"    />
     </resultMap>
 
@@ -71,9 +73,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             IFNULL(system_maintenance_fee, 0) system_maintenance_fee,
             IFNULL(daiban_fee, 0) daiban_fee,
             IFNULL(guohuo_fee, 0) guohuo_fee,
+            IFNULL(jiameng_manager_fee, 0) jiameng_manager_fee,
+            IFNULL(yeji_buchangjin, 0) yeji_buchangjin,
             IFNULL(lvyue_fee, 0) +  IFNULL(jingying_manager_fee, 0) +
             IFNULL(yunying_manager_fee, 0) + IFNULL(system_use_fee, 0) + IFNULL(system_maintenance_fee, 0) + IFNULL(daiban_fee, 0)
-                + IFNULL(guohuo_fee, 0) as total_fee
+                + IFNULL(guohuo_fee, 0) + IFNULL(jiameng_manager_fee, 0) + IFNULL(yeji_buchangjin, 0) as total_fee
         from
             biz_contract
         left join
@@ -98,7 +102,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                 SUM(case when fee.type = '3' then fee.amount else 0 end) system_use_fee,
                 SUM(case when fee.type = '4' then fee.amount else 0 end) system_maintenance_fee,
                 SUM(case when fee.type = '6' then fee.amount else 0 end) daiban_fee,
-                SUM(case when fee.type = '5' then fee.amount else 0 end) guohuo_fee
+                SUM(case when fee.type = '5' then fee.amount else 0 end) guohuo_fee,
+                SUM(case when fee.type = '7' then fee.amount else 0 end) jiameng_manager_fee,
+                SUM(case when fee.type = '8' then fee.amount else 0 end) yeji_buchangjin
             FROM
                 biz_contract_fee fee
             GROUP BY

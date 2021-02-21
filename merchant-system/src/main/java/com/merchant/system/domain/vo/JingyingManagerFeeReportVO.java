@@ -15,6 +15,7 @@ public class JingyingManagerFeeReportVO extends BaseEntity {
     private String userName; // 负责人名称
     private String postName; // 职务
     private String contractNum; // 合同编号
+    private String contractCode; // 合同编号 手动输入
     private String dianmianName; // 店面名称
     private String deptName; // 公司部门
     private String companyName; // 公司
