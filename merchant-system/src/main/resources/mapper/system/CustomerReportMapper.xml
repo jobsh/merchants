@@ -182,6 +182,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             IFNULL(system_maintenance_fee, 0) system_maintenance_fee,
             IFNULL(daiban_fee, 0) daiban_fee,
             IFNULL(guohuo_fee, 0) guohuo_fee,
+            IFNULL(jiameng_manager_fee, 0) jiameng_manager_fee,
+            IFNULL(yeji_buchangjin, 0) yeji_buchangjin,
             IFNULL(lvyue_fee, 0) +  IFNULL(jingying_manager_fee, 0) +
             IFNULL(yunying_manager_fee, 0) + IFNULL(system_use_fee, 0) + IFNULL(system_maintenance_fee, 0) + IFNULL(daiban_fee, 0)
             + IFNULL(guohuo_fee, 0)  + IFNULL(jiameng_manager_fee, 0) + IFNULL(yeji_buchangjin, 0) as total_fee
