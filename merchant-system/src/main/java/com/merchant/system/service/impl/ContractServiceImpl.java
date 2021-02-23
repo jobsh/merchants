@@ -23,6 +23,7 @@ import com.merchant.system.domain.bo.AddContractBO;
 import com.merchant.system.domain.bo.ContractBO;
 import com.merchant.system.domain.bo.ContractCompareBO;
 import com.merchant.system.domain.bo.CustomerBO;
+import com.merchant.system.domain.vo.DianmianVO;
 import com.merchant.system.mapper.ContractMapper;
 import com.merchant.system.service.*;
 import com.qiniu.util.Json;
@@ -373,6 +374,14 @@ public class ContractServiceImpl implements IContractService
             contractOperLog.setTitle("合同续约");
             contractOperLog.setDescription("原合同：" + oldContract.getNum() + ";新合同：" + contractBO.getNum());
             contractLogService.insertOperlog(contractOperLog);
+
+            // 修改店面对应的最新合同
+            List<DianmianVO> dianmianList = dianmianService.selectDianmianByContractNum(contract.getNum());
+            dianmianList.forEach(t -> {
+                t.setContractNum(contractBO.getNum());
+                dianmianService.updateDianmian(t);
+            });
+
         }
 
         return res;

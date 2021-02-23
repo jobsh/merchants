@@ -15,7 +15,7 @@
         <result column="renew_contract" property="renewContract"/>
     </resultMap>
     <resultMap type="com.merchant.system.domain.vo.ContractDandianAndQuyuVO" id="contractDandianAndQuyuVO">
-        <result column="dept_name" property="deptName"/>
+        <result column="company_name" property="deptName"/>
         <result column="dandian_contract_num" property="dandianContractNum"/>
         <result column="quyu_contract_num" property="quyuContractNum"/>
     </resultMap>
@@ -101,56 +101,87 @@
     </select>
     <select id="selectContractDandianAndQuyuVO" resultMap="contractDandianAndQuyuVO" parameterType="String">
         SELECT
-        dandian_contract.dept_name, IFNULL(dandian_contract_num,0) dandian_contract_num, IFNULL(quyu_contract_num,0)
-        quyu_contract_num
+            contract1.`name` company_name, IFNULL(dandian_contract_num,0) dandian_contract_num, IFNULL(quyu_contract_num,0)
+                             quyu_contract_num
         FROM
-        (
-        SELECT
-        d.id dept_id,d.dept_name, temp.dandian_contract_num
-        FROM
-        (
-        SELECT
-        bc.dept_id as dept_id,
-        COUNT(1) as dandian_contract_num
-        FROM
-        biz_contract bc
-        WHERE
-        bc.produce = '0' -- 单店加盟
-        <if test="type == 'month'">and DATE_FORMAT( bc.sign_date, '%Y%m' ) = DATE_FORMAT( CURDATE() , '%Y%m' )</if>
-        <if test="type == 'year'">and YEAR(bc.sign_date) = YEAR(NOW())</if>
-        GROUP BY
-        bc.dept_id
-        ) as temp
-        LEFT JOIN
-        sys_dept d
-        ON
-        d.id = temp.dept_id
-        ) as dandian_contract
-        LEFT JOIN
-        (
-        SELECT
-        d.id dept_id, d.dept_name, temp.quyu_contract_num
-        FROM
-        (
-        SELECT
-        bc.dept_id as dept_id,
-        COUNT(1) as quyu_contract_num
-        FROM
-        biz_contract bc
-        WHERE
-        bc.produce = '1' -- 区域加盟
-        <if test="type == 'month'">and DATE_FORMAT( bc.sign_date, '%Y%m' ) = DATE_FORMAT( CURDATE() , '%Y%m' )</if>
-        <if test="type == 'year'">and YEAR(bc.sign_date) = YEAR(NOW())</if>
-        GROUP BY
-        bc.dept_id
-        ) as temp
-        LEFT JOIN
-        sys_dept d
-        ON
-        d.id = temp.dept_id
-        ) as quyu_contract
-        ON
-        dandian_contract.dept_id = quyu_contract.dept_id
+            (
+                SELECT
+                    company.id company_id,company.`name`,company_dandian_contract.dandian_contract_num
+                from
+                    (select
+                         company_id,sum(dandian_contract_num) dandian_contract_num
+                     FROM
+                         (
+                             SELECT
+                                 d.id dept_id,d.dept_name,d.company_id, temp.dandian_contract_num
+                             FROM
+                                 (
+                                     SELECT
+                                         bc.dept_id as dept_id,
+                                         COUNT(1) as dandian_contract_num
+                                     FROM
+                                         biz_contract bc
+                                     WHERE
+                                         bc.produce = '0' -- 单店加盟
+                                        <if test="type == 'month'">and DATE_FORMAT( bc.sign_date, '%Y%m' ) = DATE_FORMAT( CURDATE() , '%Y%m' )</if>
+                                        <if test="type == 'year'">and YEAR(bc.sign_date) = YEAR(NOW())</if>
+                                     GROUP BY
+                                         bc.dept_id
+                                 ) as temp
+                                     LEFT JOIN
+                                 sys_dept d
+                                 ON
+                                     d.id = temp.dept_id
+                         ) as dandian_contract
+                     GROUP BY
+                         dandian_contract.company_id
+                    ) as company_dandian_contract
+                        LEFT JOIN
+                    sys_company company
+                    ON
+                        company.id = company_dandian_contract.company_id
+            ) as contract1
+
+                LEFT JOIN
+            (
+                SELECT
+                    company.id company_id,company.`name`,company_quyu_contract.quyu_contract_num
+                from
+                    (select
+                         company_id,sum(quyu_contract_num) quyu_contract_num
+                     FROM
+                         (
+                             SELECT
+                                 d.id dept_id,d.dept_name,d.company_id, temp.quyu_contract_num
+                             FROM
+                                 (
+                                     SELECT
+                                         bc.dept_id as dept_id,
+                                         COUNT(1) as quyu_contract_num
+                                     FROM
+                                         biz_contract bc
+                                     WHERE
+                                         bc.produce = '1' -- 区域加盟
+                                        <if test="type == 'month'">and DATE_FORMAT( bc.sign_date, '%Y%m' ) = DATE_FORMAT( CURDATE() , '%Y%m' )</if>
+                                        <if test="type == 'year'">and YEAR(bc.sign_date) = YEAR(NOW())</if>
+                                     GROUP BY
+                                         bc.dept_id
+                                 ) as temp
+                                     LEFT JOIN
+                                 sys_dept d
+                                 ON
+                                     d.id = temp.dept_id
+                         ) as quyu_contract
+                     GROUP BY
+                         quyu_contract.company_id
+                    ) as company_quyu_contract
+                        LEFT JOIN
+                    sys_company company
+                    ON
+                        company.id = company_quyu_contract.company_id
+            ) as contract2
+            ON
+                contract2.company_id = contract1.company_id
     </select>
     <select id="selectCustomerWorkspaceList" resultMap="CustomerWorkSpaceVO">
         SELECT
