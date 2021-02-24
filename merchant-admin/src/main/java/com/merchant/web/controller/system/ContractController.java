@@ -58,7 +58,6 @@ public class ContractController extends BaseController {
     /**
      * 查询合同列表
      */
-    @PreAuthorize("@ss.hasPermi('contract:contractManager:list')")
     @PostMapping("/list")
     public TableDataInfo list(@RequestBody ContractBO contractBO) {
         // 默认查询未失效的,在mapper.xml中控制，已失效状态为2
@@ -102,7 +101,6 @@ public class ContractController extends BaseController {
     /**
      * 获取合同详细信息
      */
-    @PreAuthorize("@ss.hasPermi('contract:contractitem:list')")
     @GetMapping(value = "/{num}")
     public AjaxResult getInfo(@PathVariable("num") String num) {
         return AjaxResult.success(contractService.selectContractByNum(num));
@@ -124,7 +122,7 @@ public class ContractController extends BaseController {
      */
 
     @ApiOperation(value = "修改合同", notes = "修改合同", httpMethod = "PUT")
-    @PreAuthorize("@ss.hasPermi('contract:contractManager:edit')")
+    @PreAuthorize("@ss.hasPermi('contract:contractItem:edit')")
     @Log(title = "合同", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody ContractBO contractBO) {
@@ -159,7 +157,7 @@ public class ContractController extends BaseController {
      * 合同解约
      */
     @ApiOperation(value = "合同解约", notes = "合同解约", httpMethod = "POST")
-    @PreAuthorize("@ss.hasPermi('contract:contractManager:break')")
+    @PreAuthorize("@ss.hasPermi('contract:contractItem:break')")
     @Log(title = "合同", businessType = BusinessType.UPDATE)
     @PostMapping("/terminate")
     public AjaxResult terminate(@RequestBody ContractBO contractBO) {
@@ -182,7 +180,7 @@ public class ContractController extends BaseController {
      * 合同续约
      */
     @ApiOperation(value = "合同续约", notes = "合同续约", httpMethod = "POST")
-    @PreAuthorize("@ss.hasPermi('contract:contractManager:renew')")
+    @PreAuthorize("@ss.hasPermi('contract:contractItem:renew')")
     @Log(title = "合同", businessType = BusinessType.UPDATE)
     @PostMapping("/renew/{id}")
     public AjaxResult renew(
@@ -197,7 +195,7 @@ public class ContractController extends BaseController {
      * 转移合同
      */
     @ApiOperation(value = "转移合同", notes = "转移合同", httpMethod = "POST")
-    @PreAuthorize("@ss.hasPermi('contract:contractManager:transfer')")
+    @PreAuthorize("@ss.hasPermi('contract:contractItem:transfer')")
     @Log(title = "合同", businessType = BusinessType.UPDATE)
     @PostMapping("/transfer/ids")
     public AjaxResult transfer(@RequestBody ContractBO contractBO) throws IllegalAccessException {
@@ -223,7 +221,7 @@ public class ContractController extends BaseController {
      * @return
      */
     @ApiOperation(value = "审核合同", notes = "审核合同", httpMethod = "POST")
-    @PreAuthorize("@ss.hasPermi('contract:contractManager:check')")
+    @PreAuthorize("@ss.hasPermi('contract:contractItem:check')")
     @Log(title = "合同", businessType = BusinessType.UPDATE)
     @PostMapping("/check/")
     public AjaxResult check(
@@ -248,7 +246,7 @@ public class ContractController extends BaseController {
      * @return
      */
     @ApiOperation(value = "反审核", notes = "反审核", httpMethod = "GET")
-    @PreAuthorize("@ss.hasPermi('contract:contractManager:unCheck')")
+    @PreAuthorize("@ss.hasPermi('contract:contractItem:unCheck')")
     @Log(title = "合同", businessType = BusinessType.UPDATE)
     @GetMapping("/uncheck/{id}")
     public AjaxResult uncheck(@ApiParam(name = "id", value = "合同id", required = true) @PathVariable("id") Integer id) {
@@ -268,7 +266,6 @@ public class ContractController extends BaseController {
      * 合同失效
      */
     @ApiOperation(value = "合同失效", notes = "合同失效", httpMethod = "GET")
-    @PreAuthorize("@ss.hasPermi('contract:contractManager:edit')")
     @Log(title = "合同", businessType = BusinessType.UPDATE)
     @GetMapping("/abandon/{id}")
     public AjaxResult abandon(@ApiParam(name = "id", value = "合同id", required = true) @PathVariable("id") Integer id) {

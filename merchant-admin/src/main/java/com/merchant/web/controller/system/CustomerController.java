@@ -207,9 +207,9 @@ public class CustomerController extends BaseController {
     @PostMapping("/customer/transfer")
     public AjaxResult transferCustomer(@RequestBody CustomerBO customerBO) {
 
-        if (!StringUtils.isNotEmpty(customerBO.getPhone())) {
-            return AjaxResult.error("请传入客户手机号");
-        }
+//        if (!StringUtils.isNotEmpty(customerBO.getPhone())) {
+//            return AjaxResult.error("请传入客户手机号");
+//        }
         if (customerBO.getUserId() == null) {
             return AjaxResult.error("请传入正确负责人");
         }

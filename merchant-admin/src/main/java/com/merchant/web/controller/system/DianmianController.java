@@ -47,7 +47,6 @@ public class DianmianController extends BaseController
      * 查询店面管理列表
      */
     @ApiOperation(value = "查询店面管理列表", notes = "查询店面管理列表", httpMethod = "POST")
-    @PreAuthorize("@ss.hasPermi('dianmian:dianmianManager:list')")
     @PostMapping("/list")
     public TableDataInfo list(@RequestBody DianmianBO dianmianBO)
     {
@@ -61,7 +60,6 @@ public class DianmianController extends BaseController
      * 根据合同num查询店面管理列表
      */
     @ApiOperation(value = "根据合同num查询店面管理列表", notes = "根据合同num查询店面管理列表", httpMethod = "GET")
-    @PreAuthorize("@ss.hasPermi('dianmian:dianmianManager:list')")
     @GetMapping("/listOfContractNum/{contractNum}")
     public TableDataInfo listByContractNum(@ApiParam(name = "contractNum", value = "合同num", required = true) @PathVariable String contractNum)
     {
@@ -88,7 +86,6 @@ public class DianmianController extends BaseController
      * 获取店面管理详细信息
      */
     @ApiOperation(value = "根据店面id查询店面管理列表", notes = "根据店面id查询店面管理列表", httpMethod = "GET")
-    @PreAuthorize("@ss.hasPermi('dianmian:dianmianManager:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@ApiParam(name = "id", value = "店面id", required = true) @PathVariable("id") Integer id)
     {

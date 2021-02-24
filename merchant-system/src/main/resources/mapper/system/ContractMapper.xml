@@ -111,8 +111,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             fee.contract_num
             ) fee
         ON fee.contract_num = biz_contract.num
-
-
     </sql>
 
     <select id="selectContractList" parameterType="ContractBO" resultMap="ContractResult">
@@ -170,7 +168,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="countContractByCode" parameterType="String" resultType="Integer">
         select count(1) from biz_contract
-        where biz_contract.code = #{code}
+        where biz_contract.code = #{code} and biz_contract.check_status between 0 and 1
     </select>
     <select id="selectContractByIds" resultType="com.merchant.system.domain.Contract" parameterType="Integer">
         select * from biz_contract where biz_contract.id in

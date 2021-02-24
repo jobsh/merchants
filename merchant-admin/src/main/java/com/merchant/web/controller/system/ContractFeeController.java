@@ -34,7 +34,6 @@ public class ContractFeeController extends BaseController
     /**
      * 查询费用管理列表
      */
-    @PreAuthorize("@ss.hasPermi('fee:feeManager:list')")
     @GetMapping("/list")
     public TableDataInfo list(ContractFeeBO contractFeeBO)
     {
@@ -59,7 +58,6 @@ public class ContractFeeController extends BaseController
     /**
      * 获取费用管理详细信息
      */
-    @PreAuthorize("@ss.hasPermi('fee:feeManager:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Integer id)
     {
@@ -106,7 +104,6 @@ public class ContractFeeController extends BaseController
     /**
      * 根据合同contractNum查询费用
      */
-    @PreAuthorize("@ss.hasPermi('fee:feeManager:list')")
     @GetMapping(value = "/getFeeByContractNum/{contractNum}")
     public AjaxResult getFeeByContractNum(@PathVariable String contractNum)
     {

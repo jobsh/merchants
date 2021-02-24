@@ -114,7 +114,7 @@ public class DataScopeAspect {
             } else if (DATA_SCOPE_DEPT_AND_CHILD.equals(dataScope)) {
                 sqlString.append(StringUtils.format(
                         " OR {}.id IN ( SELECT id FROM sys_dept WHERE id = {} or find_in_set( {} , ancestors ) )",
-                        deptAlias, user.getDeptId(), user.getSysCompany().getId()));
+                        deptAlias, user.getDeptId(), user.getDeptId()));
             } else if (DATA_SCOPE_COMPANY.equals(dataScope) && StringUtils.isNotBlank(companyAlias)){
                 sqlString.append(StringUtils.format(
                         " OR {}.company_id = {}",

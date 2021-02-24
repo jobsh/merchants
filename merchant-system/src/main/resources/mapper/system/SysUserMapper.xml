@@ -114,12 +114,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="selectUserByKeywords" parameterType="SysUser" resultMap="SysUserResult">
 		<include refid="selectUserVo"/>
 		where u.del_flag = '0'
+		<if test="deptId != null and deptId != 0">
+			AND (u.dept_id = #{deptId} OR u.dept_id IN ( SELECT t.id FROM sys_dept t WHERE find_in_set(#{deptId}, ancestors) ))
+		</if>
 		<if test="keywords != null and keywords != ''">and (
 			instr(u.user_name, #{keywords}) +
-			instr(u.phonenumber, #{keywords})
+			instr(u.phonenumber, #{keywords}) +
+			instr(r.role_name, #{keywords})
 			) > 0</if>
+		<!-- 数据范围过滤 -->
 		${params.dataScope}
-
 	</select>
 
 	<select id="selectUserByUserName" parameterType="String" resultMap="SysUserResult">
