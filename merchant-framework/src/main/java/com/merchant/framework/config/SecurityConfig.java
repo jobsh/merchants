@@ -31,7 +31,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
     /**
      * 自定义用户认证逻辑
      */
-    @Resource
+    @Autowired
     private UserDetailsService userDetailsService;
     
     /**

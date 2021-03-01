@@ -15,6 +15,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result column="gj_num" property="gjNum" />
         <result column="dandian_contract_num" property="dandianContractNum"/>
         <result column="quyu_contract_num" property="quyuContractNum" />
+        <result column="dandian_num" property="dandianNum" />
         <result column="quyu_dianmian_num" property="quyuDianmianNum" />
         <result column="dianmian_num" property="dianmianNum" />
     </resultMap>
@@ -64,8 +65,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             IFNULL(gj_num, 0) gj_num,
             IFNULL(dandian_contract_num, 0) dandian_contract_num,
             IFNULL(quyu_contract_num, 0) quyu_contract_num,
+            IFNULL(dandian_num, 0) dandian_num,
             IFNULL(quyu_dianmian_num, 0) quyu_dianmian_num,
-            IFNULL(dandian_contract_num,0) + IFNULL(quyu_dianmian_num,0) as dianmian_num
+            IFNULL(dandian_num,0) + IFNULL(quyu_dianmian_num,0) as dianmian_num
         from
             sys_user u
         left join
@@ -125,7 +127,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             contract.manager_id uid,
             count(case when contract.produce = 0 then 1 else null end) dandian_contract_num,
             count(case when contract.produce = 1 then 1 else null end) quyu_contract_num
-            -- 	COUNT(contract.id) dandian_contract_num
             FROM
             biz_contract contract
             where 1=1
@@ -142,15 +143,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             (
             SELECT
                 dianmian.sys_user_id uid,
-            COUNT(dianmian.id) quyu_dianmian_num
+                count(case when dianmian.type = 0 then 1 else null end) dandian_num, -- 单店
+                count(case when dianmian.type = 1 then 1 else null end) quyu_dianmian_num -- 区域
             FROM
                 biz_dianmian dianmian
             WHERE
-                dianmian.type = 1 -- 区域加盟
-                and dianmian.status BETWEEN 1 and 3 -- 闭店状态为0 需要排除出去，这里使用BETWEEN 1 and 3
-                <if test="inputDateStart !=  null">and date_format(dianmian.open_date,'%y%m%d') &gt;= date_format(#{inputDateStart},'%y%m%d')</if>
-                <if test="inputDateEnd !=  null">and date_format(dianmian.open_date,'%y%m%d') &lt;= date_format(#{inputDateEnd},'%y%m%d')</if>
-                <if test="inputDateStart ==  null and inputDateEnd == null">and DATE_FORMAT(dianmian.open_date, '%Y%m' ) = DATE_FORMAT(CURDATE(), '%Y%m')</if>
+                dianmian.status BETWEEN 1 and 3 -- 闭店状态为0 需要排除出去，这里使用BETWEEN 1 and 3
+                <if test="inputDateStart !=  null">and date_format(dianmian.set_date,'%y%m%d') &gt;= date_format(#{inputDateStart},'%y%m%d')</if>
+                <if test="inputDateEnd !=  null">and date_format(dianmian.set_date,'%y%m%d') &lt;= date_format(#{inputDateEnd},'%y%m%d')</if>
+                <if test="inputDateStart ==  null and inputDateEnd == null">and DATE_FORMAT(dianmian.set_date, '%Y%m' ) = DATE_FORMAT(CURDATE(), '%Y%m')</if>
         GROUP BY
                 dianmian.sys_user_id
             ) dianmian

@@ -36,7 +36,6 @@ public class ContractFileController extends BaseController
     /**
      * 查询列表
      */
-    @PreAuthorize("@ss.hasPermi('system:file:list')")
     @GetMapping("/list")
     public TableDataInfo list(ContractFile contractFile)
     {
@@ -61,7 +60,6 @@ public class ContractFileController extends BaseController
     /**
      * 根据id获取合同附件详情
      */
-    @PreAuthorize("@ss.hasPermi('system:file:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
@@ -71,7 +69,7 @@ public class ContractFileController extends BaseController
     /**
      * 新增
      */
-    @PreAuthorize("@ss.hasPermi('system:file:add')")
+    @PreAuthorize("@ss.hasPermi('contract:contractItem:addFujian')")
     @Log(title = "【请填写功能名称】", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody(required = false) ContractFile contractFile)

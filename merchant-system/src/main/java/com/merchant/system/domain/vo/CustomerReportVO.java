@@ -23,6 +23,7 @@ public class CustomerReportVO extends BaseEntity {
     private Integer gjNum;
     private Integer dandianContractNum;
     private Integer quyuContractNum;
+    private Integer dandianNum;
     private Integer quyuDianmianNum;
     private Integer dianmianNum;
 

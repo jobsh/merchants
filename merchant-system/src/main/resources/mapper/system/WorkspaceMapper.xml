@@ -212,9 +212,9 @@
         WHERE
         1=1 and c.resource &lt;= '6'
         <if test="type == '0'.toString()">and to_days(c.input_date) = to_days(now())</if>
-        <if test="type == '1'.toString()">and TO_DAYS(NOW()) - TO_DAYS(c.input_date) &lt;= 1</if>
+        <if test="type == '1'.toString()">and TO_DAYS(NOW()) - TO_DAYS(c.input_date) = 1</if>
         <if test="type == '2'.toString()">and YEARWEEK(date_format(c.input_date,'%Y-%m-%d')) = YEARWEEK(now())</if>
-        <if test="type == '3'.toString()">and YEAR(c.input_date) = YEAR(NOW())</if>
+        <if test="type == '3'.toString()">and DATE_FORMAT(c.input_date, '%Y%m') = DATE_FORMAT(CURDATE( ), '%Y%m')</if>
         GROUP BY
         dept_id
         ) as xiansuo_num
@@ -232,9 +232,10 @@
         <where>
             1=1
             <if test="type == '0'.toString()">and to_days(contract.sign_date) = to_days(now())</if>
-            <if test="type == '1'.toString()">and TO_DAYS(NOW()) - TO_DAYS(contract.sign_date) &lt;= 1</if>
+            <if test="type == '1'.toString()">and TO_DAYS(NOW()) - TO_DAYS(contract.sign_date) = 1</if>
             <if test="type == '2'.toString()">and YEARWEEK(date_format(contract.sign_date,'%Y-%m-%d')) = YEARWEEK(now())</if>
-            <if test="type == '3'.toString()">and YEAR(contract.sign_date) = YEAR(NOW())</if>
+            <if test="type == '3'.toString()">and DATE_FORMAT(contract.sign_date, '%Y%m') = DATE_FORMAT(CURDATE( ), '%Y%m')</if>
+
         </where>
         GROUP BY
         dept_id
@@ -252,9 +253,9 @@
         WHERE
         dianmian.type = 1 -- 区域加盟
         <if test="type == '0'.toString()">and to_days(dianmian.input_date) = to_days(now())</if>
-        <if test="type == '1'.toString()">and TO_DAYS(NOW()) - TO_DAYS(dianmian.input_date) &lt;= 1</if>
+        <if test="type == '1'.toString()">and TO_DAYS(NOW()) - TO_DAYS(dianmian.input_date) = 1</if>
         <if test="type == '2'.toString()">and YEARWEEK(date_format(dianmian.input_date,'%Y-%m-%d')) = YEARWEEK(now())</if>
-        <if test="type == '3'.toString()">and YEAR(dianmian.input_date) = YEAR(NOW())</if>
+        <if test="type == '3'.toString()">and DATE_FORMAT(dianmian.input_date, '%Y%m') = DATE_FORMAT(CURDATE( ), '%Y%m')</if>
         GROUP BY
         dianmian.dept_id
         ) dianmian
@@ -302,9 +303,9 @@
         d.id = u.dept_id
         <where>
             <if test="type == '0'.toString()">and to_days(fee.input_date) = to_days(now())</if>
-            <if test="type == '1'.toString()">and TO_DAYS(NOW()) - TO_DAYS(fee.input_date) &lt;= 1</if>
+            <if test="type == '1'.toString()">and TO_DAYS(NOW()) - TO_DAYS(fee.input_date) = 1</if>
             <if test="type == '2'.toString()">and YEARWEEK(date_format(fee.input_date,'%Y-%m-%d')) = YEARWEEK(now())</if>
-            <if test="type == '3'.toString()">and YEAR(fee.input_date) = YEAR(NOW())</if>
+            <if test="type == '3'.toString()">and DATE_FORMAT(fee.input_date, '%Y%m') = DATE_FORMAT(CURDATE( ), '%Y%m')</if>
             <if test="deptId != null and deptId != 0">
                 AND (d.id = #{deptId} OR d.id IN ( SELECT t.id FROM sys_dept t WHERE find_in_set(#{deptId}, ancestors)))
             </if>
