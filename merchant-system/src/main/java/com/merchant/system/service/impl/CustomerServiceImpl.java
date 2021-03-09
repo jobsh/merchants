@@ -7,6 +7,7 @@ import com.merchant.common.core.domain.entity.SysUser;
 import com.merchant.common.enums.CustomerStatus;
 import com.merchant.common.exception.CustomException;
 import com.merchant.common.utils.DateUtils;
+import com.merchant.common.utils.SecurityUtils;
 import com.merchant.common.utils.StringUtils;
 import com.merchant.system.domain.Customer;
 import com.merchant.system.domain.bo.AddCustomerBO;
@@ -208,8 +209,6 @@ public class CustomerServiceImpl implements ICustomerService {
 //        customerMapper.clearRedundantXiansuo(customerBO.getPhone());
         // 修改客户表status为线索状态（status由0置为1）
         List<String> customerNames = new ArrayList<>();
-
-
         if (existCustomer(customerBO.getPhone(),customerBO.getUserId())) {
             return -3;
         };
@@ -245,7 +244,9 @@ public class CustomerServiceImpl implements ICustomerService {
     }
 
     @Override
-    public String importCustomer(List<Customer> customerList, Boolean isUpdateSupport, String operName) {
+    public String importCustomer(List<Customer> customerList, boolean isUpdateSupport, String operName, String isCustomer) {
+        SysUser loginUser = SecurityUtils.getLoginUser().getUser();
+        int loginUserId = loginUser.getId().intValue();
         if (StringUtils.isNull(customerList) || customerList.size() == 0) {
             throw new CustomException("导入用户数据不能为空！");
         }
@@ -264,22 +265,49 @@ public class CustomerServiceImpl implements ICustomerService {
 
         for (Customer customer : customerList) {
             try {
+                int res = 0;
                 // 验证是否存在这个用户
-                int res = customerMapper.countXiansuoByPhone(customer.getPhone());
-                if (res == 0) {
-                    customer.setCreateBy(operName);
-                    this.insertCustomer(customer);
-                    successNum++;
-                    successMsg.append("<br/>" + successNum + "、用户： " + customer.getName() + " 导入成功");
-                } else if (isUpdateSupport) {
-                    customer.setUpdateBy(operName);
-                    this.updateCustomer((CustomerBO) customer);
-                    successNum++;
-                    successMsg.append("<br/>" + successNum + "、账号 " + customer.getName() + " 更新成功");
-                } else {
-                    failureNum++;
-                    failureMsg.append("<br/>" + failureNum + "、账号 " + customer.getName() + " 已存在");
+                if (CustomerStatus.DISABLE.getCode().equals(isCustomer)) {
+                    res = customerMapper.countXiansuoByPhone(customer.getPhone());
+                    if (res == 0) {
+                        customer.setCreateBy(operName);
+                        customer.setStatus(isCustomer);
+                        customer.setUserId(loginUserId);
+                        customer.setDeptId(loginUser.getDeptId().intValue());
+                        this.insertCustomer(customer);
+                        successNum++;
+                        successMsg.append("<br/>" + successNum + "、用户： " + customer.getName() + " 导入成功");
+                    } else if (isUpdateSupport) {
+                        customer.setUpdateBy(operName);
+                        this.updateCustomer(customer);
+                        successNum++;
+                        successMsg.append("<br/>" + successNum + "、账号 " + customer.getName() + " 更新成功");
+                    } else {
+                        failureNum++;
+                        failureMsg.append("<br/>" + failureNum + "、账号 " + customer.getName() + " 已存在");
+                    }
                 }
+                if (CustomerStatus.OK.getCode().equals(isCustomer)) {
+                    res = customerMapper.countCustomerByPhone(customer.getPhone(), loginUserId);
+                    if (res == 0) {
+                        customer.setCreateBy(operName);
+                        customer.setStatus(isCustomer);
+                        customer.setUserId(loginUserId);
+                        customer.setDeptId(loginUser.getDeptId().intValue());
+                        this.insertCustomer(customer);
+                        successNum++;
+                        successMsg.append("<br/>" + successNum + "、用户： " + customer.getName() + " 导入成功");
+                    } else if (isUpdateSupport) {
+                        customer.setUpdateBy(operName);
+                        this.updateCustomer(customer);
+                        successNum++;
+                        successMsg.append("<br/>" + successNum + "、账号 " + customer.getName() + " 更新成功");
+                    } else {
+                        failureNum++;
+                        failureMsg.append("<br/>" + failureNum + "、账号 " + customer.getName() + " 已存在于" + SecurityUtils.getUsername()+ "名下");
+                    }
+                }
+
             } catch (Exception e) {
                 failureNum++;
                 String msg = "<br/>" + failureNum + "、账号 " + customer.getName() + " 导入失败：";

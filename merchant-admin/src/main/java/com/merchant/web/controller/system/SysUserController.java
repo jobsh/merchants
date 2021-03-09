@@ -74,7 +74,9 @@ public class SysUserController extends BaseController
     public TableDataInfo listByKeywords(@ApiParam(name = "keywords", value = "查询关键字", required = true) @RequestParam(required = false) String keywords)
     {
         startPage();
-        List<SysUser> list = userService.selectUserByKeywords(keywords);
+        SysUser sysUser = new SysUser();
+        sysUser.setKeywords(keywords);
+        List<SysUser> list = userService.selectUserByKeywords(sysUser);
         return getDataTable(list);
     }
 

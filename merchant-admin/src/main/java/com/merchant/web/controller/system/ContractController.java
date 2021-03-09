@@ -8,15 +8,19 @@ import com.merchant.common.core.domain.AjaxResult;
 import com.merchant.common.core.domain.model.LoginUser;
 import com.merchant.common.core.page.TableDataInfo;
 import com.merchant.common.enums.BusinessType;
+import com.merchant.common.enums.DianmianStatus;
 import com.merchant.common.exception.BaseException;
+import com.merchant.common.utils.DateUtils;
 import com.merchant.common.utils.ServletUtils;
 import com.merchant.common.utils.StringUtils;
 import com.merchant.common.utils.file.FileUploadUtils;
 import com.merchant.common.utils.poi.ExcelUtil;
 import com.merchant.framework.web.service.TokenService;
 import com.merchant.system.domain.Contract;
+import com.merchant.system.domain.Dianmian;
 import com.merchant.system.domain.bo.AddContractBO;
 import com.merchant.system.domain.bo.ContractBO;
+import com.merchant.system.domain.vo.DianmianVO;
 import com.merchant.system.service.IContractLogService;
 import com.merchant.system.service.IContractService;
 import com.merchant.system.service.IDianmianService;
@@ -26,6 +30,8 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -159,6 +165,7 @@ public class ContractController extends BaseController {
     @ApiOperation(value = "合同解约", notes = "合同解约", httpMethod = "POST")
     @PreAuthorize("@ss.hasPermi('contract:contractItem:break')")
     @Log(title = "合同", businessType = BusinessType.UPDATE)
+    @Transactional(propagation = Propagation.REQUIRED)
     @PostMapping("/terminate")
     public AjaxResult terminate(@RequestBody ContractBO contractBO) {
 
@@ -172,6 +179,15 @@ public class ContractController extends BaseController {
         } catch (IOException e) {
             throw new BaseException("附件上传异常");
         }
+        // 闭店
+        Contract contract = contractService.selectContractById(contractBO.getId());
+        List<DianmianVO> dianmianVOS = dianmianService.selectDianmianByContractNum(contract.getNum());
+        dianmianVOS.forEach(dianmian -> {
+            dianmian.setStatus(DianmianStatus.ClOSED.getCode());
+            dianmian.setCloseReason("合同解约");
+            dianmian.setCloseDate(DateUtils.getNowDate());
+            dianmianService.updateDianmian(dianmian);
+        });
         return toAjax(res);
     }
 

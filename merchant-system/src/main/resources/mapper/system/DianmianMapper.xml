@@ -121,7 +121,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="keywords != null and keywords != ''">and (
                 instr(dianmian.name, #{keywords}) +
                 instr(biz_contract.code, #{keywords}) +
-                instr(c.name, #{keywords})+
+                instr(c.name, #{keywords})
                 ) > 0</if>
             <!-- 数据范围过滤 -->
             ${params.dataScope}

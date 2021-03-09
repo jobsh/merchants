@@ -75,13 +75,13 @@ public class CustomerController extends BaseController {
     @Log(title = "用户管理", businessType = BusinessType.IMPORT)
     @PreAuthorize("@ss.hasPermi('system:xiansuo:import')")
     @PostMapping("/xiansuo/importData")
-    public AjaxResult importData(MultipartFile file, boolean updateSupport) throws Exception
+    public AjaxResult importData(MultipartFile file, boolean updateSupport, String isCustomer) throws Exception
     {
         ExcelUtil<Customer> util = new ExcelUtil<>(Customer.class);
         List<Customer> userList = util.importExcel(file.getInputStream());
         LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
         String operName = loginUser.getUsername();
-        String message = customerService.importCustomer(userList, updateSupport, operName);
+        String message = customerService.importCustomer(userList, updateSupport, operName, isCustomer);
         return AjaxResult.success(message);
     }
 

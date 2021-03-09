@@ -20,7 +20,7 @@ public interface ISysUserService
      */
     public List<SysUser> selectUserList(SysUser user);
 
-    List<SysUser> selectUserByKeywords (String keyWords);
+    List<SysUser> selectUserByKeywords (SysUser user);
 
     /**
      * 通过用户ID查询用户

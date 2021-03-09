@@ -117,15 +117,17 @@ public interface ICustomerService
     /**
      * 导入用户数据
      *
-     * @param userList 用户数据列表
+     * @param customerList 用户数据列表
      * @param isUpdateSupport 是否更新支持，如果已存在，则进行更新数据
      * @param operName 操作用户
      * @return 结果
      */
-    String importCustomer(List<Customer> userList, Boolean isUpdateSupport, String operName);
+    String importCustomer(List<Customer> customerList, boolean isUpdateSupport, String operName, String isCustomer);
 
     /**
      * 定时任务：30天未跟进的客户转为线索
      */
     void degradeToXiansuo(int intervalDays);
+
+
 }

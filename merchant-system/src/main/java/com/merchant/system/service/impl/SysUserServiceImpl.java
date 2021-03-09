@@ -69,14 +69,8 @@ public class SysUserServiceImpl implements ISysUserService
 
     @Override
     @DataScope(deptAlias = "d", userAlias = "u")
-    public List<SysUser> selectUserByKeywords(String keywords) {
-        Long deptId = SecurityUtils.getLoginUser().getUser().getDeptId();
-        Long userId = SecurityUtils.getLoginUser().getUser().getId();
-        SysUser sysUser = new SysUser();
-        sysUser.setKeywords(keywords);
-        sysUser.setId(userId);
-        sysUser.setDeptId(deptId);
-        return userMapper.selectUserByKeywords(sysUser);
+    public List<SysUser> selectUserByKeywords(SysUser user) {
+        return userMapper.selectUserByKeywords(user);
     }
 
     /**

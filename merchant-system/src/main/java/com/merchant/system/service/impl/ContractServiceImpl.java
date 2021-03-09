@@ -311,8 +311,6 @@ public class ContractServiceImpl implements IContractService
             contractOperLog.setRequestMethod("POST");
             contractOperLog.setContractNum(contract.getNum());
             contractOperLog.setBusinessType(ContractOperType.TERMINATE.ordinal());
-            contractOperLog.setDescription("解约时间：" + contractBO.getTerminateDate());
-
             contractLogService.insertOperlog(contractOperLog);
 
 //            Dianmian dianmian = new Dianmian();
@@ -345,6 +343,8 @@ public class ContractServiceImpl implements IContractService
         if (contractMapper.countContractByCode(contractBO.getCode()) > 0) {
             throw new BaseException("已存在该合同编号");
         }
+        List<DianmianVO> dianmianList = dianmianService.selectDianmianByContractNum(contract.getNum());
+
         contractBO.setNum(CONTRACT_PREFIX + sid.nextShort());
         contractBO.setRootNum(contract.getRootNum());
         // 设置新合同pid
@@ -363,6 +363,7 @@ public class ContractServiceImpl implements IContractService
         // 设置新合同审核状态为未审核
         contractBO.setCheckStatus(ContractStatus.UNCHECK.getCode());
         // 增加新合同记录
+        contractBO.setDianmianNum(dianmianList.size());
         int res = contractMapper.insertContract(contractBO);
         if (res > 0) {
             ContractOperLog contractOperLog = new ContractOperLog();
@@ -376,12 +377,10 @@ public class ContractServiceImpl implements IContractService
             contractLogService.insertOperlog(contractOperLog);
 
             // 修改店面对应的最新合同
-            List<DianmianVO> dianmianList = dianmianService.selectDianmianByContractNum(contract.getNum());
             dianmianList.forEach(t -> {
                 t.setContractNum(contractBO.getNum());
                 dianmianService.updateDianmian(t);
             });
-
         }
 
         return res;
