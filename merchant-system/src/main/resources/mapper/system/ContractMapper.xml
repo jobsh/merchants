@@ -123,8 +123,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="managerId !=  null  and managerId != ''">and manager_id = #{managerId}</if>
             <if test="num != null  and num != ''"> and biz_contract.num  like concat('%', #{num}, '%')</if>
             <if test="customerName != null  and customerName != ''"> and biz_contract.customer_name like concat('%', #{customerName}, '%')</if>
-            <if test="code != null  and code != ''"> and biz_contract.code like concat('%', #{code}, '%')</if>
-            <if test="dianmianName != null and dianmianName != ''">biz_contract.dianmian_name like concat('%', #{dianmianName}, '%')</if>
+            <if test="code != null and code != ''"> and biz_contract.code like concat('%', #{code}, '%')</if>
+            <if test="dianmianName != null and dianmianName != ''">and biz_contract.dianmian_name like concat('%', #{dianmianName}, '%')</if>
             <if test="customerPhone != null  and customerPhone != ''"> and biz_contract.customer_phone = #{customerPhone}</if>
             <if test="produce != null  and produce != ''"> and biz_contract.produce = #{produce}</if>
             <if test="operation != null  and operation != ''"> and biz_contract.operation = #{operation}</if>
@@ -138,6 +138,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="endDateEnd != null  and endDateEnd != ''">and biz_contract.end_date &lt;= #{endDateEnd}</if>
             <if test="status == null or status == ''"> and biz_contract.status between '0' and '1'</if>
             <if test="status != null and status != ''"> and biz_contract.status = #{status}</if>
+            <if test="type != null and type != ''"> and biz_contract.type = #{type}</if>
             <if test="checkStatus == null  or checkStatus == ''"> and biz_contract.check_status &lt;&gt; '2'</if>
             <if test="checkStatus != null  and checkStatus != ''"> and biz_contract.check_status = #{checkStatus}</if>
             <if test="keywords != null and keywords != ''">and (

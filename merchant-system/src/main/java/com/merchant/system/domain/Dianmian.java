@@ -26,43 +26,33 @@ public class Dianmian extends BaseEntity
     private Integer deptId;
 
     /** 店东id */
-    @Excel(name = "店东id")
     private Integer diandongId;
 
     /** 店东姓名 */
-    @Excel(name = "店东姓名")
     private String diandongName;
 
     /** 店东电话 */
-    @Excel(name = "店东电话")
     private String diandongPhone;
 
     /** 管理人id */
-    @Excel(name = "管理人id")
     private Long userId;
 
     /** 所属公司id */
-    @Excel(name = "所属公司id")
     private Integer companyId;
 
     /** 门店名称 */
-    @Excel(name = "门店名称")
     private String name;
 
     /** 门店状态 */
-    @Excel(name = "门店状态")
     private String status;
 
     /** 所属省 */
-    @Excel(name = "所属省")
     private String province;
 
     /** 所属市 */
-    @Excel(name = "所属市")
     private String city;
 
     /** 所属区 */
-    @Excel(name = "所属区")
     private String district;
 
     /** 经度 */
@@ -72,53 +62,42 @@ public class Dianmian extends BaseEntity
     private String latitude;
 
     /** 店面详细地址 */
-    @Excel(name = "店面详细地址")
     private String address;
 
     /** 验收结果 */
-    @Excel(name = "验收结果")
     private String checkResult;
 
     /** 合同编号 */
-    @Excel(name = "合同编号")
     private String contractNum;
 
     /** 店面类型（0：单店加盟，1：区域加盟） */
-    @Excel(name = "店面类型", readConverterExp = "0=：单店加盟，1：区域加盟")
     private String type;
 
     /** 授权区域 */
-    @Excel(name = "授权区域")
     private String area;
 
     /** 开店日期 */
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "开店日期", width = 30, dateFormat = "yyyy-MM-dd")
     private Date setDate;
 
     /** 营业日期 */
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "营业日期", width = 30, dateFormat = "yyyy-MM-dd")
     private Date openDate;
 
     /** 停业时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "闭店/停业时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date restDate;
 
     /** 闭店时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "闭店/停业时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date closeDate;
 
     /** 暂停营业时长 */
     private Integer closeDays;
 
     /** 闭店原因 */
-    @Excel(name = "闭店原因")
     private String closeReason;
 
     /** 验收信息 */
-    @Excel(name = "验收信息")
     private String checkInfo;
 }

@@ -65,7 +65,12 @@
             <if test="inputDateStart != null  and inputDateStart != ''">and date_format(biz_customer.input_date,'%y%m%d') &gt;= date_format(#{inputDateStart},'%y%m%d')</if>
             <if test="inputDateEnd != null and inputDateEnd != ''">and date_format(biz_customer.input_date,'%y%m%d')  &lt;= date_format(#{inputDateEnd},'%y%m%d')</if>
             <if test="status != null and status != ''">and biz_customer.status = #{status}</if>
-            <if test="genjinStatus != null and genjinStatus != ''">and biz_customer.genjin_status = #{genjinStatus}</if>
+            <choose>
+                <when test="genjinStatus != null and genjinStatus != ''">and biz_customer.genjin_status = #{genjinStatus}</when>
+                <otherwise>
+                    and biz_customer.genjin_status not in ('5','7','8')
+                </otherwise>
+            </choose>
             <if test="daysFirst != null and daysFirst != ''">and biz_customer.genjin_date &lt;= DATE_SUB(NOW(),INTERVAL #{daysFirst} DAY) </if>
             <if test="daysSecond != null and daysSecond != ''">and biz_customer.genjin_date &gt;= DATE_SUB(NOW(),INTERVAL #{daysSecond} DAY)</if>
             <if test="keywords != null and keywords != ''">and (

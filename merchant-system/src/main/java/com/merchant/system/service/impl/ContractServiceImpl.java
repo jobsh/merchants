@@ -129,12 +129,20 @@ public class ContractServiceImpl implements IContractService
         // 创建人
         String createBy = tokenService.getLoginUser(ServletUtils.getRequest()).getUsername();
         contractBO.setCreateBy(createBy);
-        if (DateUtils.getNowDate().before(DateUtils.parseDate(contractBO.getBeginDate()))) {
+        Date now = DateUtils.getNowDate();
+        Date start = DateUtils.parseDate(contractBO.getBeginDate());
+        Date end = DateUtils.parseDate(contractBO.getEndDate());
+        boolean isIn = DateUtils.isInTimeLine(now, start, end);
+
+        if (now.before(start)) {
             // 如果当前时间在合同开始时间之前，设置合同状态为有效未执行
             contractBO.setStatus(ContractStatus.EFFECTIVE_NOT_EXECUTE.getCode());
-        } else {
-            // 否则设置合同状态为有效执行中
+        }
+        if (isIn) {
             contractBO.setStatus(ContractStatus.EFFECTIVE_EXECUTING.getCode());
+        }
+        else {
+            contractBO.setStatus(ContractStatus.EXPIRED.getCode());
         }
         // type为新签合同
         contractBO.setType(ContractStatus.SIGN_NEW.getCode());
@@ -205,6 +213,7 @@ public class ContractServiceImpl implements IContractService
         JingyingManagerFee oldManagerFee = oldFee.getJingyingManagerFee();
         JingyingManagerFee newManagerFee = newFee.getJingyingManagerFee();
         // 计算经营管理费total
+        // Integer total = newManagerFee.getDetail().stream().mapToInt(item -> Integer.parseInt(item.get("money"))).reduce(Integer::sum).orElse(0);
         Integer total = newManagerFee.getDetail().stream().mapToInt(item -> Integer.parseInt(item.get("money"))).sum();
         newManagerFee.setTotal(total + "");
         contractBO.setFee(JSON.toJSONString(newFee));

@@ -53,11 +53,7 @@ public class ContractController extends BaseController {
     @Autowired
     private IContractService contractService;
     @Autowired
-    private IContractLogService contractLogService;
-    @Autowired
     private IDianmianService dianmianService;
-    @Autowired
-    private ISysUserService userService;
     @Autowired
     private TokenService tokenService;
 
