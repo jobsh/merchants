@@ -303,11 +303,11 @@ public class ContractServiceImpl implements IContractService
         Contract contract = contractMapper.selectContractById(contractBO.getId());
         ContractOperLog contractOperLog = new ContractOperLog();
         if (contract.getEndDate().after(DateUtils.parseDate(contractBO.getTerminateDate()))) {
-            contractBO.setStatus(ContractStatus.EXPIRED_TERMINATION.getCode());
-            contractOperLog.setTitle("到期解约");
-        } else {
             contractBO.setStatus(ContractStatus.UNEXPIRED_TERMINATION.getCode());
             contractOperLog.setTitle("未到期解约");
+        } else {
+            contractBO.setStatus(ContractStatus.EXPIRED_TERMINATION.getCode());
+            contractOperLog.setTitle("到期解约");
         }
 //        this.addSave(file, contractBO); 改为七牛云
         int res = contractMapper.updateContract(contractBO);

@@ -117,4 +117,6 @@ public interface SysUserMapper
     public SysUser checkEmailUnique(String email);
 
     SysUser selectUserByPhone(String phone);
+
+    SysUser selectUserByPhoneAndNotDel(String username);
 }

@@ -11,6 +11,10 @@ import lombok.Data;
 @Data
 public class ContractDandianAndQuyuVO {
     private String deptName;
-    private Integer dandianContractNum;
+    /** 单店数量 */
+    private Integer dandianNum;
+    /** 区域店面数量 */
+    private Integer quyuDianmianNum;
+    /** 区域合同数量 */
     private Integer quyuContractNum;
 }

@@ -457,4 +457,9 @@ public class SysUserServiceImpl implements ISysUserService
         return successMsg.toString();
     }
 
+    @Override
+    public SysUser selectUserByPhoneAndNotDel(String username) {
+        return userMapper.selectUserByPhoneAndNotDel(username);
+    }
+
 }
