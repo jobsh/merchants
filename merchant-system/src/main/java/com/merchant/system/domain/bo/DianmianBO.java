@@ -148,6 +148,16 @@ public class DianmianBO extends BaseEntity {
     @ApiModelProperty(value = "最晚录入时间", name = "openDateEnd")
     private String openDateEnd;
 
+    /** 开店日期 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @ApiModelProperty(value = "最早开店时间", name = "openDateStart")
+    private String setDateStart;
+
+    /** 开店日期 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @ApiModelProperty(value = "最晚录入时间", name = "openDateEnd")
+    private String setDateEnd;
+
     /** 闭店/停业时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
     @ApiModelProperty(value = "最早闭店停业时间", name = "closeDateStart")

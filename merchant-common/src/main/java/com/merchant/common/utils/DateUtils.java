@@ -189,4 +189,129 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils
         }
         return false;
     }
+
+    /**
+     * 日期格式化
+     */
+    public static String format(Calendar c, String pattern) {
+        Calendar calendar = null;
+        if (c != null) {
+            calendar = c;
+        } else {
+            calendar = Calendar.getInstance();
+        }
+        if (pattern == null || pattern.equals("")) {
+            pattern = YYYY_MM_DD_HH_MM_SS;
+        }
+        SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+        return sdf.format(calendar.getTime());
+    }
+
+    /**
+     * 获得某月第一天
+     * @param month 第几个月
+     * @return    yyyy-MM-dd
+     */
+    public static String getMonthFirstDay(int month) {
+        Calendar strDate = Calendar.getInstance();
+        int day = strDate.get(Calendar.DAY_OF_MONTH);
+        int currentMonth = strDate.get(Calendar.MONTH);
+        strDate.add(Calendar.DATE,-(day-1));  // 本月第一天
+        strDate.add(Calendar.MONTH,-(currentMonth-month+1));  //
+        return format(strDate,"yyyy-MM-dd");
+    }
+
+    /**
+     * 获得某月最后一天
+     * @param month 第几个月
+     * @return    yyyy-MM-dd
+     */
+    public static String getMonthLastDay(int month) {
+        Calendar strDate = Calendar.getInstance();
+        int day = strDate.get(Calendar.DAY_OF_MONTH);
+        int currentMonth = strDate.get(Calendar.MONTH);
+        strDate.add(Calendar.DATE,-day);
+        strDate.add(Calendar.MONTH,-currentMonth+month);
+        return format(strDate,"yyyy-MM-dd");
+    }
+
+    /**
+     * 当前季度的开始时间
+     *
+     * @return
+     */
+    public static String getCurrentQuarterStartTime() {
+        Calendar c = Calendar.getInstance();
+        int currentMonth = c.get(Calendar.MONTH) + 1;
+        String now = null;
+        try {
+            if (currentMonth <= 3)
+                c.set(Calendar.MONTH, 1);
+            else if (currentMonth <= 6)
+                c.set(Calendar.MONTH, 3);
+            else if (currentMonth <= 9)
+                c.set(Calendar.MONTH, 4);
+            else if (currentMonth <= 12)
+                c.set(Calendar.MONTH, 9);
+            c.set(Calendar.DATE, 1);
+            now = format(c, YYYY_MM_DD) + " 00:00:00";
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return now;
+    }
+
+    /**
+     * 当前季度的结束时间
+     *
+     * @return
+     */
+    public static String getCurrentQuarterEndTime() {
+        Calendar c = Calendar.getInstance();
+        int currentMonth = c.get(Calendar.MONTH) + 1;
+        String now = null;
+        try {
+            if (currentMonth <= 3) {
+                c.set(Calendar.MONTH, 2);
+                c.set(Calendar.DATE, 31);
+            } else if (currentMonth <= 6) {
+                c.set(Calendar.MONTH, 5);
+                c.set(Calendar.DATE, 30);
+            } else if (currentMonth <= 9) {
+                c.set(Calendar.MONTH,8);
+                c.set(Calendar.DATE, 30);
+            } else if (currentMonth <= 12) {
+                c.set(Calendar.MONTH, 11);
+                c.set(Calendar.DATE, 31);
+            }
+            now = format(c, YYYY_MM_DD) + " 23:59:59";
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return now;
+    }
+
+    /**
+     * 获取本年的第一天
+     * @return String
+     * **/
+    public static String getCurrentYearStart(){
+        return new SimpleDateFormat("yyyy").format(new Date())+"-01-01";
+    }
+
+    /**
+     * 获取本年的最后一天
+     * @return String
+     * **/
+    public static String getCurrentYearEnd(){
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.MONTH,calendar.getActualMaximum(Calendar.MONTH));
+        calendar.set(Calendar.DAY_OF_MONTH,calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+        Date currYearLast = calendar.getTime();
+        return new SimpleDateFormat("yyyy-MM-dd").format(currYearLast)+" 23:59:59";
+    }
+//    public static void main(String[] args) {
+//        System.out.println(getCurrentQuarterStartTime());
+//        System.out.println(getCurrentQuarterEndTime());
+//    }
 }

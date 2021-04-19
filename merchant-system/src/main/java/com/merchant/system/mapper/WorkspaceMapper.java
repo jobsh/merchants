@@ -49,4 +49,13 @@ public interface WorkspaceMapper {
      * @return
      */
     List<CustomerFeeWorkSpaceVO> selectCustomerFeeWorkspaceList(@Param("type") String type,@Param("deptId") Integer deptId);
+
+    /**
+     * 获取某公司签约数量
+     * @param companyId 公司id
+     * @param begin 开始时间
+     * @param end   结束时间
+     * @return
+     */
+    Integer selectQyNumByCompanyId(@Param("companyId") Integer companyId, @Param("begin") String begin, @Param("end") String end);
 }

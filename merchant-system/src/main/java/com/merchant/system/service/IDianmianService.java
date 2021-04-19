@@ -31,6 +31,14 @@ public interface IDianmianService
     public List<DianmianVO> selectDianmianList(DianmianBO dianmianBO);
 
     /**
+     * 查询店面地图
+     *
+     * @param dianmianBO 店面管理
+     * @return 店面管理集合
+     */
+    public List<DianmianVO> selectDianmianListForMap(DianmianBO dianmianBO);
+
+    /**
      * 新增店面管理
      * 
      * @param dianmian 店面管理

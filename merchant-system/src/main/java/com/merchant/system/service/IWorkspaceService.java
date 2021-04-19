@@ -4,6 +4,7 @@ import com.merchant.system.domain.vo.*;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Classname Workspace
@@ -22,4 +23,23 @@ public interface IWorkspaceService {
     List<CustomerWorkSpaceVO> selectCustomerWorkspaceList(String type, Integer deptId);
 
     List<CustomerFeeWorkSpaceVO> selectCustomerFeeWorkspaceList(String type, Integer deptId);
+
+    /**
+     * 获取某公司某月的合同签约量
+     * @param companyId
+     * @param month
+     * @return
+     */
+    Integer selectQyNumByCompanyId(Integer companyId,Integer month);
+
+    /**
+     * 获取每个公司的某个月的合同签约量
+     * @param month
+     * @return
+     */
+    Map<String, Integer> selectQyNumAll(Integer month);
+
+    Map<String, Integer> selectQyNumAllOfQuarter();
+
+    Map<String, Integer> selectQyNumAllOfYear();
 }

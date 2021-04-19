@@ -55,6 +55,18 @@ public class DianmianController extends BaseController
         return getDataTable(list);
     }
 
+    /**
+     * 查询店面管理列表
+     */
+    @ApiOperation(value = "查询店面管理列表", notes = "查询店面管理列表", httpMethod = "POST")
+    @PostMapping("/list/map")
+    public TableDataInfo listForMap(@RequestBody DianmianBO dianmianBO)
+    {
+        startPage();
+        List<DianmianVO> list = dianmianService.selectDianmianListForMap(dianmianBO);
+        return getDataTable(list);
+    }
+
 
     /**
      * 根据合同num查询店面管理列表

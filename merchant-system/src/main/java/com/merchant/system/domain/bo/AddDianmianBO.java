@@ -82,17 +82,14 @@ public class AddDianmianBO extends BaseEntity {
 
     /** 经度 */
     @ApiModelProperty(value = "经度", name = "longitude")
-    @NotNull(message = "没有上传经度坐标")
     private String longitude;
 
     /** 纬度 */
     @ApiModelProperty(value = "纬度", name = "latitude")
-    @NotNull(message = "没有上传纬度坐标")
     private String latitude;
 
     /** 店面详细地址 */
     @ApiModelProperty(value = "店面详细地址", name = "address")
-    @NotNull(message = "没有上传店面详细地址")
     private String address;
 
     /** 验收结果 */

@@ -6,6 +6,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <resultMap type="com.merchant.system.domain.vo.CustomerReportVO" id="CustomerReportVO">
         <result column="user_name" property="userName" />
+        <result column="status" property="status" />
         <result column="phonenumber" property="phonenumber" />
         <result column="dept_name" property="deptName" />
         <result column="company_name" property="companyName" />
@@ -22,6 +23,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <resultMap type="com.merchant.system.domain.vo.CustomerFeeReportVO" id="CustomerFeeReportVO">
         <result column="user_name" property="userName" />
+        <result column="status" property="status" />
         <result column="phonenumber" property="phonenumber" />
         <result column="dept_name" property="deptName" />
         <result column="company_name" property="companyName" />
@@ -42,6 +44,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result column="dept_name" property="deptName" />
         <result property="companyName" column="company_name"/>
         <result column="user_name" property="userName" />
+        <result column="status" property="status" />
         <result column="post_name" property="postName" />
         <result column="num" property="contractNum" />
         <result column="code" property="contractCode" />
@@ -56,6 +59,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select
             u.user_name,
             u.phonenumber,
+            u.status,
             d.id,
             d.dept_name,
             cm.`name` company_name,
@@ -158,6 +162,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         ON
             dianmian.uid = u.id
         <where>
+            u.del_flag = '0'
             <if test="deptId != null and deptId != 0">
                 AND (u.dept_id = #{deptId} OR u.dept_id IN ( SELECT t.id FROM sys_dept t WHERE find_in_set(#{deptId}, ancestors) ))
             </if>
@@ -172,6 +177,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select
             u.user_name,
             u.phonenumber,
+            u.status,
             d.id,
             d.dept_name,
             cm.`name` company_name,
@@ -232,6 +238,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         ON fee.uid = u.id
         -- 查询条件
         <where>
+            u.del_flag = '0'
             <if test="deptId != null and deptId != 0">
                 AND (u.dept_id = #{deptId} OR u.dept_id IN ( SELECT t.id FROM sys_dept t WHERE find_in_set(#{deptId}, ancestors) ))
             </if>
@@ -245,6 +252,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             d.dept_name, -- 公司部门
             cm.`name` company_name,  -- 公司名称
             u.user_name, -- 姓名
+            u.status,
             p.post_name, -- 职务
             contract.num, -- 合同
             contract.code, -- 合同
@@ -299,7 +307,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         ON fee.contract_num = contract.num
         -- 查询条件
         <where>
-            1=1
+            u.del_flag = '0'
             <if test="deptId != null and deptId != 0">
                 AND (u.dept_id = #{deptId} OR u.dept_id IN ( SELECT t.id FROM sys_dept t WHERE find_in_set(#{deptId}, ancestors) ))
             </if>

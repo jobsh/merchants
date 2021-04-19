@@ -203,11 +203,12 @@ public class SysUserController extends BaseController
     @PutMapping("/resetPwd")
     public AjaxResult resetPwd(@RequestBody SysUser user)
     {
-        user = userService.selectUserById(user.getId());
-        userService.checkUserAllowed(user);
-        user.setPassword(SecurityUtils.encryptPassword(user.getPassword()));
-        user.setUpdateBy(SecurityUtils.getUsername());
-        int res = userService.resetPwd(user);
+
+        SysUser selectUser = userService.selectUserById(user.getId());
+        userService.checkUserAllowed(selectUser);
+        selectUser.setPassword(SecurityUtils.encryptPassword(user.getPassword()));
+        selectUser.setUpdateBy(SecurityUtils.getUsername());
+        int res = userService.resetPwd(selectUser);
         return toAjax(res);
     }
 

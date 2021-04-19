@@ -71,6 +71,19 @@ public class DianmianServiceImpl implements IDianmianService
     }
 
     /**
+     * 查询店面管理列表
+     *
+     * @param dianmianBO 店面管理
+     * @return 店面管理
+     */
+    @Override
+    @DataScope(deptAlias = "d", userAlias = "u")
+    public List<DianmianVO> selectDianmianListForMap(DianmianBO dianmianBO)
+    {
+        return dianmianMapper.selectDianmianListForMap(dianmianBO);
+    }
+
+    /**
      * 新增店面管理
      * 
      * @param dianmian 店面管理

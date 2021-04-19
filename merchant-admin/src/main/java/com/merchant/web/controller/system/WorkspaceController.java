@@ -5,15 +5,14 @@ import com.merchant.common.utils.SecurityUtils;
 import com.merchant.system.domain.vo.ContractDandianAndQuyuVO;
 import com.merchant.system.domain.vo.DianmianAndContractAllVO;
 import com.merchant.system.domain.vo.DianmianNumVO;
+import com.merchant.system.service.ISysConfigService;
 import com.merchant.system.service.IWorkspaceService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -71,6 +70,27 @@ public class WorkspaceController {
             deptId = SecurityUtils.getLoginUser().getUser().getDept().getDeptId().intValue();
         }
         return AjaxResult.success(workspaceService.selectCustomerFeeWorkspaceList(type,deptId));
+    }
+
+    @ApiOperation(value = "获取公司签约合同数量", notes = "获取公司签约合同数量", httpMethod = "GET")
+    @GetMapping("qyNum/all/{month}")
+    @PreAuthorize("@ss.hasPermi('workspace:above')")
+    public AjaxResult getQyNumAll(@ApiParam(name = "month", value = "月份")@PathVariable Integer month) {
+        return AjaxResult.success(workspaceService.selectQyNumAll(month));
+    }
+
+    @ApiOperation(value = "获取公司签约合同数量-本季度", notes = "获取公司签约合同数量-本季度", httpMethod = "GET")
+    @GetMapping("qyNum/all/quarter")
+    @PreAuthorize("@ss.hasPermi('workspace:above')")
+    public AjaxResult getQyNumAllOfQuarter() {
+        return AjaxResult.success(workspaceService.selectQyNumAllOfQuarter());
+    }
+
+    @ApiOperation(value = "获取公司签约合同数量-本年", notes = "获取公司签约合同数量-本年", httpMethod = "GET")
+    @GetMapping("qyNum/all/year")
+    @PreAuthorize("@ss.hasPermi('workspace:above')")
+    public AjaxResult getQyNumAllOfYear() {
+        return AjaxResult.success(workspaceService.selectQyNumAllOfYear());
     }
 
 }
