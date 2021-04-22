@@ -19,10 +19,7 @@ import com.merchant.common.utils.ServletUtils;
 import com.merchant.common.utils.file.FileUploadUtils;
 import com.merchant.common.utils.ip.IpUtils;
 import com.merchant.system.domain.*;
-import com.merchant.system.domain.bo.AddContractBO;
-import com.merchant.system.domain.bo.ContractBO;
-import com.merchant.system.domain.bo.ContractCompareBO;
-import com.merchant.system.domain.bo.CustomerBO;
+import com.merchant.system.domain.bo.*;
 import com.merchant.system.domain.vo.DianmianVO;
 import com.merchant.system.mapper.ContractMapper;
 import com.merchant.system.service.*;
@@ -96,14 +93,14 @@ public class ContractServiceImpl implements IContractService
     /**
      * 查询合同列表
      * 
-     * @param contractBO 合同
+     * @param contractParamBO 合同
      * @return 合同
      */
     @Override
     @DataScope(deptAlias = "d", userAlias = "u")
-    public List<Contract> selectContractList(ContractBO contractBO)
+    public List<Contract> selectContractList(ContractParamBO contractParamBO)
     {
-        return contractMapper.selectContractList(contractBO);
+        return contractMapper.selectContractList(contractParamBO);
     }
 
     /**
@@ -292,9 +289,9 @@ public class ContractServiceImpl implements IContractService
     @Override
     @DataScope(deptAlias = "d", userAlias = "u")
     public List<Contract> selectContractListByCustomerId(Integer customerId) {
-        ContractBO contractBO = new ContractBO();
-        contractBO.setCustomerId(customerId);
-        return contractMapper.selectContractList(contractBO);
+        ContractParamBO contractParamBO = new ContractParamBO();
+        contractParamBO.setCustomerId(customerId);
+        return contractMapper.selectContractList(contractParamBO);
     }
 
     @Override

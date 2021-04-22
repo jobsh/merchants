@@ -114,7 +114,7 @@
         FROM
         biz_dianmian d
         WHERE
-        d.`status` BETWEEN 1 AND 3 and d.type = '0'
+        d.`status` BETWEEN 1 AND 3 and (d.type = '0' or d.type = '2 ')
         <if test="type == 'month'">and DATE_FORMAT(d.open_date, '%Y%m' ) = DATE_FORMAT( CURDATE() , '%Y%m' )</if>
         <if test="type == 'year'">and YEAR(d.open_date) = YEAR(NOW())</if>
         group by
@@ -316,7 +316,7 @@
             </if>
         </where>
         GROUP BY
-            u.dept_id
+        u.dept_id
         ) fee
     </select>
     <select id="selectQyNumByCompanyId" resultType="java.lang.Integer">
@@ -324,16 +324,16 @@
             count(1)
         FROM
             biz_contract c
-        left JOIN
+                left JOIN
             sys_dept d
-        on d.id = c.dept_id
+            on d.id = c.dept_id
         WHERE
             c.`status` in ('0','1','3')
-        AND
+          AND
             c.type = '0'
-        AND
+          AND
             d.company_id = #{companyId}
-        AND
+          AND
             c.sign_date &gt;= #{begin} and c.sign_date &lt;= #{end}
     </select>
 </mapper>

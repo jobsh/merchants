@@ -113,7 +113,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         ON fee.contract_num = biz_contract.num
     </sql>
 
-    <select id="selectContractList" parameterType="ContractBO" resultMap="ContractResult">
+    <select id="selectContractList" parameterType="ContractParamBO" resultMap="ContractResult">
         <include refid="selectContractVo"/>
         <where>
             <if test="deptId != null and deptId != 0">
@@ -146,6 +146,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                 instr(biz_contract.customer_phone, #{keywords}) +
                 instr(biz_contract.num, #{keywords})
                 ) > 0</if>
+<!--            <if test="daysFirst != null and daysFirst != ''">and biz_contract.end_date &gt;= DATE_ADD(NOW(),INTERVAL #{daysFirst} DAY)</if>-->
+            <if test="daysSecond != null and daysSecond != ''">and biz_contract.end_date &lt;= DATE_ADD(NOW(),INTERVAL #{daysSecond} DAY) </if>
             <!-- 数据范围过滤 -->
             ${params.dataScope}
         </where>

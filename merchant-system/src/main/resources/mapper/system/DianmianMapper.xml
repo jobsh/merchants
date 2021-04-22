@@ -106,7 +106,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="diandongPhone != null  and diandongPhone != ''"> and dianmian.diandong_phone = #{diandongPhone}</if>
             <if test="companyId != null "> and dianmian.company_id = #{companyId}</if>
             <if test="deptName != null  and deptName != ''"> and d.dept_name like concat('%', #{deptName}, '%')</if>
-            <if test="name != null  and name != ''"> and dianmian.`name` like concat('%', #{name}, '%')</if>
             <choose>
                 <when test="status != null  and status != ''">
                     and dianmian.status = #{status}
@@ -115,7 +114,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                     and dianmian.status BETWEEN 1 AND 3
                 </otherwise>
             </choose>
-            <if test="status != null  and status != ''"> and dianmian.status = #{status}</if>
             <if test="province != null  and province != ''"> and dianmian.province = #{province}</if>
             <if test="city != null  and city != ''"> and dianmian.city = #{city}</if>
             <if test="district != null  and district != ''"> and dianmian.district = #{district}</if>
@@ -142,37 +140,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectDianmianVo"/>
         <where>
             dianmian.status BETWEEN 1 AND 2
-            <if test="deptId != null and deptId != 0">
-                AND (u.dept_id = #{deptId} OR u.dept_id IN ( SELECT t.id FROM sys_dept t WHERE find_in_set(#{deptId}, ancestors) ))
-            </if>
-            <if test="userId !=  null  and userId != ''">and biz_contract.manager_id = #{userId}</if>
-            <if test="diandongId != null "> and dianmian.diandong_id = #{diandongId}</if>
-            <if test="diandongName != null  and diandongName != ''"> and dianmian.diandong_name like concat('%', #{diandongName}, '%')</if>
-            <if test="diandongPhone != null  and diandongPhone != ''"> and dianmian.diandong_phone = #{diandongPhone}</if>
-            <if test="companyId != null "> and dianmian.company_id = #{companyId}</if>
-            <if test="deptName != null  and deptName != ''"> and d.dept_name like concat('%', #{deptName}, '%')</if>
-            <if test="name != null  and name != ''"> and dianmian.`name` like concat('%', #{name}, '%')</if>
-            <if test="status != null  and status != ''"> and dianmian.status = #{status}</if>
             <if test="province != null  and province != ''"> and dianmian.province = #{province}</if>
             <if test="city != null  and city != ''"> and dianmian.city = #{city}</if>
             <if test="district != null  and district != ''"> and dianmian.district = #{district}</if>
-            <if test="address != null  and address != ''"> and dianmian.address = #{address}</if>
-            <if test="checkResult != null  and checkResult != ''"> and dianmian.check_result = #{checkResult}</if>
-            <if test="setDateStart != null  and setDateStart != ''">and dianmian.set_date &gt;= #{setDateStart}</if>
-            <if test="setDateEnd != null  and setDateEnd != ''">and dianmian.set_date &lt;= #{setDateEnd}</if>
-            <if test="contractNum != null  and contractNum != ''"> and dianmian.contract_num = #{contractNum}</if>
-            <if test="type != null  and type != ''"> and dianmian.`type` = #{type}</if>
-            <if test="area != null  and area != ''"> and dianmian.area = #{area}</if>
-            <if test="username != null  and username != ''"> and c.username like concat('%', #{username}, '%')</if>
-            <if test="keywords != null and keywords != ''">and (
-                instr(dianmian.name, #{keywords}) +
-                instr(biz_contract.code, #{keywords}) +
-                instr(c.name, #{keywords})
-                ) > 0</if>
-            <!-- 数据范围过滤 -->
-            ${params.dataScope}
         </where>
-        order by dianmian.input_date desc
     </select>
 
     <select id="selectDianmianById" parameterType="Integer" resultMap="DianmianResult">

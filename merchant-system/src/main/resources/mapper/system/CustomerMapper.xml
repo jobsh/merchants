@@ -71,8 +71,8 @@
                     and biz_customer.genjin_status not in ('5','7','8')
                 </otherwise>
             </choose>
-            <if test="daysFirst != null and daysFirst != ''">and biz_customer.genjin_date &lt;= DATE_SUB(NOW(),INTERVAL #{daysFirst} DAY) </if>
             <if test="daysSecond != null and daysSecond != ''">and biz_customer.genjin_date &gt;= DATE_SUB(NOW(),INTERVAL #{daysSecond} DAY)</if>
+            <if test="daysFirst != null and daysFirst != ''">and biz_customer.genjin_date &lt;= DATE_SUB(NOW(),INTERVAL #{daysFirst} DAY) </if>
             <if test="keywords != null and keywords != ''">and (
                 instr(d.dept_name, #{keywords}) +
                 instr(biz_customer.name, #{keywords}) +

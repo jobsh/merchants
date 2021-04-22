@@ -4,6 +4,7 @@ import java.util.List;
 import com.merchant.system.domain.Contract;
 import com.merchant.system.domain.bo.AddContractBO;
 import com.merchant.system.domain.bo.ContractBO;
+import com.merchant.system.domain.bo.ContractParamBO;
 
 /**
  * 合同Mapper接口
@@ -26,10 +27,10 @@ public interface ContractMapper
     /**
      * 查询合同列表
      * 
-     * @param contractBO 合同
+     * @param contractParamBO 合同
      * @return 合同集合
      */
-    public List<Contract> selectContractList(ContractBO contractBO);
+    public List<Contract> selectContractList(ContractParamBO contractParamBO);
 
     /**
      * 新增合同

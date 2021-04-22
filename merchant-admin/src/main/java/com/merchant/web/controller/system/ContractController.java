@@ -20,6 +20,7 @@ import com.merchant.system.domain.Contract;
 import com.merchant.system.domain.Dianmian;
 import com.merchant.system.domain.bo.AddContractBO;
 import com.merchant.system.domain.bo.ContractBO;
+import com.merchant.system.domain.bo.ContractParamBO;
 import com.merchant.system.domain.vo.DianmianVO;
 import com.merchant.system.service.IContractLogService;
 import com.merchant.system.service.IContractService;
@@ -61,10 +62,10 @@ public class ContractController extends BaseController {
      * 查询合同列表
      */
     @PostMapping("/list")
-    public TableDataInfo list(@RequestBody ContractBO contractBO) {
+    public TableDataInfo list(@RequestBody ContractParamBO contractParamBO) {
         // 默认查询未失效的,在mapper.xml中控制，已失效状态为2
         startPage();
-        List<Contract> list = contractService.selectContractList(contractBO);
+        List<Contract> list = contractService.selectContractList(contractParamBO);
         return getDataTable(list);
     }
 
@@ -94,8 +95,8 @@ public class ContractController extends BaseController {
     @PreAuthorize("@ss.hasPermi('contract:contractManager:export')")
     @Log(title = "合同", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
-    public AjaxResult export(ContractBO contractBO) {
-        List<Contract> list = contractService.selectContractList(contractBO);
+    public AjaxResult export(ContractParamBO contractParamBO) {
+        List<Contract> list = contractService.selectContractList(contractParamBO);
         ExcelUtil<Contract> util = new ExcelUtil<>(Contract.class);
         return util.exportExcel(list, "contractManager");
     }
