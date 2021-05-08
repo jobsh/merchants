@@ -194,7 +194,7 @@ public class DianmianServiceImpl implements IDianmianService
         // 根据合同ids查询出所有的店面  =》 店面合同id
         List<Dianmian> dianmianList = dianmianMapper.selectDianmianListByIds(ids);
         List<String> contractNumList = dianmianList.stream().map(Dianmian::getContractNum).collect(Collectors.toList());
-//
+
         Map<String, Long> map = contractNumList.stream().collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
 
         for (Map.Entry<String, Long> entry : map.entrySet()) {
