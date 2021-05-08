@@ -283,5 +283,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
+
+    <select id="selectDianmianListByIds" parameterType="String" resultMap="DianmianResult">
+        select * from biz_dianmian where biz_dianmian.id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
     
 </mapper>

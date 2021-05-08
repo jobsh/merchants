@@ -256,6 +256,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <update id="updateContract" parameterType="ContractBO">
         update biz_contract
         <trim prefix="SET" suffixOverrides=",">
+            <if test="id != null and id != ''">id = #{id},</if>
             <if test="deptId != null and deptId != ''">dept_id = #{deptId},</if>
             <if test="num != null and num != ''">num = #{num},</if>
             <if test="code != null and code != ''">code = #{code},</if>
@@ -294,6 +295,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="imgs != null and imgs != ''">imgs = #{imgs},</if>
         </trim>
         where biz_contract.id = #{id}
+    </update>
+
+    <update id="updateDianmianNumByNum" parameterType="ContractBO">
+        update biz_contract bc set bc.dianmian_num = #{dianmianNum} where bc.num = #{num}
     </update>
     <update id="autoExpire" parameterType="ContractBO">
         update

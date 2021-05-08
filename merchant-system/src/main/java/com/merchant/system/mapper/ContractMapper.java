@@ -49,6 +49,14 @@ public interface ContractMapper
     public int updateContract(ContractBO contractBO);
 
     /**
+     * 通过合同num修改合同店面数量
+     *
+     * @param contractBO 合同
+     * @return 结果
+     */
+    public int updateDianmianNumByNum(ContractBO contractBO);
+
+    /**
      * 删除合同
      * 
      * @param id 合同ID

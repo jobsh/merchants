@@ -78,5 +78,12 @@ public interface DianmianMapper
      */
     public int deleteDianmianByIds(Integer[] ids);
 
+    /**
+     * 根据店面ids查询店面List
+     * @param ids
+     * @return
+     */
+    public List<Dianmian> selectDianmianListByIds(Integer[] ids);
+
     List<DianmianVO> selectDianmianByContractNum(String contractNum);
 }

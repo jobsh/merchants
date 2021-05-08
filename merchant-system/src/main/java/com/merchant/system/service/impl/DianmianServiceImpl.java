@@ -1,6 +1,9 @@
 package com.merchant.system.service.impl;
 
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import com.merchant.common.annotation.DataScope;
 import com.merchant.common.enums.DianmianStatus;
@@ -14,7 +17,7 @@ import com.merchant.system.domain.bo.DianmianBO;
 import com.merchant.system.domain.vo.DianmianVO;
 import com.merchant.system.mapper.ContractMapper;
 import com.merchant.system.mapper.DianmianLogMapper;
-import com.merchant.system.service.IContractService;
+import io.swagger.models.auth.In;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,7 +28,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import javax.xml.crypto.Data;
 
 /**
  * 店面管理Service业务层处理
@@ -44,6 +46,9 @@ public class DianmianServiceImpl implements IDianmianService
 
     @Resource
     private ContractMapper contractMapper;
+
+    @Autowired
+    private ContractServiceImpl contractService;
     /**
      * 查询店面管理
      * 
@@ -183,8 +188,34 @@ public class DianmianServiceImpl implements IDianmianService
      * @return 结果
      */
     @Override
+    @Transactional
     public int deleteDianmianByIds(Integer[] ids)
     {
+        // 根据合同ids查询出所有的店面  =》 店面合同id
+        List<Dianmian> dianmianList = dianmianMapper.selectDianmianListByIds(ids);
+        List<String> contractNumList = dianmianList.stream().map(Dianmian::getContractNum).collect(Collectors.toList());
+//
+        Map<String, Long> map = contractNumList.stream().collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+//        Map<Integer,Integer> map = new ConcurrentHashMap<>();
+//        for(Integer id : dianmianIdList){
+//            int i = 1; //定义一个计数器，用来记录重复数据的个数
+//            if(map.get(id) != null){
+//                i=map.get(id)+1;
+//            }
+//            map.put(id,i);
+//        }
+
+        for (Map.Entry<String, Long> entry : map.entrySet()) {
+            String key = entry.getKey();
+            Integer value = entry.getValue().intValue();
+            Contract contract = contractService.selectContractByNum(key);
+            ContractBO contractBO = new ContractBO();
+            contractBO.setId(contract.getId());
+            contractBO.setNum(contract.getNum());
+            contractBO.setDianmianNum(contract.getDianmianNum() - value);
+            contractMapper.updateContract(contractBO);
+        }
+
         return dianmianMapper.deleteDianmianByIds(ids);
     }
 
