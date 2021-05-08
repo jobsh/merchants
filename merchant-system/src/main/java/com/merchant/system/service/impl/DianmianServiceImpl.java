@@ -2,6 +2,7 @@ package com.merchant.system.service.impl;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -191,12 +192,10 @@ public class DianmianServiceImpl implements IDianmianService
     @Transactional
     public int deleteDianmianByIds(Integer[] ids)
     {
-        List<String> contractNumList = dianmianMapper.selectDianmianListByIds(ids)
-                                                     .stream()
-                                                     .map(Dianmian::getContractNum)
-                                                     .collect(Collectors.toList());
-
-        Map<String, Long> map = contractNumList.stream().collect(Collectors.groupingByConcurrent(Function.identity(), Collectors.counting()));
+        ConcurrentMap<String, Long> map = dianmianMapper.selectDianmianListByIds(ids)
+                                                        .stream()
+                                                        .map(Dianmian::getContractNum)
+                                                        .collect(Collectors.groupingByConcurrent(Function.identity(), Collectors.counting()));
 
         map.forEach((key, value) -> {
             Integer num = value.intValue();
