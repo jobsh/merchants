@@ -196,14 +196,6 @@ public class DianmianServiceImpl implements IDianmianService
         List<String> contractNumList = dianmianList.stream().map(Dianmian::getContractNum).collect(Collectors.toList());
 //
         Map<String, Long> map = contractNumList.stream().collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
-//        Map<Integer,Integer> map = new ConcurrentHashMap<>();
-//        for(Integer id : dianmianIdList){
-//            int i = 1; //定义一个计数器，用来记录重复数据的个数
-//            if(map.get(id) != null){
-//                i=map.get(id)+1;
-//            }
-//            map.put(id,i);
-//        }
 
         for (Map.Entry<String, Long> entry : map.entrySet()) {
             String key = entry.getKey();
