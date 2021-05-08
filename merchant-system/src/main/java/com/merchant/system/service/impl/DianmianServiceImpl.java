@@ -191,11 +191,12 @@ public class DianmianServiceImpl implements IDianmianService
     @Transactional
     public int deleteDianmianByIds(Integer[] ids)
     {
-        // 根据合同ids查询出所有的店面  =》 店面合同id
-        List<Dianmian> dianmianList = dianmianMapper.selectDianmianListByIds(ids);
-        List<String> contractNumList = dianmianList.stream().map(Dianmian::getContractNum).collect(Collectors.toList());
+        List<String> contractNumList = dianmianMapper.selectDianmianListByIds(ids)
+                                                     .stream()
+                                                     .map(Dianmian::getContractNum)
+                                                     .collect(Collectors.toList());
 
-        Map<String, Long> map = contractNumList.stream().collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+        Map<String, Long> map = contractNumList.stream().collect(Collectors.groupingByConcurrent(Function.identity(), Collectors.counting()));
 
         map.forEach((key, value) -> {
             Integer num = value.intValue();
