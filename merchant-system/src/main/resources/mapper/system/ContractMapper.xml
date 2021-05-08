@@ -136,6 +136,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="checkDateEnd != null  and checkDateEnd != ''">and biz_contract.check_date &lt;= #{checkDateEnd}</if>
             <if test="endDateStart != null  and endDateStart != ''">and biz_contract.end_date &gt;= #{endDateStart}</if>
             <if test="endDateEnd != null  and endDateEnd != ''">and biz_contract.end_date &lt;= #{endDateEnd}</if>
+            <if test="terminateDateStart != null and terminateDateStart != '' and terminateDateEnd != null and terminateDateEnd != ''">and biz_contract.terminate_date between #{terminateDateStart} and #{terminateDateEnd}</if>
             <if test="status == null or status == ''"> and biz_contract.status between '0' and '1'</if>
             <if test="status != null and status != ''"> and biz_contract.status = #{status}</if>
             <if test="type != null and type != ''"> and biz_contract.type = #{type}</if>

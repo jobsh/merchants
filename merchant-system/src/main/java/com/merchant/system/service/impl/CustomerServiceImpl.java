@@ -87,7 +87,7 @@ public class CustomerServiceImpl implements ICustomerService {
      */
 
     @Override
-    @DataScope(userAlias = "u",deptAlias = "d",companyAlias = "company")
+//    @DataScope(userAlias = "u",deptAlias = "d",companyAlias = "company")
     public List<Customer> selectXiansuoList(@RequestBody CustomerBO customerBO) {
         customerBO.setStatus(CustomerStatus.DISABLE.getCode());
         return customerMapper.selectXiansuoList(customerBO);

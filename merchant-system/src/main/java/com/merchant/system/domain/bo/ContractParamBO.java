@@ -234,6 +234,9 @@ public class ContractParamBO extends BaseEntity
     @ApiModelProperty(value = "最晚合同结束日期", name = "endDateEnd")
     private String endDateEnd;
 
+    private String terminateDateStart;
+    private String terminateDateEnd;
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Excel(name = "合同录入时间")
     private Date inputDate;
