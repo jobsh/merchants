@@ -197,16 +197,15 @@ public class DianmianServiceImpl implements IDianmianService
 
         Map<String, Long> map = contractNumList.stream().collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
 
-        for (Map.Entry<String, Long> entry : map.entrySet()) {
-            String key = entry.getKey();
-            Integer value = entry.getValue().intValue();
+        map.forEach((key, value) -> {
+            Integer num = value.intValue();
             Contract contract = contractService.selectContractByNum(key);
             ContractBO contractBO = new ContractBO();
             contractBO.setId(contract.getId());
             contractBO.setNum(contract.getNum());
-            contractBO.setDianmianNum(contract.getDianmianNum() - value);
+            contractBO.setDianmianNum(contract.getDianmianNum() - num);
             contractMapper.updateContract(contractBO);
-        }
+        });
 
         return dianmianMapper.deleteDianmianByIds(ids);
     }
