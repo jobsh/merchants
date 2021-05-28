@@ -566,6 +566,11 @@ public class ContractServiceImpl implements IContractService
         return contractMapper.updateContract(contractBO);
     }
 
+    @Override
+    public int updateTerminateContract(ContractBO contractBO) {
+        return contractMapper.updateContract(contractBO);
+    }
+
 
     public static Map<String, String> compareTwoObject(Object obj1, Object obj2, String... ignoreFields) throws IllegalAccessException {
         Map<String, String> diffMap = new LinkedHashMap<>();

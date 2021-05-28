@@ -4,6 +4,7 @@ import com.merchant.common.annotation.DataScope;
 import com.merchant.common.constant.HttpStatus;
 import com.merchant.common.core.domain.AjaxResult;
 import com.merchant.common.core.domain.entity.SysUser;
+import com.merchant.common.enums.CustomerResource;
 import com.merchant.common.enums.CustomerStatus;
 import com.merchant.common.exception.CustomException;
 import com.merchant.common.utils.DateUtils;
@@ -273,7 +274,12 @@ public class CustomerServiceImpl implements ICustomerService {
                         customer.setCreateBy(operName);
                         customer.setStatus(isCustomer);
                         customer.setUserId(loginUserId);
+                        customer.setUsername(loginUser.getUserName());
                         customer.setDeptId(loginUser.getDeptId().intValue());
+                        if (StringUtils.isBlank(customer.getResource())) {
+                            // 默认为系统导入
+                            customer.setResource(CustomerResource.SYSTEM_IMPORT.getCode());
+                        }
                         this.insertCustomer(customer);
                         successNum++;
                         successMsg.append("<br/>" + successNum + "、用户： " + customer.getName() + " 导入成功");

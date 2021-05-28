@@ -14,7 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
  * @author hanke
  * @date 2020-11-03
  */
-public interface IContractService 
+public interface IContractService
 {
     /**
      * 查询合同
@@ -81,7 +81,6 @@ public interface IContractService
     /**
      * 根据合同id解约合同
      *
-     * @param file
      * @param contractBO
      * @return
      */
@@ -151,4 +150,6 @@ public interface IContractService
     int existCode(String code);
 
     int updateThisContractStatus(ContractBO contractBO);
+
+    int updateTerminateContract(ContractBO contractBO);
 }

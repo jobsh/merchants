@@ -332,6 +332,8 @@
           AND
             c.type = '0'
           AND
+            c.check_status &lt;&gt; '2'
+        AND
             d.company_id = #{companyId}
           AND
             c.sign_date &gt;= #{begin} and c.sign_date &lt;= #{end}

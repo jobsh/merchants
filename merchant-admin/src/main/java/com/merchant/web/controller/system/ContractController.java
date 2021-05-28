@@ -143,6 +143,17 @@ public class ContractController extends BaseController {
     }
 
     /**
+     * 合同解约编辑
+     */
+    @ApiOperation(value = "修改解约合同", notes = "修改解约合同", httpMethod = "PUT")
+    @PreAuthorize("@ss.hasPermi('contract:contractItem:editAfterTerminate')")
+    @Log(title = "合同", businessType = BusinessType.UPDATE)
+    @PutMapping("/terminate/edit")
+    public AjaxResult editAfterTerminate(@RequestBody ContractBO contractBO) {
+        return toAjax(contractService.updateTerminateContract(contractBO));
+    }
+
+    /**
      * 删除合同
      */
     @ApiOperation(value = "删除合同", notes = "删除合同", httpMethod = "DELETE")
