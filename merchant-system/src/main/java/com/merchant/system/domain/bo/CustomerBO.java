@@ -17,7 +17,7 @@ import java.util.List;
  * @Created by hanke
  */
 @Data
-public class CustomerBO extends Customer {
+public class  CustomerBO extends Customer {
 
     /** 前端传来的客户ids */
     @ApiModelProperty(value = "客户ids数组", name = "ids", example = "[1,2,3]")

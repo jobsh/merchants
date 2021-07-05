@@ -115,7 +115,7 @@ public class DianmianVO extends Dianmian {
     private Date closeDate;
 
     /** 店面类型（0：单店加盟，1：区域加盟） */
-    @Excel(name = "店面类型", readConverterExp = "0=单店加盟,1=区域加盟")
+    @Excel(name = "店面类型", readConverterExp = "0=单店加盟,1=区域加盟,2=并购")
     private String type;
 
     /** 授权区域 */

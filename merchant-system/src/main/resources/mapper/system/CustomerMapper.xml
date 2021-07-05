@@ -278,7 +278,7 @@
             c.`status` = 0,
             c.update_date = NOW()
         WHERE
-            c.`status` = 1
+            c.`status` = 1 and c.genjin_status &lt;&gt;5
         and
             c.genjin_date &lt; DATE_SUB(NOW(),INTERVAL #{intervalDays} DAY)
     </update>
